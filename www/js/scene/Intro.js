@@ -9,23 +9,51 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
     }
 
     var SPEED = 'speed';
-    var BACKGROUND = 'background';
     var BACKGROUND_STAR = 'background_star';
-    var LOGO = 'undefined';
-    var PRESENTS = 'presents';
-    var GAME_LOGO = 'shields_up_logo/shields_up_logo';
+
+    var INTRO_MSG_KEY = 'intro';
+    var LOGO_TXT = 'RAPHAEL STARY';
+    var LOGO_FONT = 'LogoFont';
+    var GAME_LOGO_TXT = 'SHIELDS UP';
+    var PRESENTS_TXT = 'PRESENTS';
+    var GAME_LOGO_FONT = 'KenPixelBlocks';
+    var WHITE = '#fff';
+    var LIGHT_GRAY = '#D3D3D3';
+    var DARK_GRAY = '#A9A9A9';
 
     Intro.prototype._createDrawables = function (screenWidth, screenHeight) {
         var drawableStorage = {};
 
         var screenWidthHalf = calcScreenConst(screenWidth, 2);
         var screenHeightHalf = calcScreenConst(screenHeight, 2);
+        var screenWidthThird = calcScreenConst(screenWidth, 3);
+        var screenHeightThird = calcScreenConst(screenHeight, 3);
+        var screenWidthTwoThird = calcScreenConst(screenWidth, 3, 2);
+        var screenHeightTwoThird = calcScreenConst(screenHeight, 3, 2);
+        var screenWidthQuarter = calcScreenConst(screenWidth, 4);
+        var screenHeightQuarter = calcScreenConst(screenHeight, 4);
+        var screenWidthThreeQuarter = calcScreenConst(screenWidth, 4, 3);
+        var screenHeightThreeQuarter = calcScreenConst(screenHeight, 4, 3);
 
-        drawableStorage.firstBg = this.stage.drawFresh(screenWidthHalf, screenHeightHalf,
-            BACKGROUND, 0);
+        drawableStorage.firstBg = [
+            this.stage.drawFresh(screenWidthHalf, screenHeightHalf, BACKGROUND_STAR, 0, 1, 0, 0.5),
+            this.stage.drawFresh(screenWidthThird, screenHeightQuarter, BACKGROUND_STAR, 0, 0.75, 0, 0.75),
+            this.stage.drawFresh(screenWidthQuarter, screenHeightTwoThird, BACKGROUND_STAR, 0, 0.5, 0, 1),
+            this.stage.drawFresh(screenWidthThreeQuarter, screenHeightThird, BACKGROUND_STAR, 0, 1, 0, 0.5),
+            this.stage.drawFresh(screenWidthTwoThird, screenHeightHalf, BACKGROUND_STAR, 0, 0.5, 0, 0.75),
+            this.stage.drawFresh(screenWidthHalf, screenHeightQuarter, BACKGROUND_STAR, 0, 0.75, 0, 1),
+            this.stage.drawFresh(screenWidthTwoThird, screenHeightThreeQuarter, BACKGROUND_STAR, 0, 1, 0, 0.5)
+        ];
 
-        drawableStorage.scrollingBackGround = this.stage.getDrawable(screenWidthHalf,
-                screenHeightHalf + screenHeight, BACKGROUND, 0);
+        drawableStorage.scrollingBackGround = [
+            this.stage.drawFresh(screenWidthHalf, screenHeightHalf + screenHeight, BACKGROUND_STAR, 0, 1, 0, 0.5),
+            this.stage.drawFresh(screenWidthThird, screenHeightQuarter + screenHeight, BACKGROUND_STAR, 0, 0.75, 0, 0.75),
+            this.stage.drawFresh(screenWidthQuarter, screenHeightTwoThird + screenHeight, BACKGROUND_STAR, 0, 0.5, 0, 1),
+            this.stage.drawFresh(screenWidthThreeQuarter, screenHeightThird + screenHeight, BACKGROUND_STAR, 0, 1, 0, 0.5),
+            this.stage.drawFresh(screenWidthTwoThird, screenHeightHalf + screenHeight, BACKGROUND_STAR, 0, 0.5, 0, 0.75),
+            this.stage.drawFresh(screenWidthHalf, screenHeightQuarter + screenHeight, BACKGROUND_STAR, 0, 0.75, 0, 1),
+            this.stage.drawFresh(screenWidthTwoThird, screenHeightThreeQuarter + screenHeight, BACKGROUND_STAR, 0, 1, 0, 0.5)
+        ];
 
         var speedY = 0; // 600
 
@@ -48,25 +76,59 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         var irgendwasLogo = calcScreenConst(screenHeight, 48, 5);
 
 
-        drawableStorage.letsplayIO = this.stage.getDrawable(x, y + irgendwasLogo, LOGO, 2);
+        drawableStorage.logoDrawable = this.stage.getDrawableText(x, y + irgendwasLogo, 2, LOGO_TXT,
+            calcScreenConst(screenHeight, 480, 97), LOGO_FONT, WHITE);
 
-        drawableStorage.presentsDrawable = this.stage.getDrawable(x, y, PRESENTS, 2);
+        drawableStorage.presentsDrawable = this.stage.getDrawableText(x, y, 2, PRESENTS_TXT,
+            calcScreenConst(screenHeight, 480, 22), GAME_LOGO_FONT, LIGHT_GRAY);
 
-        drawableStorage.logoDrawable = this.stage.animateFresh(x, y, GAME_LOGO, 60);
+        drawableStorage.gameLogoDrawable = this.stage.getDrawableText(x, y, 2, GAME_LOGO_TXT,
+            calcScreenConst(screenHeight, 480, 34), GAME_LOGO_FONT, DARK_GRAY);
+        drawableStorage.gameLogoDrawableHighlight = this.stage.getDrawableText(x, y, 3, GAME_LOGO_TXT,
+            calcScreenConst(screenHeight, 480, 34), GAME_LOGO_FONT, WHITE, 0, 0);
 
         return drawableStorage;
     };
 
     Intro.prototype._resizeDrawables = function (screenWidth, screenHeight, drawableStorage) {
+
         var screenWidthHalf = calcScreenConst(screenWidth, 2);
         var screenHeightHalf = calcScreenConst(screenHeight, 2);
+        var screenWidthThird = calcScreenConst(screenWidth, 3);
+        var screenHeightThird = calcScreenConst(screenHeight, 3);
+        var screenWidthTwoThird = calcScreenConst(screenWidth, 3, 2);
+        var screenHeightTwoThird = calcScreenConst(screenHeight, 3, 2);
+        var screenWidthQuarter = calcScreenConst(screenWidth, 4);
+        var screenHeightQuarter = calcScreenConst(screenHeight, 4);
+        var screenWidthThreeQuarter = calcScreenConst(screenWidth, 4, 3);
+        var screenHeightThreeQuarter = calcScreenConst(screenHeight, 4, 3);
 
-        changeCoords(drawableStorage.firstBg, screenWidthHalf, screenHeightHalf);
+        changeCoords(drawableStorage.firstBg[0], screenWidthHalf, screenHeightHalf);
+        changeCoords(drawableStorage.firstBg[1], screenWidthThird, screenHeightQuarter);
+        changeCoords(drawableStorage.firstBg[2], screenWidthQuarter, screenHeightTwoThird);
+        changeCoords(drawableStorage.firstBg[3], screenWidthThreeQuarter, screenHeightThird);
+        changeCoords(drawableStorage.firstBg[4], screenWidthTwoThird, screenHeightHalf);
+        changeCoords(drawableStorage.firstBg[5], screenWidthHalf, screenHeightQuarter);
+        changeCoords(drawableStorage.firstBg[6], screenWidthTwoThird, screenHeightThreeQuarter);
 
-        if (this.backGroundHasNewPosition)
-            changeCoords(drawableStorage.scrollingBackGround, screenWidthHalf, screenHeightHalf);
-        else
-            changeCoords(drawableStorage.scrollingBackGround, screenWidthHalf, screenHeightHalf + screenHeight);
+        if (this.backGroundHasNewPosition) {
+            changeCoords(drawableStorage.scrollingBackGround[0], screenWidthHalf, screenHeightHalf);
+            changeCoords(drawableStorage.scrollingBackGround[1], screenWidthThird, screenHeightQuarter);
+            changeCoords(drawableStorage.scrollingBackGround[2], screenWidthQuarter, screenHeightTwoThird);
+            changeCoords(drawableStorage.scrollingBackGround[3], screenWidthThreeQuarter, screenHeightThird);
+            changeCoords(drawableStorage.scrollingBackGround[4], screenWidthTwoThird, screenHeightHalf);
+            changeCoords(drawableStorage.scrollingBackGround[5], screenWidthHalf, screenHeightQuarter);
+            changeCoords(drawableStorage.scrollingBackGround[6], screenWidthTwoThird, screenHeightThreeQuarter);
+
+        } else {
+            changeCoords(drawableStorage.scrollingBackGround[0], screenWidthHalf, screenHeightHalf + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[1], screenWidthThird, screenHeightQuarter + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[2], screenWidthQuarter, screenHeightTwoThird + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[3], screenWidthThreeQuarter, screenHeightThird + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[4], screenWidthTwoThird, screenHeightHalf + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[5], screenWidthHalf, screenHeightQuarter + screenHeight);
+            changeCoords(drawableStorage.scrollingBackGround[6], screenWidthTwoThird, screenHeightThreeQuarter + screenHeight);
+        }
 
         var speedY = 0; // 600
         changeCoords(drawableStorage.speedDrawableOne, calcScreenConst(screenWidth, 4), speedY);
@@ -87,10 +149,16 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
 
         var irgendwasLogo = calcScreenConst(screenHeight, 48, 5);
 
-        changeCoords(drawableStorage.letsplayIO, x, y + irgendwasLogo);
+        changeCoords(drawableStorage.logoDrawable, x, y + irgendwasLogo);
 
         changeCoords(drawableStorage.presentsDrawable, x, y);
-        changeCoords(drawableStorage.logoDrawable, x, y);
+        changeCoords(drawableStorage.gameLogoDrawable, x, y);
+        changeCoords(drawableStorage.gameLogoDrawableHighlight, x, y);
+
+        drawableStorage.logoDrawable.txt.size = calcScreenConst(screenHeight, 480, 97);
+        drawableStorage.presentsDrawable.txt.size = calcScreenConst(screenHeight, 480, 22);
+        drawableStorage.gameLogoDrawable.txt.size = calcScreenConst(screenHeight, 480, 34);
+        drawableStorage.gameLogoDrawableHighlight.txt.size = calcScreenConst(screenHeight, 480, 34);
     };
 
     Intro.prototype._createMotion = function (screenWidth, screenHeight) {
@@ -98,13 +166,19 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
 
         var screenWidthHalf = calcScreenConst(screenWidth, 2);
         var screenHeightHalf = calcScreenConst(screenHeight, 2);
+        var self = this;
+        motionStorage.firstBgPath = [];
+        this.drawableStorage.firstBg.forEach(function (firstBg) {
+            motionStorage.firstBgPath.push(self.stage.getPath(firstBg.x, firstBg.y,
+                firstBg.x, firstBg.y - screenHeight, 120, Transition.LINEAR))
+        });
 
-        motionStorage.firstBgPath = this.stage.getPath(screenWidthHalf, screenHeightHalf,
-            screenWidthHalf, screenHeightHalf - screenHeight, 120, Transition.LINEAR);
-
-        motionStorage.scrollingBgPath = this.stage.getPath(screenWidthHalf,
-                screenHeightHalf + screenHeight, screenWidthHalf,
-            screenHeightHalf, 120, Transition.LINEAR);
+        motionStorage.scrollingBgPath = [];
+        this.drawableStorage.scrollingBackGround.forEach(function (scrollingBackGround) {
+            motionStorage.scrollingBgPath.push(self.stage.getPath(scrollingBackGround.x,
+                scrollingBackGround.y, scrollingBackGround.x, scrollingBackGround.y - screenHeight, 120,
+                Transition.LINEAR));
+        });
 
         var irgendwas = calcScreenConst(screenHeight, 12);
         var x = screenWidthHalf,
@@ -116,7 +190,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
 
         var logoYEnd = calcScreenConst(screenHeight, 32, 7);
 
-        motionStorage.letsplayIOPath = this.stage.getPath(x, y + irgendwasLogo, x, yEnd - irgendwasLogo, 120,
+        motionStorage.logoDrawablePath = this.stage.getPath(x, y + irgendwasLogo, x, yEnd - irgendwasLogo, 120,
             Transition.EASE_OUT_IN_SIN);
 
         motionStorage.presentsPath = this.stage.getPath(x, y + irgendwasPresents, x, yEnd + irgendwasLogo, 120,
@@ -138,6 +212,15 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
                 screenHeightHalf + screenHeight, screenWidthHalf,
             screenHeightHalf);
 
+        this.drawableStorage.firstBg.forEach(function (firstBg, i) {
+            changePath(motionStorage.firstBgPath[i], firstBg.x, firstBg.y, firstBg.x, firstBg.y - screenHeight);
+        });
+
+        this.drawableStorage.scrollingBackGround.forEach(function (scrollingBackGround, i) {
+            changePath(motionStorage.scrollingBgPath[i], scrollingBackGround.x, scrollingBackGround.y + screenHeight,
+                scrollingBackGround.x, scrollingBackGround.y);
+        });
+
         var irgendwas = calcScreenConst(screenHeight, 12);
         var x = screenWidthHalf,
             y = screenHeight + irgendwas,
@@ -148,11 +231,11 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
 
         var logoYEnd = calcScreenConst(screenHeight, 32, 7);
 
-        changePath(motionStorage.letsplayIOPath ,x, y + irgendwasLogo, x, yEnd - irgendwasLogo);
+        changePath(motionStorage.logoDrawablePath, x, y + irgendwasLogo, x, yEnd - irgendwasLogo);
 
-        changePath(motionStorage.presentsPath ,x, y + irgendwasPresents, x, yEnd + irgendwasLogo);
+        changePath(motionStorage.presentsPath, x, y + irgendwasPresents, x, yEnd + irgendwasLogo);
 
-        changePath(motionStorage.logoInPath ,x, y, x, logoYEnd);
+        changePath(motionStorage.logoInPath, x, y, x, logoYEnd);
     };
 
     Intro.prototype.show = function (nextScene, screenWidth, screenHeight) {
@@ -171,7 +254,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         });
 
         this.speedos = speedos;
-        this.lastY = this.drawableStorage.letsplayIO.y;
+        this.lastY = this.drawableStorage.logoDrawable.y;
         this.hasNotStarted = true;
         this.yVelocity = calcScreenConst(screenHeight, 48);
         this.screenWidth = screenWidth;
@@ -184,8 +267,8 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
     };
 
     Intro.prototype._parallaxUpdate = function () {
-        var delta = this.lastY - this.drawableStorage.letsplayIO.y;
-        this.lastY = this.drawableStorage.letsplayIO.y;
+        var delta = this.lastY - this.drawableStorage.logoDrawable.y;
+        this.lastY = this.drawableStorage.logoDrawable.y;
         var self = this;
         this.speedos.forEach(function (speeeeeeed) {
             speeeeeeed.y += self.yVelocity;
@@ -200,16 +283,18 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         if (this.drawableStorage.speedDrawableOne.y >= this.screenHeight && this.hasNotStarted) {
             this.hasNotStarted = false;
 
-            self.stage.move(this.drawableStorage.firstBg, this.motionStorage.firstBgPath, function () {
-                self.stage.remove(self.drawableStorage.firstBg);
+            this.drawableStorage.firstBg.forEach(function (firstBg, i) {
+                self.stage.move(firstBg, self.motionStorage.firstBgPath[i], function () {
+                    self.stage.remove(firstBg);
+                });
             });
-            self.stage.move(this.drawableStorage.scrollingBackGround, this.motionStorage.scrollingBgPath, function () {
-                self.drawableStorage.scrollingBackGround.y = calcScreenConst(self.screenHeight, 2);
-                self.backGroundHasNewPosition = true;
+            this.drawableStorage.scrollingBackGround.forEach(function (scrollingBackGround, i) {
+                self.stage.move(scrollingBackGround, self.motionStorage.scrollingBgPath[i], function () {
+                    self.backGroundHasNewPosition = true;
+                });
             });
-
-            self.stage.move(this.drawableStorage.letsplayIO, this.motionStorage.letsplayIOPath, function () {
-                self.stage.remove(self.drawableStorage.letsplayIO);
+            self.stage.move(this.drawableStorage.logoDrawable, this.motionStorage.logoDrawablePath, function () {
+                self.stage.remove(self.drawableStorage.logoDrawable);
             });
 
             self.stage.move(this.drawableStorage.presentsDrawable, this.motionStorage.presentsPath, function () {
@@ -217,15 +302,21 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
             });
 
             var speedStripes;
-            self.stage.moveLater({item: this.drawableStorage.logoDrawable, path: this.motionStorage.logoInPath,
+            self.stage.moveLater({item: this.drawableStorage.gameLogoDrawable, path: this.motionStorage.logoInPath,
                 ready: function () {
 
-                    self.next(self.nextScene, self.drawableStorage.logoDrawable, speedStripes,
+                    self.next(self.nextScene, self.drawableStorage.gameLogoDrawable, speedStripes,
                         self.drawableStorage.scrollingBackGround);
 
                 }}, 90, function () {
                 var delay = 30;
                 speedStripes = SpeedStripesHelper.draw(self.stage, delay, self.screenWidth, self.screenHeight);
+            });
+            self.stage.moveLater({item: this.drawableStorage.gameLogoDrawableHighlight,
+                path: this.motionStorage.logoInPath}, 90, function () {
+                self.stage.animateAlphaPattern(self.drawableStorage.gameLogoDrawableHighlight,
+                    [{value: 1, duration: 30, easing: Transition.LINEAR}, {value: 0, duration: 30, easing: Transition.LINEAR}],
+                    true);
             });
         }
     };

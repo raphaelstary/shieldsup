@@ -22,6 +22,7 @@ var App = (function (require) {
             audioInfo = resourceLoader.addJSON('data/audio.json'),
             fontBlock = resourceLoader.addFont('data/kenpixel_blocks.woff'),
             font = resourceLoader.addFont('data/kenpixel.woff'),
+            logoFont = resourceLoader.addFont('data/dooodleista.woff'),
             locales = resourceLoader.addJSON('data/locales.json'),
             initialScreen = new require.SimpleLoadingScreen(this.screenCtx);
 
@@ -43,7 +44,7 @@ var App = (function (require) {
 
             self.resizeBus.remove('initial_screen');
 
-            var sceneStuff = self._initCommonSceneStuff(atlases, font, fontBlock, locales, audioInfo);
+            var sceneStuff = self._initCommonSceneStuff(atlases, font, fontBlock, logoFont, locales, audioInfo);
             self._initScenes(sceneStuff.stage, sceneStuff.messages, sceneStuff.sounds);
             self._doThePlay();
         };
@@ -51,10 +52,11 @@ var App = (function (require) {
         resourceLoader.load();
     };
 
-    App.prototype._initCommonSceneStuff = function (atlases, font, fontBlock, locales, audioInfo) {
+    App.prototype._initCommonSceneStuff = function (atlases, font, fontBlock, logoFont, locales, audioInfo) {
         require.addFontToDOM([
             {name: 'KenPixel', url: require.URL.createObjectURL(font.blob)},
-            {name: 'KenPixelBlocks', url: require.URL.createObjectURL(fontBlock.blob)}
+            {name: 'KenPixelBlocks', url: require.URL.createObjectURL(fontBlock.blob)},
+            {name: 'LogoFont', url: require.URL.createObjectURL(logoFont.blob)}
         ]);
 
         var atlasMapper = new require.AtlasMapper();
@@ -65,7 +67,7 @@ var App = (function (require) {
             new require.MotionDirector(new require.MotionStudio()),
             new require.SpriteAnimationDirector(new require.SpriteAnimationStudio()),
             new require.AnimationAssistant(new require.AnimationDirector(new require.AnimationStudio())),
-            new require.Renderer(this.screen, this.screenCtx)
+            new require.AtlasRenderer(this.screen, this.screenCtx)
         );
 
         this.resizeBus.add('stage', stage.resize.bind(stage));
@@ -139,7 +141,7 @@ var App = (function (require) {
 })({
     ResourceLoader: ResourceLoader,
     SimpleLoadingScreen: SimpleLoadingScreen,
-    Renderer: Renderer,
+    AtlasRenderer: AtlasRenderer,
     GameLoop: GameLoop,
     AtlasMapper: AtlasMapper,
     SpriteAnimationStudio: SpriteAnimationStudio,
