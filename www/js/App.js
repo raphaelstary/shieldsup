@@ -2,20 +2,19 @@ var App = (function (require) {
     "use strict";
 //    var DEBUG_START_IMMEDIATELY = false;
 
-    function App(screen, screenCtx, resizeBus, screenInput, gameController) {
+    function App(screen, resizeBus, screenInput, gameController) {
         this.screen = screen;
-        this.screenCtx = screenCtx;
         this.resizeBus = resizeBus;
         this.tapController = screenInput;
         this.gameController = gameController;
     }
 
-    App.prototype.start = function (windowWidth, windowHeight, screenWidth, screenHeight) {
+    App.prototype.start = function () {
         // idea to create list of all scenes and just use nextScene() to advance
-        this._loadingScene(windowWidth, windowHeight, screenWidth, screenHeight);
+        this._loadingScene();
     };
 
-    App.prototype._loadingScene = function (windowWidth, windowHeight, screenWidth, screenHeight) {
+    App.prototype._loadingScene = function () {
         // show loading screen, load binary resources
 
         var resourceLoader = new require.ResourceLoader(),
@@ -24,10 +23,10 @@ var App = (function (require) {
             font = resourceLoader.addFont('data/kenpixel.woff'),
             logoFont = resourceLoader.addFont('data/dooodleista.woff'),
             locales = resourceLoader.addJSON('data/locales.json'),
-            initialScreen = new require.SimpleLoadingScreen(this.screenCtx);
+            initialScreen = new require.SimpleLoadingScreen(this.screen.getContext('2d'));
 
         var atlases = [];
-        require.resolveAtlasPaths(screenWidth, screenHeight).forEach(function (groupedAtlasInfo) {
+        require.resolveAtlasPaths(require.screenWidth, require.screenHeight).forEach(function (groupedAtlasInfo) {
             atlases.push({
                 atlas: resourceLoader.addImage(groupedAtlasInfo.gfx),
                 info: resourceLoader.addJSON(groupedAtlasInfo.data)
@@ -37,7 +36,7 @@ var App = (function (require) {
         resourceLoader.onProgress = initialScreen.showProgress.bind(initialScreen);
         this.resizeBus.add('initial_screen', initialScreen.resize.bind(initialScreen));
 
-        initialScreen.showNew(2, windowWidth, windowHeight);
+        initialScreen.showNew(2);
 
         var self = this;
         resourceLoader.onComplete = function () {
@@ -67,7 +66,7 @@ var App = (function (require) {
             new require.MotionDirector(new require.MotionStudio()),
             new require.SpriteAnimationDirector(new require.SpriteAnimationStudio()),
             new require.AnimationAssistant(new require.AnimationDirector(new require.AnimationStudio())),
-            new require.AtlasRenderer(this.screen, this.screenCtx)
+            new require.AtlasRenderer(this.screen)
         );
 
         this.resizeBus.add('stage', stage.resize.bind(stage));
@@ -167,5 +166,7 @@ var App = (function (require) {
     UniversalTranslator: UniversalTranslator,
     SoundFilesManager: SoundFilesManager,
     SoundSpriteManager: SoundSpriteManager,
-    resolveAtlasPaths: resolveAtlasPaths
+    resolveAtlasPaths: resolveAtlasPaths,
+    screenWidth: window.screen.availWidth,
+    screenHeight: window.screen.availHeight
 });
