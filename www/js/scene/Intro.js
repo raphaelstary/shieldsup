@@ -11,7 +11,6 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
     var SPEED = 'speed';
     var BACKGROUND_STAR = 'background_star';
 
-    var INTRO_MSG_KEY = 'intro';
     var LOGO_TXT = 'RAPHAEL STARY';
     var LOGO_FONT = 'LogoFont';
     var GAME_LOGO_TXT = 'SHIELDS UP';
