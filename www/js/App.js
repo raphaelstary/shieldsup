@@ -1,12 +1,11 @@
 var App = (function (require) {
     "use strict";
 //    var DEBUG_START_IMMEDIATELY = false;
-
-    function App(screen, resizeBus, screenInput, gameController) {
-        this.screen = screen;
-        this.resizeBus = resizeBus;
-        this.tapController = screenInput;
-        this.gameController = gameController;
+    function App(gameServices) {
+        this.screen = gameServices.screen;
+        this.resizeBus = gameServices.resize;
+        this.tapController = gameServices.tap;
+        this.gameController = gameServices.pushRelease;
     }
 
     App.prototype.start = function () {
