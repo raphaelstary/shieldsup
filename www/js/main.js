@@ -1,6 +1,6 @@
 window.onload = function () {
     "use strict";
 
-    var app = bootstrapResponsiveWithPushRelease();
+    var app = Bootstrapper.atlas().tap().pushRelease().build(MyGameResources);
     app.start();
 };
