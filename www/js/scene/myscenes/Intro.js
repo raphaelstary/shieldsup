@@ -1,11 +1,11 @@
 var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, SpeedStripesHelper) {
     "use strict";
 
-    function Intro(stage, sceneStorage, gameLoop, resizeBus) {
-        this.stage = stage;
-        this.sceneStorage = sceneStorage;
-        this.gameLoop = gameLoop;
-        this.resizeBus = resizeBus;
+    function Intro(services) {
+        this.stage = services.stage;
+        this.sceneStorage = services.sceneStorage;
+        this.loop = services.loop;
+        this.resize = services.resize;
     }
 
     var SPEED = 'speed';
@@ -15,7 +15,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
     var LOGO_FONT = 'LogoFont';
     var GAME_LOGO_TXT = 'SHIELDS UP';
     var PRESENTS_TXT = 'PRESENTS';
-    var GAME_LOGO_FONT = 'KenPixelBlocks';
+    var GAME_LOGO_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
     var LIGHT_GRAY = '#D3D3D3';
     var DARK_GRAY = '#A9A9A9';
@@ -238,7 +238,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
     };
 
     Intro.prototype.show = function (nextScene, screenWidth, screenHeight) {
-        this.resizeBus.add('intro_scene', this.resize.bind(this));
+        this.resize.add('intro_scene', this.resizeScene.bind(this));
 
         this.drawableStorage = this._createDrawables(screenWidth, screenHeight);
         this.motionStorage = this._createMotion(screenWidth, screenHeight);
@@ -260,7 +260,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         this.screenHeight = screenHeight;
         this.nextScene = nextScene;
 
-        this.gameLoop.add('z_parallax', this._parallaxUpdate.bind(this));
+        this.loop.add('z_parallax', this._parallaxUpdate.bind(this));
 
 
     };
@@ -320,7 +320,7 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         }
     };
 
-    Intro.prototype.resize = function (width, height) {
+    Intro.prototype.resizeScene = function (width, height) {
         this.yVelocity = calcScreenConst(height, 48);
         this.screenWidth = width;
         this.screenHeight = height;
@@ -342,8 +342,8 @@ var Intro = (function (Transition, calcScreenConst, changeCoords, changePath, Sp
         delete this.drawableStorage;
         delete this.motionStorage;
 
-        this.resizeBus.remove('intro_scene');
-        this.gameLoop.remove('z_parallax');
+        this.resize.remove('intro_scene');
+        this.loop.remove('z_parallax');
 
         this.sceneStorage.logo = logoDrawable;
         this.sceneStorage.speedStripes = speedStripes;
