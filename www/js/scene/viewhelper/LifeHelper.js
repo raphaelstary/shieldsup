@@ -8,7 +8,7 @@ var LifeHelper = (function (calcScreenConst, changeCoords, getTopRaster) {
     }
 
     function getLifeOffSet(stage) {
-        return stage.getSubImage(PLAYER_LIFE).width;
+        return stage.getGraphic(PLAYER_LIFE).width;
     }
 
     function lifeTwoX(stage, screenWidth) {

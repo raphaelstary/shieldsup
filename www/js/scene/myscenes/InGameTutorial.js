@@ -86,21 +86,21 @@ var InGameTutorial = (function (require) {
             return require.calcScreenConst(self.screenHeight, 16);
         }
 
-        var shipDrawable = this.sceneStorage.ship,
-            shieldsDrawable = this.sceneStorage.shields ||
-                (this.sceneStorage.shields = this.stage.getDrawable(getWidthHalf(), get__400(), SHIELDS)),
-            energyBarDrawable = this.sceneStorage.energyBar,
-            lifeDrawablesDict = this.sceneStorage.lives,
-            countDrawables = this.sceneStorage.counts,
-            fireDrawable = this.sceneStorage.fire,
-            speedStripes = this.sceneStorage.speedStripes,
-            shieldsUpSprite =
-                this.sceneStorage.shieldsUp || this.stage.getSprite(SHIELDS_UP, 6, false),
-            shieldsDownSprite =
-                this.sceneStorage.shieldsDown || this.stage.getSprite(SHIELDS_DOWN, 6, false);
+        var shipDrawable = this.sceneStorage.ship, shieldsDrawable = this.sceneStorage.shields ||
+            (this.sceneStorage.shields = this.stage.getDrawable(getWidthHalf(), get__400(),
+                SHIELDS)), energyBarDrawable = this.sceneStorage.energyBar, lifeDrawablesDict = this.sceneStorage.lives, countDrawables = this.sceneStorage.counts, fireDrawable = this.sceneStorage.fire, speedStripes = this.sceneStorage.speedStripes, shieldsUpSprite = this.sceneStorage.shieldsUp ||
+            this.stage.getSprite(SHIELDS_UP, 6, false), shieldsDownSprite = this.sceneStorage.shieldsDown ||
+            this.stage.getSprite(SHIELDS_DOWN, 6, false);
 
-        var shaker = new require.ScreenShaker([shipDrawable, shieldsDrawable, energyBarDrawable, lifeDrawablesDict[1],
-            lifeDrawablesDict[2], lifeDrawablesDict[3], fireDrawable]);
+        var shaker = new require.ScreenShaker([
+            shipDrawable,
+            shieldsDrawable,
+            energyBarDrawable,
+            lifeDrawablesDict[1],
+            lifeDrawablesDict[2],
+            lifeDrawablesDict[3],
+            fireDrawable
+        ]);
         this.resizeShaker = shaker.resize.bind(shaker);
         countDrawables.forEach(shaker.add.bind(shaker));
         speedStripes.forEach(function (wrapper) {
@@ -118,11 +118,12 @@ var InGameTutorial = (function (require) {
             scoreAnimator.resize(self.screenWidth, self.screenHeight);
         });
 
-        var shipCollision = new require.CanvasCollisionDetector(this.stage.getSubImage(SHIP), shipDrawable);
-        var shieldsCollision = new require.CanvasCollisionDetector(this.stage.getSubImage(SHIELDS), shieldsDrawable);
+        var shipCollision = new require.CanvasCollisionDetector(this.stage.getGraphic(SHIP), shipDrawable);
+        var shieldsCollision = new require.CanvasCollisionDetector(this.stage.getGraphic(SHIELDS), shieldsDrawable);
         var world = new require.GameWorld(this.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
             scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker, lifeDrawablesDict,
-            function () {}, endGame, this.sounds);
+            function () {
+            }, endGame, this.sounds);
 
         this.gameLoop.add(SHAKE_TUTORIAL, shaker.update.bind(shaker));
         this.gameLoop.add(COLLISION_TUTORIAL, world.checkCollisions.bind(world));
@@ -150,6 +151,7 @@ var InGameTutorial = (function (require) {
         }
 
         var skipTxt, skipTouchable;
+
         function createSkipStuff() {
             function getY() {
                 return require.calcScreenConst(self.screenHeight, 20, 3);
@@ -175,42 +177,47 @@ var InGameTutorial = (function (require) {
                 }, 1000);
             });
 
-            skipTxt = self.stage.getDrawableText(getX(), getY(), 3,
-                self.messages.get(TUTORIAL_MSG_KEY, SKIP_MSG), 15, FONT, WHITE, 0, 0.5);
+            skipTxt = self.stage.getDrawableText(getX(), getY(), 3, self.messages.get(TUTORIAL_MSG_KEY, SKIP_MSG), 15,
+                FONT, WHITE, 0, 0.5);
             self.stage.draw(skipTxt);
 
             self.resizeRepo.add(skipTxt, function () {
                 require.changeCoords(skipTxt, getX(), getY());
-                require.changeTouchable(skipTouchable, getWidthHalf(), getY() - getHeightSixteenth(), getWidthHalf(), getHeight());
+                require.changeTouchable(skipTouchable, getWidthHalf(), getY() - getHeightSixteenth(), getWidthHalf(),
+                    getHeight());
             });
 
             return skipTxt;
         }
+
         function removeSkipStuff() {
             self.stage.remove(skipTxt);
             self.tapController.remove(skipTouchable);
         }
+
         createSkipStuff();
 
         function createFirstAsteroid() {
             function getAsteroidHeightHalf() {
-                return require.calcScreenConst(self.stage.getSubImage(ASTEROID).height, 2);
+                return require.calcScreenConst(self.stage.getGraphic(ASTEROID).height, 2);
             }
 
             function getAsteroidWidthHalf() {
-                return require.calcScreenConst(self.stage.getSubImage(ASTEROID).width, 2);
+                return require.calcScreenConst(self.stage.getGraphic(ASTEROID).width, 2);
             }
 
-            var asteroid = self.stage.getDrawable(getWidthHalf() - getAsteroidWidthHalf(), - getAsteroidHeightHalf(), ASTEROID);
+            var asteroid = self.stage.getDrawable(getWidthHalf() - getAsteroidWidthHalf(), -getAsteroidHeightHalf(),
+                ASTEROID);
             trackedAsteroids[asteroid.id] = asteroid;
             self.stage.draw(asteroid);
 
             self.resizeRepo.add(asteroid, function () {
-                require.changeCoords(asteroid, getWidthHalf() - getAsteroidWidthHalf(), - getAsteroidHeightHalf());
+                require.changeCoords(asteroid, getWidthHalf() - getAsteroidWidthHalf(), -getAsteroidHeightHalf());
             });
 
             return asteroid;
         }
+
         function createTouchNHoldTxt() {
 
             var touch_txt = self.stage.getDrawableText(getWidthThreeQuarter(), getHeightThird(), 3,
@@ -227,8 +234,8 @@ var InGameTutorial = (function (require) {
             }
 
             var raise_txt = self.stage.getDrawableText(getX(), getHeightHalf(), 3,
-                self.messages.get(TUTORIAL_MSG_KEY, TO_RAISE_SHIELDS_MSG), 17, FONT, WHITE, - require.Math.PI / 16, 1, getWidthThird(),
-                22);
+                self.messages.get(TUTORIAL_MSG_KEY, TO_RAISE_SHIELDS_MSG), 17, FONT, WHITE, -require.Math.PI / 16, 1,
+                getWidthThird(), 22);
             self.stage.draw(raise_txt);
 
             self.resizeRepo.add(raise_txt, function () {
@@ -291,6 +298,7 @@ var InGameTutorial = (function (require) {
         }
 
         var drainTxt, shieldsEnergyDrawable, energyTxt, okButton, okButtonTxt, okTouchable, dialogBack;
+
         function showEnergyTxtSubScene() {
             function createEnergyTxt() {
 
@@ -306,8 +314,8 @@ var InGameTutorial = (function (require) {
                     require.changeCoords(drainTxt, getWidthHalf(), getHeightThird());
                 });
 
-                shieldsEnergyDrawable = self.stage.animateFresh(getWidthHalf(), getHeightHalf(),
-                    SHIELDS_UP_TUTORIAL, 90);
+                shieldsEnergyDrawable = self.stage.animateFresh(getWidthHalf(), getHeightHalf(), SHIELDS_UP_TUTORIAL,
+                    90);
                 self.resizeRepo.add(shieldsEnergyDrawable, function () {
                     require.changeCoords(shieldsEnergyDrawable, getWidthHalf(), getHeightHalf());
                 });
@@ -336,7 +344,7 @@ var InGameTutorial = (function (require) {
                     self.sounds.play(CLICK);
                     self.tapController.remove(okTouchable);
 
-                    okButton.img = self.stage.getSubImage(BUTTON_PRIM_ACTIVE);
+                    okButton.img = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
                     okButtonTxt.txt.color = BLACK;
                     require.window.setTimeout(function () {
                         removeEnergyStuff();
@@ -345,6 +353,7 @@ var InGameTutorial = (function (require) {
                     }, 1500);
                 });
             }
+
             unregisterGameController();
             createEnergyTxt();
         }
@@ -367,33 +376,36 @@ var InGameTutorial = (function (require) {
         }
 
         var starTxts, star;
+
         function collectStarsSubScene() {
             function createFirstStar() {
                 var starNum = require.range(1, 4);
                 var starPath = STAR + starNum + '/' + STAR + starNum;
 
                 function getStarHeightHalf() {
-                    return require.calcScreenConst(self.stage.getSubImage(STAR_1).height, 2);
+                    return require.calcScreenConst(self.stage.getGraphic(STAR_1).height, 2);
                 }
 
                 function getStarWidthHalf() {
-                    return require.calcScreenConst(self.stage.getSubImage(STAR_1).height, 2);
+                    return require.calcScreenConst(self.stage.getGraphic(STAR_1).height, 2);
                 }
 
-                var star = self.stage.animateFresh(getWidthHalf() - getStarWidthHalf(), - getStarHeightHalf(), starPath, 30);
+                var star = self.stage.animateFresh(getWidthHalf() - getStarWidthHalf(), -getStarHeightHalf(), starPath,
+                    30);
                 trackedStars[star.id] = star;
                 self.stage.draw(star);
 
                 self.resizeRepo.add(star, function () {
-                    require.changeCoords(star, getWidthHalf() - getStarWidthHalf(), - getStarHeightHalf());
+                    require.changeCoords(star, getWidthHalf() - getStarWidthHalf(), -getStarHeightHalf());
                 });
 
                 return star;
             }
+
             function createCollectTxt() {
                 var collectTxt = self.stage.getDrawableText(getWidthThreeQuarter(), getHeightThird(), 3,
-                    self.messages.get(TUTORIAL_MSG_KEY, COLLECT_STUFF_MSG), 20, FONT, WHITE, require.Math.PI / 16, 1, getWidthHalf(),
-                    25);
+                    self.messages.get(TUTORIAL_MSG_KEY, COLLECT_STUFF_MSG), 20, FONT, WHITE, require.Math.PI / 16, 1,
+                    getWidthHalf(), 25);
                 self.stage.draw(collectTxt);
                 self.resizeRepo.add(collectTxt, function () {
                     require.changeCoords(collectTxt, getWidthThreeQuarter(), getHeightThird());

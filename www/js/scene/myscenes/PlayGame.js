@@ -28,21 +28,22 @@ var PlayGame = (function (require) {
 
         var __400 = require.calcScreenConst(self.screenHeight, 6, 5);
 
-        var shipDrawable = this.sceneStorage.ship,
-            shieldsDrawable = this.sceneStorage.shields ||
-                (this.sceneStorage.shields = this.stage.getDrawable(require.calcScreenConst(self.screenWidth, 2), __400, 'shields')),
-            energyBarDrawable = this.sceneStorage.energyBar,
-            lifeDrawablesDict = this.sceneStorage.lives,
-            countDrawables = this.sceneStorage.counts,
-            fireDrawable = this.sceneStorage.fire,
-            speedStripes = this.sceneStorage.speedStripes,
-            shieldsUpSprite =
-                this.sceneStorage.shieldsUp || this.stage.getSprite('shields_up/shields_up', 6, false),
-            shieldsDownSprite =
-                this.sceneStorage.shieldsDown || this.stage.getSprite('shields_down/shields_down', 6, false);
+        var shipDrawable = this.sceneStorage.ship, shieldsDrawable = this.sceneStorage.shields ||
+            (this.sceneStorage.shields = this.stage.getDrawable(require.calcScreenConst(self.screenWidth, 2), __400,
+                'shields')), energyBarDrawable = this.sceneStorage.energyBar, lifeDrawablesDict = this.sceneStorage.lives, countDrawables = this.sceneStorage.counts, fireDrawable = this.sceneStorage.fire, speedStripes = this.sceneStorage.speedStripes, shieldsUpSprite = this.sceneStorage.shieldsUp ||
+            this.stage.getSprite('shields_up/shields_up', 6,
+                false), shieldsDownSprite = this.sceneStorage.shieldsDown ||
+            this.stage.getSprite('shields_down/shields_down', 6, false);
 
-        var shaker = new require.ScreenShaker([shipDrawable, shieldsDrawable, energyBarDrawable, lifeDrawablesDict[1],
-            lifeDrawablesDict[2], lifeDrawablesDict[3], fireDrawable]);
+        var shaker = new require.ScreenShaker([
+            shipDrawable,
+            shieldsDrawable,
+            energyBarDrawable,
+            lifeDrawablesDict[1],
+            lifeDrawablesDict[2],
+            lifeDrawablesDict[3],
+            fireDrawable
+        ]);
         countDrawables.forEach(shaker.add.bind(shaker));
         speedStripes.forEach(function (wrapper) {
             shaker.add(wrapper.drawable);
@@ -66,8 +67,8 @@ var PlayGame = (function (require) {
         self.resizeRepo.add({id: 'score_view_game'}, function () {
             scoreAnimator.resize(self.screenWidth, self.screenHeight);
         });
-        var shipCollision = new require.CanvasCollisionDetector(this.stage.getSubImage('ship'), shipDrawable);
-        var shieldsCollision = new require.CanvasCollisionDetector(this.stage.getSubImage('shields'), shieldsDrawable);
+        var shipCollision = new require.CanvasCollisionDetector(this.stage.getGraphic('ship'), shipDrawable);
+        var shieldsCollision = new require.CanvasCollisionDetector(this.stage.getGraphic('shields'), shieldsDrawable);
 
         var world = new require.GameWorld(this.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
             scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker, lifeDrawablesDict,
@@ -87,8 +88,8 @@ var PlayGame = (function (require) {
         self.resizeRepo.add(touchable, function () {
             require.changeTouchable(touchable, 0, 0, self.screenWidth, self.screenHeight);
         });
-        this.gameController.add(touchable,
-            energyStates.drainEnergy.bind(energyStates), energyStates.loadEnergy.bind(energyStates));
+        this.gameController.add(touchable, energyStates.drainEnergy.bind(energyStates),
+            energyStates.loadEnergy.bind(energyStates));
 
         //end scene todo move to own scene
         function endGame(points) {
@@ -120,13 +121,13 @@ var PlayGame = (function (require) {
 
             self.gameController.remove(touchable);
             var outOffSet = require.calcScreenConst(self.screenWidth, 3);
-            var barOut = self.stage.getPath(energyBarDrawable.x, energyBarDrawable.y,
-                energyBarDrawable.x, energyBarDrawable.y + outOffSet, 60, require.Transition.EASE_OUT_EXPO);
+            var barOut = self.stage.getPath(energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
+                    energyBarDrawable.y + outOffSet, 60, require.Transition.EASE_OUT_EXPO);
 
             self.resizeRepo.add(energyBarDrawable, function () {
                 var outOffSet = require.calcScreenConst(self.screenWidth, 3);
-                require.changePath(energyBarDrawable, energyBarDrawable.x, energyBarDrawable.y,
-                    energyBarDrawable.x, energyBarDrawable.y + outOffSet)
+                require.changePath(energyBarDrawable, energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
+                        energyBarDrawable.y + outOffSet)
             });
 
             self.stage.move(energyBarDrawable, barOut, function () {

@@ -14,10 +14,10 @@ var GetReady = (function (Transition, calcScreenConst, changeCoords, changePath,
         var self = this;
         self.resizeBus.add(GET_READY_SCENE, this.resize.bind(this));
         var heightThird = calcScreenConst(screenHeight, 3);
-        var readyWidth = self.stage.getSubImage(GET_READY).width;
-        self.readyDrawable = self.stage.getDrawable(- readyWidth, heightThird, GET_READY);
+        var readyWidth = self.stage.getGraphic(GET_READY).width;
+        self.readyDrawable = self.stage.getDrawable(-readyWidth, heightThird, GET_READY);
 
-        self.readyPath = self.stage.getPath(- readyWidth, heightThird, screenWidth + readyWidth, heightThird, 90,
+        self.readyPath = self.stage.getPath(-readyWidth, heightThird, screenWidth + readyWidth, heightThird, 90,
             Transition.EASE_OUT_IN_SIN);
 
         self.stage.move(self.readyDrawable, self.readyPath, function () {
@@ -34,11 +34,11 @@ var GetReady = (function (Transition, calcScreenConst, changeCoords, changePath,
 
     GetReady.prototype.resize = function (width, height) {
         var heightThird = calcScreenConst(height, 3);
-        var readyWidth = this.stage.getSubImage(GET_READY).width;
+        var readyWidth = this.stage.getGraphic(GET_READY).width;
         if (this.readyDrawable)
-            changeCoords(this.readyDrawable, - readyWidth, heightThird);
+            changeCoords(this.readyDrawable, -readyWidth, heightThird);
         if (this.readyPath)
-            changePath(this.readyPath, - readyWidth, heightThird, width + readyWidth, heightThird);
+            changePath(this.readyPath, -readyWidth, heightThird, width + readyWidth, heightThird);
 
         GameStuffHelper.resize(this.stage, this.sceneStorage, width, height);
     };

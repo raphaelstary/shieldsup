@@ -17,19 +17,21 @@ var OdometerView = (function () {
         sprite7_8 = this.stage.getSprite('7_to_8/7_to_8', 15, false);
         sprite8_9 = this.stage.getSprite('8_to_9/8_to_9', 15, false);
         sprite9_0 = this.stage.getSprite('9_to_0/9_to_0', 15, false);
-        this.countSprites = [sprite0_1, sprite1_2, sprite2_3, sprite3_4, sprite4_5, sprite5_6, sprite6_7, sprite7_8, sprite8_9, sprite9_0];
+        this.countSprites = [
+            sprite0_1, sprite1_2, sprite2_3, sprite3_4, sprite4_5, sprite5_6, sprite6_7, sprite7_8, sprite8_9, sprite9_0
+        ];
 
         this.countStatics = [
-            this.stage.getSubImage('numeral_0'),
-            this.stage.getSubImage('numeral_1'),
-            this.stage.getSubImage('numeral_2'),
-            this.stage.getSubImage('numeral_3'),
-            this.stage.getSubImage('numeral_4'),
-            this.stage.getSubImage('numeral_5'),
-            this.stage.getSubImage('numeral_6'),
-            this.stage.getSubImage('numeral_7'),
-            this.stage.getSubImage('numeral_8'),
-            this.stage.getSubImage('numeral_9')
+            this.stage.getGraphic('numeral_0'),
+            this.stage.getGraphic('numeral_1'),
+            this.stage.getGraphic('numeral_2'),
+            this.stage.getGraphic('numeral_3'),
+            this.stage.getGraphic('numeral_4'),
+            this.stage.getGraphic('numeral_5'),
+            this.stage.getGraphic('numeral_6'),
+            this.stage.getGraphic('numeral_7'),
+            this.stage.getGraphic('numeral_8'),
+            this.stage.getGraphic('numeral_9')
         ];
     }
 

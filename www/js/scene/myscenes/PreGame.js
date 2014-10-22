@@ -1,4 +1,5 @@
-var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath, changeTouchable, Repository) {
+var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath,
+    changeTouchable, Repository) {
     "use strict";
 
     function PreGame(stage, sceneStorage, tapController, fullScreen, messages, resizeBus, sounds) {
@@ -48,7 +49,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
         function getFadeOffSet() {
             if (self.fadeOffSet)
-                return - self.screenWidth;
+                return -self.screenWidth;
             return 0;
         }
 
@@ -59,6 +60,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         function getLogoX() {
             return getWidthHalf();
         }
+
         function getLogoY() {
             return calcScreenConst(self.screenHeight, 32, 7);
         }
@@ -69,11 +71,13 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
 
         function getShipStartY() {
-            return calcScreenConst(self.stage.getSubImage(SHIP).height, 2) + self.screenHeight;
+            return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + self.screenHeight;
         }
+
         function getShipX() {
             return getWidthHalf();
         }
+
         function getShipEndY() {
             return calcScreenConst(self.screenHeight, 2);
         }
@@ -101,8 +105,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
         var pressPlay = self.stage.getDrawable(shipX_widthHalf, getPlayY(), BUTTON_PRIM);
 
-        var pressPlayTxt = self.stage.getDrawableText(shipX_widthHalf, getPlayY(), 3, self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), 15,
-            FONT, FONT_COLOR);
+        var pressPlayTxt = self.stage.getDrawableText(shipX_widthHalf, getPlayY(), 3,
+            self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), 15, FONT, FONT_COLOR);
         var playTouchable = {id: 'ready_tap', x: pressPlay.getCornerX(), y: pressPlay.getCornerY(),
             width: pressPlay.getWidth(), height: pressPlay.getHeight()};
         self.resizeRepo.add(pressPlay, function () {
@@ -121,7 +125,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         function registerTapListener() {
             allTouchables.forEach(function (wrapper) {
                 changeTouchable(wrapper.touchable, wrapper.anchor.getCornerX(), wrapper.anchor.getCornerY(),
-                wrapper.anchor.getWidth(), wrapper.anchor.getHeight());
+                    wrapper.anchor.getWidth(), wrapper.anchor.getHeight());
 
                 self.tapController.add(wrapper.touchable, wrapper.fn);
             });
@@ -159,8 +163,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
             lightFrame = self.stage.drawFresh(xButton, bottomRaster, BUTTON_SEC);
 
-            credits = self.stage.getDrawableText(xButton, bottomRaster, 3, self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), 15,
-                FONT, FONT_COLOR, 0, 0.5);
+            credits = self.stage.getDrawableText(xButton, bottomRaster, 3,
+                self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), 15, FONT, FONT_COLOR, 0, 0.5);
             self.stage.draw(credits);
 
             var creditsTouchable = {id: 'credits_tap', x: lightFrame.getCornerX(), y: lightFrame.getCornerY(),
@@ -178,10 +182,10 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
             function goToCreditsScreen() {
                 self.sounds.play(CLICK);
                 credits.alpha = 1;
-                lightFrame.img = self.stage.getSubImage(BUTTON_SEC_ACTIVE);
+                lightFrame.img = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
                 window.setTimeout(function () {
                     credits.alpha = 0.5;
-                    lightFrame.img = self.stage.getSubImage(BUTTON_SEC);
+                    lightFrame.img = self.stage.getGraphic(BUTTON_SEC);
                 }, 1500);
                 var creditsScreen = new Credits(self.stage, self.tapController, self.messages, self.sounds);
 
@@ -203,9 +207,9 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
                 doTheShields = false;
                 self.stage.remove(shieldsDrawable);
                 self.resizeBus.add(CREDITS_SCENE, creditsScreen.resize.bind(creditsScreen));
-                creditsScreen.show(continuePreGame,
-                    [credits, lightFrame, pressPlay, pressPlayTxt, logoDrawable,
-                        shipDrawable, fireDrawable], self.screenWidth, self.screenHeight, setFadeOffSet);
+                creditsScreen.show(continuePreGame, [
+                    credits, lightFrame, pressPlay, pressPlayTxt, logoDrawable, shipDrawable, fireDrawable
+                ], self.screenWidth, self.screenHeight, setFadeOffSet);
             }
 
             registerTapListener();
@@ -219,7 +223,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         function startPlaying() {
             self.sounds.play(CLICK);
 
-            pressPlay.img = self.stage.getSubImage(BUTTON_PRIM_ACTIVE);
+            pressPlay.img = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
             pressPlayTxt.txt.color = BLACK;
             window.setTimeout(function () {
                 self.fullScreen.request();
@@ -241,7 +245,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
             self.stage.animateLater({item: shieldsDrawable, sprite: shieldsUpSprite, ready: function () {
 
-                shieldsDrawable.img = self.stage.getSubImage(SHIELDS);
+                shieldsDrawable.img = self.stage.getGraphic(SHIELDS);
                 self.stage.animateLater({item: shieldsDrawable, sprite: shieldsDownSprite, ready: function () {
                     self.stage.remove(shieldsDrawable);
                     startTimer = 20;
@@ -279,8 +283,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
                 return calcScreenConst(self.screenHeight, 6, 5);
             }
 
-            var dockShipToGamePosition = self.stage.getPath(shipDrawable.x, shipDrawable.y,
-                shipDrawable.x, getShipGamePositionY(), 30, Transition.EASE_IN_OUT_EXPO);
+            var dockShipToGamePosition = self.stage.getPath(shipDrawable.x, shipDrawable.y, shipDrawable.x,
+                getShipGamePositionY(), 30, Transition.EASE_IN_OUT_EXPO);
             self.resizeRepo.add(shipDrawable, function () {
                 changeCoords(shipDrawable, getShipX(), getShipEndY());
                 changeCoords(fireDrawable, getShipX(), getShipEndY());
@@ -307,7 +311,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
     };
 
     PreGame.prototype.next = function (nextScene, shipDrawable, fireDrawable, shieldsDrawable, shieldsUpSprite,
-                                       shieldsDownSprite) {
+        shieldsDownSprite) {
 
         this.sceneStorage.ship = shipDrawable;
         this.sceneStorage.fire = fireDrawable;
@@ -332,4 +336,5 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
     };
 
     return PreGame;
-})(Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath, changeTouchable, Repository);
+})(Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath, changeTouchable,
+    Repository);

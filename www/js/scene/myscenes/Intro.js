@@ -32,6 +32,7 @@ var Intro = (function ($) {
         ];
 
         var self = this;
+
         function updateYVelocity() {
             self.yVelocity = $.calcScreenConst(self.stage.height, 48);
         }
@@ -53,7 +54,7 @@ var Intro = (function ($) {
 
         function minusHeightFiveSixTeenth(height) {
             updateYVelocity();
-            return - $.calcScreenConst(height, 16, 5);
+            return -$.calcScreenConst(height, 16, 5);
         }
 
         this.speedos = [
@@ -66,7 +67,7 @@ var Intro = (function ($) {
         ];
         if (!this.logoDrawable)
             this.logoDrawable = {};
-        
+
         this.logoDrawable.y = $.add(y, irgendwasLogo)(this.stage.height);
         this.lastY = this.logoDrawable.y;
 
@@ -122,7 +123,7 @@ var Intro = (function ($) {
 
             speeeeeeed.y -= delta * 2;
 
-            if (speeeeeeed.y > self.stage.height + $.calcScreenConst(self.stage.getSubImage('speed').width, 2)) {
+            if (speeeeeeed.y > self.stage.height + $.calcScreenConst(self.stage.getGraphic('speed').width, 2)) {
                 self.stage.remove(speeeeeeed);
             }
         });
@@ -145,36 +146,38 @@ var Intro = (function ($) {
             });
 
             var scrollingBackGround = [
-                this.stage.moveFresh($.widthHalf, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthHalf, $.heightHalf,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
-                this.stage.moveFresh($.widthThird, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthThird, $.heightQuarter,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 0.75),
-                this.stage.moveFresh($.widthQuarter, $.add($.heightTwoThird, $.height), BACKGROUND_STAR, $.widthQuarter, $.heightTwoThird,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 1),
-                this.stage.moveFresh($.widthThreeQuarter, $.add($.heightThird, $.height), BACKGROUND_STAR, $.widthThreeQuarter, $.heightThird,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
-                this.stage.moveFresh($.widthTwoThird, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthTwoThird, $.heightHalf,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 0.75),
-                this.stage.moveFresh($.widthHalf, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthHalf, $.heightQuarter,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 1),
-                this.stage.moveFresh($.widthTwoThird, $.add($.heightThreeQuarter, $.height), BACKGROUND_STAR, $.widthTwoThird, $.heightThreeQuarter,
-                    120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5)
+                this.stage.moveFresh($.widthHalf, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthHalf,
+                    $.heightHalf, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
+                this.stage.moveFresh($.widthThird, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthThird,
+                    $.heightQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 0.75),
+                this.stage.moveFresh($.widthQuarter, $.add($.heightTwoThird, $.height), BACKGROUND_STAR, $.widthQuarter,
+                    $.heightTwoThird, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 1),
+                this.stage.moveFresh($.widthThreeQuarter, $.add($.heightThird, $.height), BACKGROUND_STAR,
+                    $.widthThreeQuarter, $.heightThird, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0,
+                    0.5),
+                this.stage.moveFresh($.widthTwoThird, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthTwoThird,
+                    $.heightHalf, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 0.75),
+                this.stage.moveFresh($.widthHalf, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthHalf,
+                    $.heightQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 1),
+                this.stage.moveFresh($.widthTwoThird, $.add($.heightThreeQuarter, $.height), BACKGROUND_STAR,
+                    $.widthTwoThird, $.heightThreeQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1,
+                    0, 0.5)
             ];
 
-            var gameLogoDrawable = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT,
-                font_30of480, GAME_LOGO_FONT, DARK_GRAY, 2);
-            var gameLogoDrawableHighlight = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT,
-                font_30of480, GAME_LOGO_FONT, WHITE, 3, undefined, 0, 0);
+            var gameLogoDrawable = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT, font_30of480, GAME_LOGO_FONT,
+                DARK_GRAY, 2);
+            var gameLogoDrawableHighlight = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT, font_30of480,
+                GAME_LOGO_FONT, WHITE, 3, undefined, 0, 0);
 
-            this.logoDrawable = self.stage.moveFreshText($.widthHalf, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480, LOGO_FONT, WHITE,
-                $.widthHalf, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN, false, function () {
+            this.logoDrawable = self.stage.moveFreshText($.widthHalf, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
+                LOGO_FONT, WHITE, $.widthHalf, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
+                false, function () {
                     self.stage.remove(self.logoDrawable);
                 }).drawable;
 
-            var presentsDrawable = self.stage.moveFreshText($.widthHalf, presentYStart, PRESENTS_TXT,
-                font_22of480, GAME_LOGO_FONT, LIGHT_GRAY,
-                $.widthHalf, $.add(yEnd, irgendwasLogo), 120,
-                $.Transition.EASE_OUT_IN_SIN, false, function () {
+            var presentsDrawable = self.stage.moveFreshText($.widthHalf, presentYStart, PRESENTS_TXT, font_22of480,
+                GAME_LOGO_FONT, LIGHT_GRAY, $.widthHalf, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
+                false, function () {
                     self.stage.remove(presentsDrawable);
                 }).drawable;
 
@@ -187,14 +190,12 @@ var Intro = (function ($) {
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
                 });
 
-            self.stage.moveLater(gameLogoDrawableHighlight, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, false,
-                undefined, undefined, 90, function () {
-                    self.stage.animateAlphaPattern(gameLogoDrawableHighlight,
-                        [
+            self.stage.moveLater(gameLogoDrawableHighlight, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD,
+                false, undefined, undefined, 90, function () {
+                    self.stage.animateAlphaPattern(gameLogoDrawableHighlight, [
                             {value: 1, duration: 30, easing: $.Transition.LINEAR},
                             {value: 0, duration: 30, easing: $.Transition.LINEAR}
-                        ],
-                        true);
+                    ], true);
                 });
         }
     };

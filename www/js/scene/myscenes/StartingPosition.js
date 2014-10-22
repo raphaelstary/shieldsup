@@ -1,4 +1,5 @@
-var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, GameStuffHelper, EnergyBarHelper, LifeHelper) {
+var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords,
+    changePath, GameStuffHelper, EnergyBarHelper, LifeHelper) {
     "use strict";
 
     function StartingPosition(stage, sceneStorage, resizeBus) {
@@ -34,6 +35,7 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
         function yTop() {
             return getTopRaster(self.screenHeight);
         }
+
         function lifeX() {
             return calcScreenConst(self.screenWidth, 10);
         }
@@ -59,14 +61,14 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
             changePath(lifeOneWrapper.path, lifeStartX(), yTop(), lifeX(), yTop());
         });
 
-        var lifeOffSet = self.stage.getSubImage(PLAYER_LIFE).width;
+        var lifeOffSet = self.stage.getGraphic(PLAYER_LIFE).width;
 
         function lifeTwoEndX() {
             return lifeX() + lifeOffSet;
         }
 
-        var lifeTwoWrapper = self.stage.moveFreshLater(lifeStartX(), yTop(), PLAYER_LIFE, lifeTwoEndX(), yTop(),
-            speed, spacing, 15, false, function () {
+        var lifeTwoWrapper = self.stage.moveFreshLater(lifeStartX(), yTop(), PLAYER_LIFE, lifeTwoEndX(), yTop(), speed,
+            spacing, 15, false, function () {
                 self.resizeRepo.add(lifeTwoWrapper.drawable, function () {
                     LifeHelper.resizeLifeTwo(lifeTwoWrapper.drawable, self.stage, self.screenWidth, self.screenHeight);
                 });
@@ -84,7 +86,8 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
         var lifeThreeWrapper = self.stage.moveFreshLater(lifeStartX(), yTop(), PLAYER_LIFE, lifeThreeEndX(), yTop(),
             speed, spacing, 10, false, function () {
                 self.resizeRepo.add(lifeThreeWrapper.drawable, function () {
-                    LifeHelper.resizeLifeThree(lifeThreeWrapper.drawable, self.stage, self.screenWidth, self.screenHeight);
+                    LifeHelper.resizeLifeThree(lifeThreeWrapper.drawable, self.stage, self.screenWidth,
+                        self.screenHeight);
                 });
                 goodToGo();
             });
@@ -102,14 +105,14 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
             return x - x * 2;
         }
 
-        var energyBarWrapper = self.stage.moveFresh(energyStartX(), yBottom(), ENERGY_FULL, energyX(), yBottom(),
-            speed, spacing, false, function () {
-                self.resizeRepo.add(energyBarWrapper.drawable, function() {
+        var energyBarWrapper = self.stage.moveFresh(energyStartX(), yBottom(), ENERGY_FULL, energyX(), yBottom(), speed,
+            spacing, false, function () {
+                self.resizeRepo.add(energyBarWrapper.drawable, function () {
                     EnergyBarHelper.resize(energyBarWrapper.drawable, self.screenWidth, self.screenHeight);
                 });
                 goodToGo();
             });
-        self.resizeRepo.add(energyBarWrapper.drawable, function() {
+        self.resizeRepo.add(energyBarWrapper.drawable, function () {
             changeCoords(energyBarWrapper.drawable, energyStartX(), yBottom());
             changePath(energyBarWrapper.path, energyStartX(), yBottom(), energyX(), yBottom());
         });
@@ -158,20 +161,25 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
                     CountHelper.resize4th(fourthDigitWrapper.drawable, self.stage, self.screenWidth, self.screenHeight);
                 });
                 goodToGo();
-        });
+            });
         self.resizeRepo.add(fourthDigitWrapper.drawable, function () {
             CountHelper.resize4thWrapper(fourthDigitWrapper, self.stage, self.screenWidth, self.screenHeight);
         });
 
         var numberOfCallbacks = 8;
+
         function goodToGo() {
             if (--numberOfCallbacks > 0)
                 return;
 
             var lifeDrawablesDict = {1: lifeOneWrapper.drawable, 2: lifeTwoWrapper.drawable,
                 3: lifeThreeWrapper.drawable};
-            var countDrawables = [firstDigitWrapper.drawable, secondDigitWrapper.drawable, thirdDigitWrapper.drawable,
-                fourthDigitWrapper.drawable];
+            var countDrawables = [
+                firstDigitWrapper.drawable,
+                secondDigitWrapper.drawable,
+                thirdDigitWrapper.drawable,
+                fourthDigitWrapper.drawable
+            ];
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);
         }
@@ -197,4 +205,5 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, GameStuffHelper, EnergyBarHelper, LifeHelper);
+})(Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, GameStuffHelper,
+    EnergyBarHelper, LifeHelper);

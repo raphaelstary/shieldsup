@@ -1,9 +1,9 @@
 var GameWorld = (function () {
     "use strict";
 
-    function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator, shipCollision,
-                       shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, removeFromRepo,
-                       endGame, sounds) {
+    function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
+        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, removeFromRepo,
+        endGame, sounds) {
         this.stage = stage;
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
@@ -51,7 +51,7 @@ var GameWorld = (function () {
 
                 this.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
                     if (self.shieldsOn) {
-                        self.shieldsDrawable.img = self.stage.getSubImage('shields');
+                        self.shieldsDrawable.img = self.stage.getGraphic('shields');
                     } else {
                         self.stage.remove(self.shieldsDrawable);
                     }
@@ -80,7 +80,7 @@ var GameWorld = (function () {
                 if (this.lives <= 0) {
                     this.endGame(this.points);
                 }
-//                    continue;
+                //                    continue;
             }
         }
 
@@ -94,7 +94,7 @@ var GameWorld = (function () {
                 this.shieldsCollision.isHit(star)) {
                 self.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
                     if (self.shieldsOn) {
-                        self.shieldsDrawable.img = self.stage.getSubImage('shields');
+                        self.shieldsDrawable.img = self.stage.getGraphic('shields');
                     } else {
                         self.stage.remove(self.shieldsDrawable);
                     }
@@ -122,7 +122,7 @@ var GameWorld = (function () {
                 this.stage.remove(star);
                 self.removeFromRepo(star);
                 delete this.trackedStars[key];
-//                    continue;
+                //                    continue;
             }
         }
     };
@@ -139,11 +139,11 @@ var GameWorld = (function () {
             self.sounds.play('asteroid-explosion');
             self.stage.animate(this.shipDrawable, this.shipHullHitSprite, function () {
                 if (self.lives == self.initialLives - 1) {
-                    self.shipDrawable.img = self.stage.getSubImage('damaged_ship_2');
+                    self.shipDrawable.img = self.stage.getGraphic('damaged_ship_2');
                 } else if (self.lives == self.initialLives - 2) {
-                    self.shipDrawable.img = self.stage.getSubImage('damaged_ship_3');
+                    self.shipDrawable.img = self.stage.getGraphic('damaged_ship_3');
                 } else {
-                    self.shipDrawable.img = self.stage.getSubImage('ship');
+                    self.shipDrawable.img = self.stage.getGraphic('ship');
                 }
             });
         }
