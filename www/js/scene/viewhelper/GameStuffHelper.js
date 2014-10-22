@@ -39,4 +39,4 @@ var GameStuffHelper = (function (FireHelper, ShipHelper, BackGroundHelper, Speed
         resize: resizeSharedGameStuff,
         draw: drawSharedGameStuff
     };
-})(FireHelper, ShipHelper, BackGroundHelper, SpeedStripesHelper, CountHelper, EnergyBarHelper, LifeHelper, ShieldsHelper);
+})(FireHelper, ShipHelper, BackGroundHelper, drawSpeedStripes, CountHelper, EnergyBarHelper, LifeHelper, ShieldsHelper);
