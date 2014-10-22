@@ -28,7 +28,8 @@ var StageFactory = (function ($) {
             $.Touchables.get,
             $.fetchDrawableIntoTouchable,
             resize.getWidth(),
-            resize.getHeight());
+            resize.getHeight(),
+            new $.CallbackTimer());
 
         resize.add('stage', stage.resize.bind(stage));
 
@@ -65,5 +66,6 @@ var StageFactory = (function ($) {
     ResizableStageDirector: ResizableStageDirector,
     Repository: Repository,
     Touchables: Touchables,
-    fetchDrawableIntoTouchable: fetchDrawableIntoTouchable
+    fetchDrawableIntoTouchable: fetchDrawableIntoTouchable,
+    CallbackTimer: CallbackTimer
 });
