@@ -27,7 +27,8 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         delete this.collisions[collisionDetector.drawable.id];
     };
 
-    ResizableStageDirector.prototype.drawFresh = function (xFn, yFn, imgName, zIndex, resizeIsDependentOnThisDrawables, alpha, rotation, scale) {
+    ResizableStageDirector.prototype.drawFresh = function (xFn, yFn, imgName, zIndex, resizeIsDependentOnThisDrawables,
+        alpha, rotation, scale) {
         var drawable = this.stage.drawFresh(xFn(this.width), yFn(this.height), imgName, zIndex, alpha, rotation, scale);
         this.resizer.add(drawable, function (width, height) {
             changeCoords(drawable, xFn(width), yFn(height));
@@ -36,7 +37,8 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         return drawable;
     };
 
-    ResizableStageDirector.prototype.drawFreshWithInput = function (xFn, yFn, imgName, zIndex, resizeIsDependentOnThisDrawables, alpha, rotation, scale) {
+    ResizableStageDirector.prototype.drawFreshWithInput = function (xFn, yFn, imgName, zIndex,
+        resizeIsDependentOnThisDrawables, alpha, rotation, scale) {
         var drawable = this.stage.drawFresh(xFn(this.width), yFn(this.height), imgName, zIndex, alpha, rotation, scale);
         var self = this;
         var input = self.createInput(drawable);
@@ -52,8 +54,7 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
     };
 
     ResizableStageDirector.prototype.drawText = function (xFn, yFn, text, sizeFn, font, color, zIndex,
-                                                          resizeIsDependentOnThisDrawables, rotation, alpha,
-                                                          maxLineLength, lineHeight) {
+        resizeIsDependentOnThisDrawables, rotation, alpha, maxLineLength, lineHeight) {
         var drawable = this.stage.drawText(xFn(this.width), yFn(this.height), text, sizeFn(this.width, this.height),
             font, color, zIndex, rotation, alpha, maxLineLength, lineHeight);
         this.resizer.add(drawable, function (width, height) {
@@ -64,7 +65,8 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         return drawable;
     };
 
-    ResizableStageDirector.prototype.drawTextWithInput = function (xFn, yFn, text, sizeFn, font, color, zIndex, resizeIsDependentOnThisDrawables, alpha, rotation, maxLineLength, lineHeight) {
+    ResizableStageDirector.prototype.drawTextWithInput = function (xFn, yFn, text, sizeFn, font, color, zIndex,
+        resizeIsDependentOnThisDrawables, alpha, rotation, maxLineLength, lineHeight) {
         var drawable = this.stage.getDrawableText(xFn(this.width), yFn(this.height), zIndex, text,
             sizeFn(this.width, this.height), font, color, rotation, alpha, maxLineLength, lineHeight);
         this.stage.draw(drawable);
@@ -162,7 +164,7 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
     };
 
     ResizableStageDirector.prototype.moveFresh = function (xFn, yFn, imgName, endXFn, endYFn, speed, spacing, loop,
-                                                           callback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale) {
+        callback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale) {
         var self = this;
         var registerResizeAfterMove = function () {
             self.resizer.add(wrapper.drawable, function (width, height) {
@@ -173,8 +175,7 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         var enhancedCallBack;
         if (callback) {
             if (loop)
-                enhancedCallBack = callback;
-            else {
+                enhancedCallBack = callback; else {
                 enhancedCallBack = function () {
                     callback();
                     registerResizeAfterMove();
@@ -182,13 +183,12 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
             }
         } else {
             if (loop)
-                enhancedCallBack = undefined;
-            else
+                enhancedCallBack = undefined; else
                 enhancedCallBack = registerResizeAfterMove;
         }
 
-        var wrapper = this.stage.moveFresh(xFn(this.width), yFn(this.height), imgName, endXFn(this.width), endYFn(this.height),
-            speed, spacing, loop, enhancedCallBack, zIndex, alpha, rotation, scale);
+        var wrapper = this.stage.moveFresh(xFn(this.width), yFn(this.height), imgName, endXFn(this.width),
+            endYFn(this.height), speed, spacing, loop, enhancedCallBack, zIndex, alpha, rotation, scale);
 
         this.resizer.add(wrapper.drawable, function (width, height) {
             changeCoords(wrapper.drawable, xFn(width), yFn(height));
@@ -198,8 +198,9 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         return wrapper;
     };
 
-    ResizableStageDirector.prototype.moveFreshText = function (xFn, yFn, text, sizeFn, font, color, endXFn, endYFn, speed, spacing, loop,
-                                                               callback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, maxLineLength, lineHeight) {
+    ResizableStageDirector.prototype.moveFreshText = function (xFn, yFn, text, sizeFn, font, color, endXFn, endYFn,
+        speed, spacing, loop, callback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, maxLineLength,
+        lineHeight) {
 
         var self = this;
         var registerResizeAfterMove = function () {
@@ -219,8 +220,9 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
             enhancedCallBack = registerResizeAfterMove;
         }
 
-        var wrapper = this.stage.moveFreshText(xFn(this.width), yFn(this.height), text, sizeFn(this.width, this.height), font, color, endXFn(this.width), endYFn(this.height),
-            speed, spacing, loop, enhancedCallBack, zIndex, alpha, rotation, maxLineLength, lineHeight);
+        var wrapper = this.stage.moveFreshText(xFn(this.width), yFn(this.height), text, sizeFn(this.width, this.height),
+            font, color, endXFn(this.width), endYFn(this.height), speed, spacing, loop, enhancedCallBack, zIndex, alpha,
+            rotation, maxLineLength, lineHeight);
 
         this.resizer.add(wrapper.drawable, function (width, height) {
             changeCoords(wrapper.drawable, xFn(width), yFn(height));
@@ -233,8 +235,7 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
     };
 
     ResizableStageDirector.prototype.moveFreshRoundTrip = function (xFn, yFn, imgName, endXFn, endYFn, speed, spacing,
-                                                                    loopTheTrip, callbackTo, callbackReturn,
-                                                                    resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale) {
+        loopTheTrip, callbackTo, callbackReturn, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale) {
         var self = this;
         var registerResizeReturn = function () {
             self.resizer.add(wrapper.drawable, function (width, height) {
@@ -283,18 +284,17 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         }
 
         var wrapper = this.stage.moveFreshRoundTrip(xFn(this.width), yFn(this.height), imgName, endXFn(this.width),
-            endYFn(this.height), speed, spacing, loopTheTrip, enhancedCallBackTo,
-            enhancedCallBackFrom, zIndex, alpha, rotation, scale);
+            endYFn(this.height), speed, spacing, loopTheTrip, enhancedCallBackTo, enhancedCallBackFrom, zIndex, alpha,
+            rotation, scale);
 
         initResize();
 
         return wrapper;
     };
 
-    ResizableStageDirector.prototype.moveFreshLater = function (xFn, yFn, imgName, endXFn, endYFn, speed, spacing, delay,
-                                                                loop,  callback, startedMovingCallback,
-                                                                resizeIsDependentOnThisDrawables, zIndex, alpha,
-                                                                rotation, scale) {
+    ResizableStageDirector.prototype.moveFreshLater = function (xFn, yFn, imgName, endXFn, endYFn, speed, spacing,
+        delay, loop, callback, startedMovingCallback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation,
+        scale) {
         var self = this;
         this.timer.doLater(function () {
             if (startedMovingCallback) {
@@ -306,8 +306,8 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         }, delay);
     };
 
-    ResizableStageDirector.prototype.move = function (drawable, endXFn, endYFn, speed, spacing, loop,
-                                                              callback, resizeIsDependentOnThisDrawables) {
+    ResizableStageDirector.prototype.move = function (drawable, endXFn, endYFn, speed, spacing, loop, callback,
+        resizeIsDependentOnThisDrawables) {
         var pathId = {id: drawable.id + '_1'};
         var self = this;
         var registerResizeAfterMove = function () {
@@ -327,8 +327,8 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
             enhancedCallBack = registerResizeAfterMove;
         }
 
-        var path = this.stage.getPath(drawable.x, drawable.y, endXFn(this.width), endYFn(this.height),
-            speed, spacing, loop);
+        var path = this.stage.getPath(drawable.x, drawable.y, endXFn(this.width), endYFn(this.height), speed, spacing,
+            loop);
 
         this.stage.move(drawable, path, enhancedCallBack);
 
@@ -343,13 +343,13 @@ var ResizableStageDirector = (function (changeCoords, changePath, PxCollisionDet
         }, resizeIsDependentOnThisDrawables);
     };
 
-    ResizableStageDirector.prototype.moveRoundTrip = function (drawable, pathTo, pathReturn, loopTheTrip, callbackTo,
-                                                               callbackReturn) {
+    ResizableStageDirector.prototype.moveRoundTrip = function (drawable, endXFn, endYFn, speed, spacing, loopTheTrip,
+        callbackTo, callbackReturn, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale) {
         //todo implement
     };
 
-    ResizableStageDirector.prototype.moveLater = function (drawable, endXFn, endYFn, speed, spacing, loop,
-                                                           callback, resizeIsDependentOnThisDrawables, duration, laterCallback) {
+    ResizableStageDirector.prototype.moveLater = function (drawable, endXFn, endYFn, speed, spacing, loop, callback,
+        resizeIsDependentOnThisDrawables, duration, laterCallback) {
         var self = this;
         this.timer.doLater(function () {
             if (laterCallback) {
