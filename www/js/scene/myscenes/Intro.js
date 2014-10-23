@@ -59,7 +59,7 @@ var Intro = (function ($) {
 
         this.speedos = [
             this.stage.drawFresh($.widthQuarter, $.zero, SPEED, 1),
-            this.stage.drawFresh(widthSevenEighth, $.changeSign($.heightFifth), SPEED, 1),
+            this.stage.drawFresh(widthSevenEighth, $.changeSign($.heightTwoFifth), SPEED, 1),
             this.stage.drawFresh(widthSixTeenth, $.changeSign($.heightTwoFifth), SPEED, 1),
             this.stage.drawFresh(widthSevenSixTeenth, $.changeSign($.heightThreeFifth), SPEED, 1),
             this.stage.drawFresh(widthSixTeenth, $.changeSign($.heightFourFifth), SPEED, 1),
