@@ -164,11 +164,6 @@ var Intro = (function ($) {
                     0, 0.5)
             ];
 
-            var gameLogoDrawable = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT, font_30of480, GAME_LOGO_FONT,
-                DARK_GRAY, 2);
-            var gameLogoDrawableHighlight = this.stage.drawText($.widthHalf, y, GAME_LOGO_TXT, font_30of480,
-                GAME_LOGO_FONT, WHITE, 3, undefined, 0, 0);
-
             this.logoDrawable = self.stage.moveFreshText($.widthHalf, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
                 LOGO_FONT, WHITE, $.widthHalf, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
                 false, function () {
@@ -182,17 +177,19 @@ var Intro = (function ($) {
                 }).drawable;
 
             var speedStripes;
-            self.stage.moveLater(gameLogoDrawable, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, false,
+            var wrapperLogo = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, font_30of480, GAME_LOGO_FONT,
+                DARK_GRAY, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false,
                 function () {
-                    self.next(self.nextScene, gameLogoDrawable, speedStripes, scrollingBackGround);
-                }, undefined, 90, function () {
+                    self.next(self.nextScene, wrapperLogo.drawable, speedStripes, scrollingBackGround);
+                }, function () {
                     var delay = 30;
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
-                });
+                }, undefined, 2);
 
-            self.stage.moveLater(gameLogoDrawableHighlight, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD,
-                false, undefined, undefined, 90, function () {
-                    self.stage.animateAlphaPattern(gameLogoDrawableHighlight, [
+            var wrapperLogoHighlight = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, font_30of480,
+                GAME_LOGO_FONT, WHITE, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
+                function () {
+                    self.stage.animateAlphaPattern(wrapperLogoHighlight.drawable, [
                             {value: 1, duration: 30, easing: $.Transition.LINEAR},
                             {value: 0, duration: 30, easing: $.Transition.LINEAR}
                     ], true);
