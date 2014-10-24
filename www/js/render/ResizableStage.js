@@ -1,4 +1,4 @@
-var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, inheritMethods) {
+var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, inheritMethods, TextWrapper) {
     "use strict";
 
     function ResizableStage(stage, gfx, resizer, createInput, changeInput, width, height, timer) {
@@ -60,7 +60,7 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
             font, color, zIndex, rotation, alpha, maxLineLength, lineHeight);
         this.resizer.add(drawable, function (width, height) {
             changeCoords(drawable, xFn(width), yFn(height));
-            drawable.txt.size = sizeFn(width, height);
+            drawable.data.size = sizeFn(width, height);
         }, resizeIsDependentOnThisDrawables);
 
         return drawable;
@@ -75,7 +75,7 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         var self = this;
         this.resizer.add(drawable, function (width, height) {
             changeCoords(drawable, xFn(width), yFn(height));
-            drawable.txt.size = sizeFn(width, height);
+            drawable.data.size = sizeFn(width, height);
             self.changeInput(input, drawable);
         }, resizeIsDependentOnThisDrawables);
 
@@ -153,7 +153,7 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         var registerResizeAfterMove = function () {
             self.resizer.add(wrapper.drawable, function (width, height) {
                 changeCoords(wrapper.drawable, endXFn(width), endYFn(height));
-                wrapper.drawable.txt.size = sizeFn(width, height);
+                wrapper.drawable.data.size = sizeFn(width, height);
             }, resizeIsDependentOnThisDrawables);
         };
 
@@ -173,7 +173,7 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
 
         this.resizer.add(wrapper.drawable, function (width, height) {
             changeCoords(wrapper.drawable, xFn(width), yFn(height));
-            wrapper.drawable.txt.size = sizeFn(width, height);
+            wrapper.drawable.data.size = sizeFn(width, height);
             changePath(wrapper.path, xFn(width), yFn(height), endXFn(width), endYFn(height));
         }, resizeIsDependentOnThisDrawables);
 
@@ -287,7 +287,7 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         var registerResizeAfterMove = function () {
             self.resizer.remove(pathId);
 
-            if (drawable.txt) {
+            if (drawable.data instanceof TextWrapper) {
                 var afterFontSize_id = {id: drawable.id + '_2'};
                 self.resizer.add(afterFontSize_id, function (width, height) {
                     changeCoords(drawable, endXFn(width), endYFn(height));
@@ -376,4 +376,4 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
     };
 
     return ResizableStage;
-})(changeCoords, changePath, CanvasImageCollisionDetector, inheritMethods);
+})(changeCoords, changePath, CanvasImageCollisionDetector, inheritMethods, TextWrapper);
