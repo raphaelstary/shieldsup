@@ -344,8 +344,8 @@ var InGameTutorial = (function (require) {
                     self.sounds.play(CLICK);
                     self.tapController.remove(okTouchable);
 
-                    okButton.img = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
-                    okButtonTxt.txt.color = BLACK;
+                    okButton.data = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
+                    okButtonTxt.data.color = BLACK;
                     require.window.setTimeout(function () {
                         removeEnergyStuff();
                         registerGameController();

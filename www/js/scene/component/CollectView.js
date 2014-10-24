@@ -20,11 +20,11 @@ var CollectView = (function () {
 
         function setRightShipImgAfterAnimation() {
             if (lives == self.initialLives - 1) {
-                self.shipDrawable.img = self.stage.getGraphic(DAMAGED_SHIP_2);
+                self.shipDrawable.data = self.stage.getGraphic(DAMAGED_SHIP_2);
             } else if (lives == self.initialLives - 2) {
-                self.shipDrawable.img = self.stage.getGraphic(DAMAGED_SHIP_3);
+                self.shipDrawable.data = self.stage.getGraphic(DAMAGED_SHIP_3);
             } else {
-                self.shipDrawable.img = self.stage.getGraphic(SHIP);
+                self.shipDrawable.data = self.stage.getGraphic(SHIP);
             }
         }
     };

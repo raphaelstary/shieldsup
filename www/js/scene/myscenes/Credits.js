@@ -127,30 +127,30 @@ var Credits = (function (Transition, window, calcScreenConst, changeCoords, chan
             });
 
             var a_txt = self.stage.getDrawableText(calcScreenConst(self.screenWidth, 2) + self.screenWidth,
-                    calcScreenConst(self.screenHeight, 4) - game_txt.txt.size, 3,
+                calcScreenConst(self.screenHeight, 4) - game_txt.data.size, 3,
                 self.messages.get(CREDITS_MSG_KEY, A_MSG), 25, FONT_SPECIAL, LIGHT_GREY);
             self.stage.draw(a_txt);
             self.resizeRepoDrawables.add(a_txt, function () {
                 if (self.drawablesAtNewPosition) {
                     changeCoords(a_txt, calcScreenConst(self.screenWidth, 2),
-                            calcScreenConst(self.screenHeight, 4) - game_txt.txt.size);
+                        calcScreenConst(self.screenHeight, 4) - game_txt.data.size);
                 } else {
                     changeCoords(a_txt, calcScreenConst(self.screenWidth, 2) + self.screenWidth,
-                            calcScreenConst(self.screenHeight, 4) - game_txt.txt.size);
+                        calcScreenConst(self.screenHeight, 4) - game_txt.data.size);
                 }
             });
 
             var by_txt = self.stage.getDrawableText(calcScreenConst(self.screenWidth, 2) + self.screenWidth,
-                    calcScreenConst(self.screenHeight, 4) + game_txt.txt.size, 3,
+                calcScreenConst(self.screenHeight, 4) + game_txt.data.size, 3,
                 self.messages.get(CREDITS_MSG_KEY, BY_MSG), 25, FONT_SPECIAL, LIGHT_GREY);
             self.stage.draw(by_txt);
             self.resizeRepoDrawables.add(by_txt, function () {
                 if (self.drawablesAtNewPosition) {
                     changeCoords(by_txt, calcScreenConst(self.screenWidth, 2),
-                            calcScreenConst(self.screenHeight, 4) + game_txt.txt.size)
+                        calcScreenConst(self.screenHeight, 4) + game_txt.data.size)
                 } else {
                     changeCoords(by_txt, calcScreenConst(self.screenWidth, 2) + self.screenWidth,
-                            calcScreenConst(self.screenHeight, 4) + game_txt.txt.size)
+                        calcScreenConst(self.screenHeight, 4) + game_txt.data.size)
                 }
             });
 
@@ -169,32 +169,32 @@ var Credits = (function (Transition, window, calcScreenConst, changeCoords, chan
 
             fb = self.stage.drawFresh(calcScreenConst(self.screenWidth, 2) -
                     calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4) + self.screenWidth,
-                    calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3), FACEBOOK);
+                calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3), FACEBOOK);
             self.resizeRepoDrawables.add(fb, function () {
                 if (self.drawablesAtNewPosition) {
                     changeCoords(fb, calcScreenConst(self.screenWidth, 2) -
                             calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4),
-                            calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3));
+                        calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3));
                 } else {
                     changeCoords(fb, calcScreenConst(self.screenWidth, 2) -
                             calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4) + self.screenWidth,
-                            calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3))
+                        calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3))
                 }
             });
 
 
             twitter = self.stage.drawFresh(calcScreenConst(self.screenWidth, 2) +
                     calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4) + self.screenWidth,
-                    calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3), TWITTER);
+                calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3), TWITTER);
             self.resizeRepoDrawables.add(twitter, function () {
                 if (self.drawablesAtNewPosition) {
                     changeCoords(twitter, calcScreenConst(self.screenWidth, 2) +
                             calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4),
-                            calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3));
+                        calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3));
                 } else {
                     changeCoords(twitter, calcScreenConst(self.screenWidth, 2) +
                             calcScreenConst(self.stage.getGraphic(FACEBOOK).width, 5, 4) + self.screenWidth,
-                            calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.img.height, 2, 3))
+                        calcScreenConst(self.screenHeight, 2) + calcScreenConst(letsplayIO.data.height, 2, 3))
                 }
             });
 
@@ -325,7 +325,7 @@ var Credits = (function (Transition, window, calcScreenConst, changeCoords, chan
 
         function endScene() {
             self.sounds.play(CLICK);
-            back.img = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
+            back.data = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
             backTxt.alpha = 1;
             unRegisterTapListener(touchables);
             fadeIn(creditsDrawables);

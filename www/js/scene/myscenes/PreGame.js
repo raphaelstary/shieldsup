@@ -182,10 +182,10 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
             function goToCreditsScreen() {
                 self.sounds.play(CLICK);
                 credits.alpha = 1;
-                lightFrame.img = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
+                lightFrame.data = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
                 window.setTimeout(function () {
                     credits.alpha = 0.5;
-                    lightFrame.img = self.stage.getGraphic(BUTTON_SEC);
+                    lightFrame.data = self.stage.getGraphic(BUTTON_SEC);
                 }, 1500);
                 var creditsScreen = new Credits(self.stage, self.tapController, self.messages, self.sounds);
 
@@ -223,8 +223,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         function startPlaying() {
             self.sounds.play(CLICK);
 
-            pressPlay.img = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
-            pressPlayTxt.txt.color = BLACK;
+            pressPlay.data = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
+            pressPlayTxt.data.color = BLACK;
             window.setTimeout(function () {
                 self.fullScreen.request();
                 endOfScreen();
@@ -245,7 +245,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
             self.stage.animateLater({item: shieldsDrawable, sprite: shieldsUpSprite, ready: function () {
 
-                shieldsDrawable.img = self.stage.getGraphic(SHIELDS);
+                shieldsDrawable.data = self.stage.getGraphic(SHIELDS);
                 self.stage.animateLater({item: shieldsDrawable, sprite: shieldsDownSprite, ready: function () {
                     self.stage.remove(shieldsDrawable);
                     startTimer = 20;

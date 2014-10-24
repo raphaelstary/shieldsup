@@ -42,7 +42,7 @@ var OdometerView = (function () {
         var currentSprite = this.countSprites[oldValue];
 
         this.stage.animate(currentDrawable, currentSprite, function () {
-            currentDrawable.img = self.countStatics[newValue];
+            currentDrawable.data = self.countStatics[newValue];
         });
     };
 

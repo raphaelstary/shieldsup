@@ -51,7 +51,7 @@ var GameWorld = (function () {
 
                 this.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
                     if (self.shieldsOn) {
-                        self.shieldsDrawable.img = self.stage.getGraphic('shields');
+                        self.shieldsDrawable.data = self.stage.getGraphic('shields');
                     } else {
                         self.stage.remove(self.shieldsDrawable);
                     }
@@ -94,7 +94,7 @@ var GameWorld = (function () {
                 this.shieldsCollision.isHit(star)) {
                 self.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
                     if (self.shieldsOn) {
-                        self.shieldsDrawable.img = self.stage.getGraphic('shields');
+                        self.shieldsDrawable.data = self.stage.getGraphic('shields');
                     } else {
                         self.stage.remove(self.shieldsDrawable);
                     }
@@ -139,11 +139,11 @@ var GameWorld = (function () {
             self.sounds.play('asteroid-explosion');
             self.stage.animate(this.shipDrawable, this.shipHullHitSprite, function () {
                 if (self.lives == self.initialLives - 1) {
-                    self.shipDrawable.img = self.stage.getGraphic('damaged_ship_2');
+                    self.shipDrawable.data = self.stage.getGraphic('damaged_ship_2');
                 } else if (self.lives == self.initialLives - 2) {
-                    self.shipDrawable.img = self.stage.getGraphic('damaged_ship_3');
+                    self.shipDrawable.data = self.stage.getGraphic('damaged_ship_3');
                 } else {
-                    self.shipDrawable.img = self.stage.getGraphic('ship');
+                    self.shipDrawable.data = self.stage.getGraphic('ship');
                 }
             });
         }

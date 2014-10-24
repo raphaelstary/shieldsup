@@ -24,7 +24,7 @@ var EnergyStateMachine = (function () {
             self.sounds.play('shields-up');
             self.world.shieldsOn = true;
             self.stage.animate(self.shieldsDrawable, self.shieldsUpSprite, function () {
-                self.shieldsDrawable.img = self.stage.getGraphic('shields');
+                self.shieldsDrawable.data = self.stage.getGraphic('shields');
             });
         }
 
@@ -37,7 +37,7 @@ var EnergyStateMachine = (function () {
             self.stage.animate(self.energyBarDrawable, self.energyDrainSprite, self.energyEmpty.bind(self));
 
             self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].time = position;
-            self.energyBarDrawable.img = self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].sprite.frames[position];
+            self.energyBarDrawable.data = self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].sprite.frames[position];
         }
 
         turnShieldsOn();
@@ -48,7 +48,7 @@ var EnergyStateMachine = (function () {
         var self = this;
 
         function setEnergyBarEmpty() {
-            self.energyBarDrawable.img = self.stage.getGraphic('energy_empty');
+            self.energyBarDrawable.data = self.stage.getGraphic('energy_empty');
         }
 
         this.turnShieldsOff();
@@ -75,7 +75,7 @@ var EnergyStateMachine = (function () {
             self.stage.animate(self.energyBarDrawable, self.energyLoadSprite, self.energyFull.bind(self));
 
             self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].time = position;
-            self.energyBarDrawable.img = self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].sprite.frames[position];
+            self.energyBarDrawable.data = self.stage.spriteAnimations.animationsDict[self.energyBarDrawable.id].sprite.frames[position];
         }
 
         if (this.world.shieldsOn) {
@@ -88,7 +88,7 @@ var EnergyStateMachine = (function () {
         var self = this;
 
         function setEnergyBarFull() {
-            self.energyBarDrawable.img = self.stage.getGraphic('energy_full');
+            self.energyBarDrawable.data = self.stage.getGraphic('energy_full');
         }
 
         setEnergyBarFull();

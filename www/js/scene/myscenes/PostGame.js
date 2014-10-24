@@ -250,8 +250,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                             self.sounds.play(CLICK);
                             // end event
                             self.tapController.remove(touchable);
-                            playDrawable.img = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
-                            playTxt.txt.color = BLACK;
+                            playDrawable.data = self.stage.getGraphic(BUTTON_PRIM_ACTIVE);
+                            playTxt.data.color = BLACK;
 
                             var playPathOut = self.stage.getPath(playDrawable.x, playDrawable.y, playDrawable.x,
                                     playDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
