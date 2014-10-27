@@ -93,27 +93,10 @@ var PlayGame = (function (require) {
 
         //end scene todo move to own scene
         function endGame(points) {
-            var key, elem;
-            for (key in trackedAsteroids) {
-                if (!trackedAsteroids.hasOwnProperty(key)) {
-                    continue;
-                }
-                elem = trackedAsteroids[key];
-                self.stage.remove(elem);
-            }
-            for (key in trackedStars) {
-                if (!trackedStars.hasOwnProperty(key)) {
-                    continue;
-                }
-                elem = trackedStars[key];
-                self.stage.remove(elem);
-            }
-
-            for (key in lifeDrawablesDict) {
-                if (lifeDrawablesDict.hasOwnProperty(key)) {
-                    self.stage.remove(lifeDrawablesDict[key]);
-                }
-            }
+            var remove = self.stage.remove.bind(self.stage);
+            require.iterateEntries(trackedAsteroids, remove);
+            require.iterateEntries(trackedStars, remove);
+            require.iterateEntries(lifeDrawablesDict, remove);
 
             self.gameLoop.remove('shake');
             self.gameLoop.remove('collisions');
@@ -171,6 +154,5 @@ var PlayGame = (function (require) {
     GameStuffHelper: GameStuffHelper,
     Repository: Repository,
     changeTouchable: changeTouchable,
-    changeCoords: changeCoords,
-    changePath: changePath
+    changeCoords: changeCoords, changePath: changePath, iterateEntries: iterateEntries
 });

@@ -1,4 +1,4 @@
-var GameWorld = (function () {
+var GameWorld = (function (Object) {
     "use strict";
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
@@ -39,11 +39,7 @@ var GameWorld = (function () {
 
     GameWorld.prototype.checkCollisions = function () {
         var self = this;
-        var key;
-        for (key in this.trackedAsteroids) {
-            if (!this.trackedAsteroids.hasOwnProperty(key)) {
-                continue;
-            }
+        Object.keys(this.trackedAsteroids).forEach(function (key) {
             var asteroid = this.trackedAsteroids[key];
 
             if (this.shieldsOn && needPreciseCollisionDetection(this.shieldsDrawable, asteroid) &&
@@ -66,7 +62,7 @@ var GameWorld = (function () {
                 this.sounds.play('asteroid-explosion');
                 self.removeFromRepo(asteroid);
                 delete this.trackedAsteroids[key];
-                continue;
+                return;
             }
 
             if (needPreciseCollisionDetection(this.shipDrawable, asteroid) && this.shipCollision.isHit(asteroid)) {
@@ -80,14 +76,11 @@ var GameWorld = (function () {
                 if (this.lives <= 0) {
                     this.endGame(this.points);
                 }
-                //                    continue;
+                // return;
             }
-        }
+        }, this);
 
-        for (key in this.trackedStars) {
-            if (!this.trackedStars.hasOwnProperty(key)) {
-                continue;
-            }
+        Object.keys(this.trackedStars).forEach(function (key) {
             var star = this.trackedStars[key];
 
             if (this.shieldsOn && needPreciseCollisionDetection(this.shieldsDrawable, star) &&
@@ -108,7 +101,7 @@ var GameWorld = (function () {
                 self.sounds.play('star-explosion');
                 self.removeFromRepo(star);
                 delete this.trackedStars[key];
-                continue;
+                return;
             }
 
             if (needPreciseCollisionDetection(this.shipDrawable, star) && this.shipCollision.isHit(star)) {
@@ -122,9 +115,9 @@ var GameWorld = (function () {
                 this.stage.remove(star);
                 self.removeFromRepo(star);
                 delete this.trackedStars[key];
-                //                    continue;
+                // return;
             }
-        }
+        }, this);
     };
 
     GameWorld.prototype._shipGotHit = function () {
@@ -154,4 +147,4 @@ var GameWorld = (function () {
     }
 
     return GameWorld;
-})();
+})(Object);
