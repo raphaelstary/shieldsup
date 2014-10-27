@@ -1,4 +1,5 @@
-var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, inheritMethods, TextWrapper) {
+var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, inheritMethods, TextWrapper,
+    iterateEntries, Object) {
     "use strict";
 
     function ResizableStage(stage, gfx, resizer, createInput, changeInput, width, height, timer) {
@@ -93,9 +94,9 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
             this.gfx.resize(width, height);
         this.resizer.call(width, height);
 
-        for (var key in this.collisions) {
-            this.collisions[key].resize();
-        }
+        iterateEntries(this.collisions, function (detector) {
+            detector.resize();
+        });
     };
 
     ResizableStage.prototype.animateFresh = function (xFn, yFn, imgPathName, numberOfFrames, loop,
@@ -250,11 +251,9 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
             var wrapper = self.moveFresh(xFn, yFn, imgName, endXFn, endYFn, speed, spacing, loop, callback,
                 resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, scale);
 
-            for (var key in wrapper) {
-                if (wrapper.hasOwnProperty(key)) {
-                    returnObject[key] = wrapper[key];
-                }
-            }
+            Object.keys(wrapper).forEach(function (key) {
+                returnObject[key] = wrapper[key];
+            });
         }, delay);
         return returnObject;
     };
@@ -268,11 +267,10 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
             var wrapper = self.moveFreshText(xFn, yFn, text, sizeFn, font, color, endXFn, endYFn, speed, spacing, loop,
                 callback, resizeIsDependentOnThisDrawables, zIndex, alpha, rotation, maxLineLength, lineHeight);
 
-            for (var key in wrapper) {
-                if (wrapper.hasOwnProperty(key)) {
-                    returnObject[key] = wrapper[key];
-                }
-            }
+            Object.keys(wrapper).forEach(function (key) {
+                returnObject[key] = wrapper[key];
+            });
+
             if (startedMovingCallback) {
                 startedMovingCallback();
             }
@@ -376,4 +374,4 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
     };
 
     return ResizableStage;
-})(changeCoords, changePath, CanvasImageCollisionDetector, inheritMethods, TextWrapper);
+})(changeCoords, changePath, CanvasImageCollisionDetector, inheritMethods, TextWrapper, iterateEntries, Object);
