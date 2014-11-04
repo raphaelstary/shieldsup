@@ -7,7 +7,7 @@ var BasicAnimations = (function (Object) {
 
     BasicAnimations.prototype.animate = function (drawable, setter, animation, callback) {
         this.dict[drawable.id] = {
-            drawable: drawable, setter: setter, animation: animation, ready: callback, time: 0
+            setter: setter, animation: animation, ready: callback, time: 0
         };
     };
 
