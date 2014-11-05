@@ -10,7 +10,7 @@ var SpriteAnimations = (function (Object) {
         drawable.data = sprite.frames[0];
 
         this.animationsDict[drawable.id] = {
-            drawable: drawable, sprite: sprite, ready: callback, time: 0
+            drawable: drawable, sprite: sprite, callback: callback, time: 0
         };
     };
 
@@ -30,8 +30,8 @@ var SpriteAnimations = (function (Object) {
                     delete this.animationsDict[key];
                 }
 
-                if (animation.ready) {
-                    animation.ready();
+                if (animation.callback) {
+                    animation.callback();
                 }
             }
         }, this);

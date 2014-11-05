@@ -12,10 +12,10 @@ var SpriteTimer = (function () {
 
             if (toAdd.duration < toAdd.time) {
 
-                this.spriteAnimations.animate(toAdd.addable.item, toAdd.addable.sprite, toAdd.addable.ready);
+                this.spriteAnimations.animate(toAdd.addable.drawable, toAdd.addable.sprite, toAdd.addable.callback);
 
-                if (toAdd.ready) {
-                    toAdd.ready();
+                if (toAdd.callback) {
+                    toAdd.callback();
                 }
 
                 this.todos.splice(i, 1);
@@ -30,8 +30,7 @@ var SpriteTimer = (function () {
         this.todos.push({
             addable: drawableToAdd,
             duration: duration,
-            time: 0,
-            ready: callback
+            time: 0, callback: callback
         });
     };
 
