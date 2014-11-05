@@ -243,10 +243,12 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
         function shieldsAnimation() {
 
-            self.stage.animateLater({item: shieldsDrawable, sprite: shieldsUpSprite, ready: function () {
+            self.stage.animateLater({
+                drawable: shieldsDrawable, sprite: shieldsUpSprite, callback: function () {
 
                 shieldsDrawable.data = self.stage.getGraphic(SHIELDS);
-                self.stage.animateLater({item: shieldsDrawable, sprite: shieldsDownSprite, ready: function () {
+                    self.stage.animateLater({
+                        drawable: shieldsDrawable, sprite: shieldsDownSprite, callback: function () {
                     self.stage.remove(shieldsDrawable);
                     startTimer = 20;
                     if (doTheShields) {

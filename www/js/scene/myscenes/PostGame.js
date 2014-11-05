@@ -269,7 +269,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                                 highScoreDigits[0].drawable.y, highScoreDigits[0].drawable.x,
                                     highScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             highScoreDigits.forEach(function (elem, index) {
-                                self.stage.moveLater({item: elem.drawable, path: highScorePathOut, ready: function () {
+                                self.stage.moveLater({
+                                    drawable: elem.drawable, path: highScorePathOut, callback: function () {
                                     self.stage.remove(elem.drawable);
                                 }}, 5 + index);
                             });
@@ -282,7 +283,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
 
                             var bestPathOut = self.stage.getPath(bestDrawable.x, bestDrawable.y, bestDrawable.x,
                                     bestDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
-                            self.stage.moveLater({item: bestDrawable, path: bestPathOut, ready: function () {
+                            self.stage.moveLater({
+                                drawable: bestDrawable, path: bestPathOut, callback: function () {
                                 self.stage.remove(bestDrawable);
                             }}, 10);
                             self.resizeRepo.add(bestDrawable, function () {
@@ -294,7 +296,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                             var newScorePathOut = self.stage.getPath(0, newScoreDigits[0].drawable.y, 0,
                                     newScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             newScoreDigits.forEach(function (elem, index) {
-                                self.stage.moveLater({item: elem.drawable, path: newScorePathOut, ready: function () {
+                                self.stage.moveLater({
+                                    drawable: elem.drawable, path: newScorePathOut, callback: function () {
                                     self.stage.remove(elem.drawable);
                                 }}, 15 + index);
                             });
@@ -306,7 +309,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
 
                             var scorePathOut = self.stage.getPath(scoreDrawable.x, scoreDrawable.y, scoreDrawable.x,
                                     scoreDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
-                            self.stage.moveLater({item: scoreDrawable, path: scorePathOut, ready: function () {
+                            self.stage.moveLater({
+                                drawable: scoreDrawable, path: scorePathOut, callback: function () {
                                 self.stage.remove(scoreDrawable);
                             }}, 20);
                             self.resizeRepo.add(scoreDrawable, function () {
@@ -323,7 +327,8 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                                 changePath(gameOverPathOut, gameOverDrawable.x, gameOverDrawable.y, gameOverDrawable.x,
                                         gameOverDrawable.y + self.screenHeight);
                             });
-                            self.stage.moveLater({item: gameOverDrawable, path: gameOverPathOut, ready: function () {
+                            self.stage.moveLater({
+                                drawable: gameOverDrawable, path: gameOverPathOut, callback: function () {
                                 self.stage.remove(gameOverDrawable);
 
                                 self.resizeBus.remove(POST_GAME_SCENE);
