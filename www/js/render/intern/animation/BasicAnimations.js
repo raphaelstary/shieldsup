@@ -7,7 +7,7 @@ var BasicAnimations = (function (Object) {
 
     BasicAnimations.prototype.animate = function (drawable, setter, animation, callback) {
         this.dict[drawable.id] = {
-            setter: setter, animation: animation, ready: callback, time: 0
+            setter: setter, animation: animation, ready: callback, time: 0, active: true
         };
     };
 
@@ -15,14 +15,18 @@ var BasicAnimations = (function (Object) {
         Object.keys(this.dict).forEach(function (key) {
             var wrapper = this.dict[key];
 
+            if (!wrapper.active)
+                return;
+
             var animation = wrapper.animation;
             if (animation.duration > wrapper.time) {
 
-                wrapper.setter(animation.timingFn(wrapper.time, animation.start, animation.length, animation.duration));
+                var value = animation.timingFn(wrapper.time, animation.start, animation.length, animation.duration);
+                wrapper.setter(value, wrapper.time);
                 wrapper.time++;
 
             } else {
-                wrapper.setter(animation.end);
+                wrapper.setter(animation.end, wrapper.time);
 
                 if (animation.loop) {
                     wrapper.time = 0;
@@ -43,6 +47,14 @@ var BasicAnimations = (function (Object) {
 
     BasicAnimations.prototype.has = function (drawable) {
         return this.dict[drawable.id] !== undefined;
+    };
+
+    BasicAnimations.prototype.pause = function (drawable) {
+        this.dict[drawable.id].active = false;
+    };
+
+    BasicAnimations.prototype.play = function (drawable) {
+        this.dict[drawable.id].active = true;
     };
 
     return BasicAnimations;
