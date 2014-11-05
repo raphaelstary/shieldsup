@@ -33,7 +33,7 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         sounds.load(audioInfo);
 
         return {
-            message: new UniversalTranslator(locales),
+            messages: new UniversalTranslator(locales),
             sounds: sounds,
             gfxCache: AtlasResourceHelper.process(atlases)
         };
