@@ -24,9 +24,15 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
     };
 
     Stage.prototype.getDrawableText = function (x, y, zIndex, msg, size, fontFamily, color, rotation, alpha,
-        maxLineLength, lineHeight) {
+        maxLineLength, lineHeight, scale) {
         return Drawables.getTxt(++this._id, x, y, zIndex, msg, size, fontFamily, color, rotation, alpha, maxLineLength,
-            lineHeight);
+            lineHeight, scale);
+    };
+
+    Stage.prototype.getDrawableRectangle = function (x, y, width, height, color, filled, lineWidth, zIndex, alpha,
+        rotation, scale) {
+        return Drawables.getRect(++this._id, x, y, width, height, color, filled, lineWidth, zIndex, alpha, rotation,
+            scale);
     };
 
     Stage.prototype.getSprite = function (imgPathName, numberOfFrames, loop) {
@@ -48,8 +54,7 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.animate(drawable, sprite);
 
         return {
-            drawable: drawable,
-            sprite: sprite
+            drawable: drawable, sprite: sprite
         };
     };
 
@@ -88,8 +93,7 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.move(drawable, path, callback);
 
         return {
-            drawable: drawable,
-            path: path
+            drawable: drawable, path: path
         };
     };
 
@@ -102,8 +106,7 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.move(drawable, path, callback);
 
         return {
-            drawable: drawable,
-            path: path
+            drawable: drawable, path: path
         };
     };
 
@@ -116,9 +119,7 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.moveRoundTrip(drawable, pathTo, pathReturn, loopTheTrip, callbackTo, callbackReturn);
 
         return {
-            drawable: drawable,
-            pathTo: pathTo,
-            pathReturn: pathReturn
+            drawable: drawable, pathTo: pathTo, pathReturn: pathReturn
         }
     };
 
@@ -131,8 +132,7 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.moveLater(movedItem, delay, startedMovingCallback);
 
         return {
-            drawable: drawable,
-            path: path
+            drawable: drawable, path: path
         };
     };
 
@@ -174,9 +174,18 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
     };
 
     Stage.prototype.drawText = function (x, y, text, size, font, color, zIndex, rotation, alpha, maxLineLength,
-        lineHeight) {
+        lineHeight, scale) {
         var drawable = this.getDrawableText(x, y, zIndex, text, size, font, color, rotation, alpha, maxLineLength,
-            lineHeight);
+            lineHeight, scale);
+        this.draw(drawable);
+
+        return drawable;
+    };
+
+    Stage.prototype.drawRectangle = function (x, y, width, height, color, filled, lineWidth, zIndex, alpha, rotation,
+        scale) {
+        var drawable = this.getDrawableRectangle(x, y, width, height, color, filled, lineWidth, zIndex, alpha, rotation,
+            scale);
         this.draw(drawable);
 
         return drawable;
