@@ -54,7 +54,8 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.animate(drawable, sprite);
 
         return {
-            drawable: drawable, sprite: sprite
+            drawable: drawable,
+            sprite: sprite
         };
     };
 
@@ -93,7 +94,8 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.move(drawable, path, callback);
 
         return {
-            drawable: drawable, path: path
+            drawable: drawable,
+            path: path
         };
     };
 
@@ -106,7 +108,8 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.move(drawable, path, callback);
 
         return {
-            drawable: drawable, path: path
+            drawable: drawable,
+            path: path
         };
     };
 
@@ -119,7 +122,9 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         this.moveRoundTrip(drawable, pathTo, pathReturn, loopTheTrip, callbackTo, callbackReturn);
 
         return {
-            drawable: drawable, pathTo: pathTo, pathReturn: pathReturn
+            drawable: drawable,
+            pathTo: pathTo,
+            pathReturn: pathReturn
         }
     };
 
@@ -128,11 +133,16 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
         var drawable = this.getDrawable(x, y, imgName, zIndex, alpha, rotation, scale);
         var path = this.getPath(x, y, endX, endY, speed, spacing, loop);
 
-        var movedItem = {drawable: drawable, path: path, callback: callback};
+        var movedItem = {
+            drawable: drawable,
+            path: path,
+            callback: callback
+        };
         this.moveLater(movedItem, delay, startedMovingCallback);
 
         return {
-            drawable: drawable, path: path
+            drawable: drawable,
+            path: path
         };
     };
 

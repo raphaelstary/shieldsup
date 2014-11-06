@@ -51,7 +51,8 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         }, resizeIsDependentOnThisDrawables);
 
         return {
-            drawable: drawable, input: input
+            drawable: drawable,
+            input: input
         };
     };
 
@@ -81,7 +82,8 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         }, resizeIsDependentOnThisDrawables);
 
         return {
-            drawable: drawable, input: input
+            drawable: drawable,
+            input: input
         };
     };
 
@@ -118,7 +120,8 @@ var ResizableStage = (function (changeCoords, changePath, PxCollisionDetector, i
         }, resizeDependencies);
 
         return {
-            drawable: drawable, input: input
+            drawable: drawable,
+            input: input
         };
     };
 

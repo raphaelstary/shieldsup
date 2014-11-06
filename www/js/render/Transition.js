@@ -24,7 +24,7 @@ var Transition = (function (Math) {
             return startValue + changeInValue;
 
         var period = duration * .3, s = changeInValue < Math.abs(changeInValue) ? period / 4 :
-            period / (2 * Math.PI) * Math.asin(changeInValue / changeInValue);
+        period / (2 * Math.PI) * Math.asin(changeInValue / changeInValue);
 
         return changeInValue * Math.pow(2, -10 * currentTime) *
             Math.sin((currentTime * duration - s) * (2 * Math.PI) / period) + changeInValue + startValue;

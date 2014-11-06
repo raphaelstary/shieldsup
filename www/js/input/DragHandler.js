@@ -80,7 +80,10 @@ var DragHandler = (function (isHit, iterateEntries, iterateSomeEntries) {
 
     DragHandler.prototype.add = function (touchable, startCallback, moveCallback, endCallback) {
         this.elements[touchable.id] = {
-            touchable: touchable, start: startCallback, move: moveCallback, end: endCallback
+            touchable: touchable,
+            start: startCallback,
+            move: moveCallback,
+            end: endCallback
         };
     };
 

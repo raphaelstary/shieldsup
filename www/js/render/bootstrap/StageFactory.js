@@ -27,8 +27,8 @@ var StageFactory = (function ($) {
 
         return new $.Stage(gfxCache, motions, new $.MotionTimer(motions, timer), new $.MotionHelper(motions),
             spriteAnimations, new $.SpriteTimer(spriteAnimations, timer), animations, animationHelper,
-            new $.BasicAnimationTimer(animations, timer),
-            new $.PropertyAnimations(animations, animationHelper), renderer, timer);
+            new $.BasicAnimationTimer(animations, timer), new $.PropertyAnimations(animations, animationHelper),
+            renderer, timer);
     }
 
     function createResponsive(gfxCache, renderer, resize) {
@@ -65,7 +65,8 @@ var StageFactory = (function ($) {
     Stage: Stage,
     MotionHelper: MotionHelper,
     MotionTimer: MotionTimer,
-    Motions: Motions, SpriteTimer: SpriteTimer,
+    Motions: Motions,
+    SpriteTimer: SpriteTimer,
     SpriteAnimations: SpriteAnimations,
     PropertyAnimations: PropertyAnimations,
     BasicAnimationHelper: AnimationHelper,

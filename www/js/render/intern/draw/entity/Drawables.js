@@ -28,6 +28,8 @@ var Drawables = (function (Drawable, TextWrapper, Rectangle) {
     }
 
     return {
-        getGraphic: createNewGfx, getTxt: createNewText, getRect: createRectangle
+        getGraphic: createNewGfx,
+        getTxt: createNewText,
+        getRect: createRectangle
     };
 })(Drawable, TextWrapper, Rectangle);

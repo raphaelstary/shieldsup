@@ -10,7 +10,10 @@ var SpriteAnimations = (function (Object) {
         drawable.data = sprite.frames[0];
 
         this.animationsDict[drawable.id] = {
-            drawable: drawable, sprite: sprite, callback: callback, time: 0
+            drawable: drawable,
+            sprite: sprite,
+            callback: callback,
+            time: 0
         };
     };
 

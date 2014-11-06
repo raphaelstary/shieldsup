@@ -21,6 +21,7 @@ var Paths = (function (Math, Line, BezierCurve, Vectors, Animations) {
     }
 
     return {
-        getLine: createLine, getCurve: createNewBezierCurvePath
+        getLine: createLine,
+        getCurve: createNewBezierCurvePath
     };
 })(Math, Line, BezierCurve, Vectors, Animations);
