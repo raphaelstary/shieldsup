@@ -11,8 +11,7 @@ var Odometer = (function (Math) {
         var self = this;
         var scoreString = score.toString();
 
-        var digitPosition = 0,
-            overflow = 0;
+        var digitPosition = 0, overflow = 0;
 
         for (var i = scoreString.length - 1; i > -1; i--) {
             addDigit(parseInt(scoreString[i], 10));

@@ -44,4 +44,4 @@ var GetReady = (function (Transition, calcScreenConst, changeCoords, changePath,
     };
 
     return GetReady;
-})(Transition, calcScreenConst, changeCoords, changePath, GameStuffHelper);
+})(Transition, calcScreenConst, changeCoords, changePath, drawSharedGameStuff);

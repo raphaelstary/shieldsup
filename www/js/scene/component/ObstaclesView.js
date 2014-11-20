@@ -36,7 +36,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
             self.resizeRepo.add(star, function () {
                 var startRange = self._getStarStartRange();
                 var newX = Math.floor((self._getStarEndRange(startRange) - startRange) / 100 * relativePosition +
-                    startRange);
+                startRange);
                 changeCoords(star, newX, -starHeightHalf);
                 changePath(path, newX, -starHeightHalf, newX, self.screenHeight + starHeightHalf);
                 path.duration = calcScreenConst(self.screenHeight, 480, speed)
@@ -83,7 +83,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
             this.resizeRepo.add(asteroid.drawable, function () {
                 var startRange = self._getAsteroidStartRange(imgName);
                 var newX = Math.floor((self._getAsteroidEndRange(startRange) - startRange) / 100 * relativePosition +
-                    startRange);
+                startRange);
                 changeCoords(asteroid.drawable, newX, -asteroidHeightHalf);
                 changePath(asteroid.path, newX, -asteroidHeightHalf, newX, self.screenHeight + asteroidHeightHalf);
                 asteroid.path.duration = calcScreenConst(self.screenHeight, 480, speed);

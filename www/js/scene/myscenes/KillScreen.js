@@ -78,4 +78,4 @@ var KillScreen = (function (Transition, calcScreenConst, changeCoords, changePat
     };
 
     return KillScreen;
-})(Transition, calcScreenConst, changeCoords, changePath, heightHalf, GameStuffHelper);
+})(Transition, calcScreenConst, changeCoords, changePath, heightHalf, drawSharedGameStuff);

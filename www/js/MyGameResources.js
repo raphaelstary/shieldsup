@@ -1,13 +1,7 @@
 var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, URL) {
     "use strict";
 
-    var audioInfo,
-        specialGameFont,
-        gameFont,
-        logoFont,
-        locales,
-        atlases = [],
-        images = {};
+    var audioInfo, specialGameFont, gameFont, logoFont, locales, atlases = [], images = {};
 
     function registerFiles(resourceLoader) {
         audioInfo = resourceLoader.addJSON('data/audio.json');
@@ -24,9 +18,18 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
     function processFiles() {
 
         addFontToDOM([
-            {name: 'SpecialGameFont', url: URL.createObjectURL(specialGameFont.blob)},
-            {name: 'GameFont', url: URL.createObjectURL(gameFont.blob)},
-            {name: 'LogoFont', url: URL.createObjectURL(logoFont.blob)}
+            {
+                name: 'SpecialGameFont',
+                url: URL.createObjectURL(specialGameFont.blob)
+            },
+            {
+                name: 'GameFont',
+                url: URL.createObjectURL(gameFont.blob)
+            },
+            {
+                name: 'LogoFont',
+                url: URL.createObjectURL(logoFont.blob)
+            }
         ]);
 
         var sounds = new SoundSpriteManager();

@@ -108,7 +108,7 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                 for (i = 0; i < pointsInString.length; i++) {
                     x = getScoreDynamicX(i);
                     var scoreDigitDrawable = self.stage.moveFreshLater(x, getNewScoreStartY(),
-                            NUMERAL + pointsInString[i], x, getNewScoreY(), 60, Transition.EASE_OUT_BOUNCE, 5, false,
+                        NUMERAL + pointsInString[i], x, getNewScoreY(), 60, Transition.EASE_OUT_BOUNCE, 5, false,
                         resizeScore);
                     newScoreDigits.push(scoreDigitDrawable);
                 }
@@ -238,7 +238,13 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                 var playWrapper = self.stage.moveFreshLater(getWidthHalf(), playStartY, BUTTON_PRIM, getWidthHalf(),
                     playY, 60, Transition.EASE_OUT_BOUNCE, 20, false, function () {
 
-                        var touchable = {id: 'play_again_tap', x: 0, y: 0, width: self.screenWidth, height: self.screenHeight};
+                        var touchable = {
+                            id: 'play_again_tap',
+                            x: 0,
+                            y: 0,
+                            width: self.screenWidth,
+                            height: self.screenHeight
+                        };
 
                         self.resizeRepo.add(playDrawable, function () {
                             changeCoords(playDrawable, getWidthHalf(), getPlayY());
@@ -254,7 +260,7 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                             playTxt.data.color = BLACK;
 
                             var playPathOut = self.stage.getPath(playDrawable.x, playDrawable.y, playDrawable.x,
-                                    playDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                                playDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             self.stage.move(playDrawable, playPathOut, function () {
                                 self.stage.remove(playDrawable);
                                 self.stage.remove(playTxt);
@@ -267,56 +273,68 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
 
                             var highScorePathOut = self.stage.getPath(highScoreDigits[0].drawable.x,
                                 highScoreDigits[0].drawable.y, highScoreDigits[0].drawable.x,
-                                    highScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                                highScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             highScoreDigits.forEach(function (elem, index) {
                                 self.stage.moveLater({
-                                    drawable: elem.drawable, path: highScorePathOut, callback: function () {
-                                    self.stage.remove(elem.drawable);
-                                }}, 5 + index);
+                                    drawable: elem.drawable,
+                                    path: highScorePathOut,
+                                    callback: function () {
+                                        self.stage.remove(elem.drawable);
+                                    }
+                                }, 5 + index);
                             });
                             self.resizeRepo.add(highScoreDigits[0].drawable, function () {
                                 realHighScoreResizing();
                                 changePath(highScorePathOut, highScoreDigits[0].drawable.x,
                                     highScoreDigits[0].drawable.y, highScoreDigits[0].drawable.x,
-                                        highScoreDigits[0].drawable.y + self.screenHeight);
+                                    highScoreDigits[0].drawable.y + self.screenHeight);
                             });
 
                             var bestPathOut = self.stage.getPath(bestDrawable.x, bestDrawable.y, bestDrawable.x,
-                                    bestDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                                bestDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             self.stage.moveLater({
-                                drawable: bestDrawable, path: bestPathOut, callback: function () {
-                                self.stage.remove(bestDrawable);
-                            }}, 10);
+                                drawable: bestDrawable,
+                                path: bestPathOut,
+                                callback: function () {
+                                    self.stage.remove(bestDrawable);
+                                }
+                            }, 10);
                             self.resizeRepo.add(bestDrawable, function () {
                                 realBestResizing();
                                 changePath(bestPathOut, bestDrawable.x, bestDrawable.y, bestDrawable.x,
-                                        bestDrawable.y + self.screenHeight);
+                                    bestDrawable.y + self.screenHeight);
                             });
 
                             var newScorePathOut = self.stage.getPath(0, newScoreDigits[0].drawable.y, 0,
-                                    newScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                                newScoreDigits[0].drawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             newScoreDigits.forEach(function (elem, index) {
                                 self.stage.moveLater({
-                                    drawable: elem.drawable, path: newScorePathOut, callback: function () {
-                                    self.stage.remove(elem.drawable);
-                                }}, 15 + index);
+                                    drawable: elem.drawable,
+                                    path: newScorePathOut,
+                                    callback: function () {
+                                        self.stage.remove(elem.drawable);
+                                    }
+                                }, 15 + index);
                             });
                             self.resizeRepo.add(newScoreDigits[0].drawable, function () {
                                 realScoreResizing();
                                 changePath(newScorePathOut, 0, newScoreDigits[0].drawable.y, 0,
-                                        newScoreDigits[0].drawable.y + self.screenHeight);
+                                    newScoreDigits[0].drawable.y + self.screenHeight);
                             });
 
                             var scorePathOut = self.stage.getPath(scoreDrawable.x, scoreDrawable.y, scoreDrawable.x,
-                                    scoreDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                                scoreDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
                             self.stage.moveLater({
-                                drawable: scoreDrawable, path: scorePathOut, callback: function () {
-                                self.stage.remove(scoreDrawable);
-                            }}, 20);
+                                drawable: scoreDrawable,
+                                path: scorePathOut,
+                                callback: function () {
+                                    self.stage.remove(scoreDrawable);
+                                }
+                            }, 20);
                             self.resizeRepo.add(scoreDrawable, function () {
                                 realScoreTxtResizing();
                                 changePath(scorePathOut, scoreDrawable.x, scoreDrawable.y, scoreDrawable.x,
-                                        scoreDrawable.y + self.screenHeight);
+                                    scoreDrawable.y + self.screenHeight);
                             });
 
                             var gameOverPathOut = self.stage.getPath(gameOverDrawable.x, gameOverDrawable.y,
@@ -325,16 +343,19 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
                             self.resizeRepo.add(gameOverDrawable, function () {
                                 realGameOverResizing();
                                 changePath(gameOverPathOut, gameOverDrawable.x, gameOverDrawable.y, gameOverDrawable.x,
-                                        gameOverDrawable.y + self.screenHeight);
+                                    gameOverDrawable.y + self.screenHeight);
                             });
                             self.stage.moveLater({
-                                drawable: gameOverDrawable, path: gameOverPathOut, callback: function () {
-                                self.stage.remove(gameOverDrawable);
+                                drawable: gameOverDrawable,
+                                path: gameOverPathOut,
+                                callback: function () {
+                                    self.stage.remove(gameOverDrawable);
 
-                                self.resizeBus.remove(POST_GAME_SCENE);
-                                delete self.resizeRepo;
-                                nextScene();
-                            }}, 25, function () {
+                                    self.resizeBus.remove(POST_GAME_SCENE);
+                                    delete self.resizeRepo;
+                                    nextScene();
+                                }
+                            }, 25, function () {
                                 if (points > parseInt(allTimeHighScore, 10)) {
                                     localStorage.setItem(ALL_TIME_HIGH_SCORE, points);
                                 }

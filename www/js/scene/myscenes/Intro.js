@@ -14,6 +14,7 @@ var Intro = (function ($) {
     var LOGO_FONT = 'LogoFont';
     var GAME_LOGO_TXT = 'SHIELDS UP';
     var PRESENTS_TXT = 'PRESENTS';
+    var GAME_FONT = 'GameFont';
     var GAME_LOGO_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
     var LIGHT_GRAY = '#D3D3D3';
@@ -84,14 +85,6 @@ var Intro = (function ($) {
 
     function font_97of480(width, height) {
         return $.calcScreenConst(height, 480, 97);
-    }
-
-    function font_22of480(width, height) {
-        return $.calcScreenConst(height, 480, 22);
-    }
-
-    function font_30of480(height) {
-        return $.calcScreenConst(height, 480, 30);
     }
 
     function y(height) {
@@ -170,15 +163,15 @@ var Intro = (function ($) {
                     self.stage.remove(self.logoDrawable);
                 }).drawable;
 
-            var presentsDrawable = self.stage.moveFreshText($.widthHalf, presentYStart, PRESENTS_TXT, font_22of480,
-                GAME_LOGO_FONT, LIGHT_GRAY, $.widthHalf, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
+            var presentsDrawable = self.stage.moveFreshText($.widthHalf, presentYStart, PRESENTS_TXT, $.fontSize_30,
+                GAME_FONT, LIGHT_GRAY, $.widthHalf, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
                 false, function () {
                     self.stage.remove(presentsDrawable);
                 }).drawable;
 
             var speedStripes;
-            var wrapperLogo = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, font_30of480, GAME_LOGO_FONT,
-                DARK_GRAY, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false,
+            var wrapperLogo = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, $.fontSize_15,
+                GAME_LOGO_FONT, DARK_GRAY, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false,
                 function () {
                     self.next(self.nextScene, wrapperLogo.drawable, speedStripes, scrollingBackGround);
                 }, function () {
@@ -186,12 +179,19 @@ var Intro = (function ($) {
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
                 }, undefined, 2);
 
-            var wrapperLogoHighlight = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, font_30of480,
+            var wrapperLogoHighlight = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, $.fontSize_15,
                 GAME_LOGO_FONT, WHITE, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
                 function () {
                     self.stage.animateAlphaPattern(wrapperLogoHighlight.drawable, [
-                            {value: 1, duration: 30, easing: $.Transition.LINEAR},
-                            {value: 0, duration: 30, easing: $.Transition.LINEAR}
+                        {
+                            value: 1,
+                            duration: 30,
+                            easing: $.Transition.LINEAR
+                        }, {
+                            value: 0,
+                            duration: 30,
+                            easing: $.Transition.LINEAR
+                        }
                     ], true);
                 });
         }
@@ -240,5 +240,7 @@ var Intro = (function ($) {
     width: width,
     height: height,
     add: add,
-    subtract: subtract
+    subtract: subtract,
+    fontSize_15: fontSize_15,
+    fontSize_30: fontSize_30
 });

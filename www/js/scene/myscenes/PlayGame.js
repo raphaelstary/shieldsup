@@ -84,7 +84,13 @@ var PlayGame = (function (require) {
         var energyStates = new require.EnergyStateMachine(this.stage, world, shieldsDrawable, shieldsUpSprite,
             shieldsDownSprite, energyBarDrawable, this.sounds);
 
-        var touchable = {id: 'shields_up', x: 0, y: 0, width: self.screenWidth, height: self.screenHeight};
+        var touchable = {
+            id: 'shields_up',
+            x: 0,
+            y: 0,
+            width: self.screenWidth,
+            height: self.screenHeight
+        };
         self.resizeRepo.add(touchable, function () {
             require.changeTouchable(touchable, 0, 0, self.screenWidth, self.screenHeight);
         });
@@ -105,12 +111,12 @@ var PlayGame = (function (require) {
             self.gameController.remove(touchable);
             var outOffSet = require.calcScreenConst(self.screenWidth, 3);
             var barOut = self.stage.getPath(energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
-                    energyBarDrawable.y + outOffSet, 60, require.Transition.EASE_OUT_EXPO);
+                energyBarDrawable.y + outOffSet, 60, require.Transition.EASE_OUT_EXPO);
 
             self.resizeRepo.add(energyBarDrawable, function () {
                 var outOffSet = require.calcScreenConst(self.screenWidth, 3);
                 require.changePath(energyBarDrawable, energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
-                        energyBarDrawable.y + outOffSet)
+                    energyBarDrawable.y + outOffSet)
             });
 
             self.stage.move(energyBarDrawable, barOut, function () {
@@ -151,8 +157,10 @@ var PlayGame = (function (require) {
     GameWorld: GameWorld,
     EnergyStateMachine: EnergyStateMachine,
     calcScreenConst: calcScreenConst,
-    GameStuffHelper: GameStuffHelper,
+    GameStuffHelper: drawSharedGameStuff,
     Repository: Repository,
     changeTouchable: changeTouchable,
-    changeCoords: changeCoords, changePath: changePath, iterateEntries: iterateEntries
+    changeCoords: changeCoords,
+    changePath: changePath,
+    iterateEntries: iterateEntries
 });

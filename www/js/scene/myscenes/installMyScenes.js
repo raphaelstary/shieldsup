@@ -1,4 +1,5 @@
-var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager) {
+var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
+    PostGame, SceneManager) {
     "use strict";
 
     function installMyScenes(sceneServices) {

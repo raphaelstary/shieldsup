@@ -134,7 +134,13 @@ var InGameTutorial = (function (require) {
         var energyStates = new require.EnergyStateMachine(this.stage, world, shieldsDrawable, shieldsUpSprite,
             shieldsDownSprite, energyBarDrawable, this.sounds);
 
-        var touchable = {id: 'shields_up_tutorial', x: 0, y: 0, width: self.screenWidth, height: self.screenHeight};
+        var touchable = {
+            id: 'shields_up_tutorial',
+            x: 0,
+            y: 0,
+            width: self.screenWidth,
+            height: self.screenHeight
+        };
         self.resizeRepo.add(touchable, function () {
             require.changeTouchable(touchable, 0, 0, self.screenWidth, self.screenHeight);
         });
@@ -165,8 +171,13 @@ var InGameTutorial = (function (require) {
                 return require.calcScreenConst(self.screenHeight, 8);
             }
 
-            skipTouchable = {id: 'skip_tap', x: getWidthHalf(), y: getY() - getHeightSixteenth(),
-                width: getWidthHalf(), height: getHeight()};
+            skipTouchable = {
+                id: 'skip_tap',
+                x: getWidthHalf(),
+                y: getY() - getHeightSixteenth(),
+                width: getWidthHalf(),
+                height: getHeight()
+            };
             self.tapController.add(skipTouchable, function () {
                 self.sounds.play(CLICK);
                 self.tapController.remove(skipTouchable);
@@ -222,7 +233,7 @@ var InGameTutorial = (function (require) {
 
             var touch_txt = self.stage.getDrawableText(getWidthThreeQuarter(), getHeightThird(), 3,
                 self.messages.get(TUTORIAL_MSG_KEY, TOUCH_AND_HOLD_MSG), 20, FONT, WHITE, require.Math.PI / 16, 1,
-                    getWidthThird() * 2, 25);
+                getWidthThird() * 2, 25);
             self.stage.draw(touch_txt);
 
             self.resizeRepo.add(touch_txt, function () {
@@ -247,17 +258,17 @@ var InGameTutorial = (function (require) {
 
         function get__4() {
             var value = require.calcScreenConst(self.screenHeight, 100);
-            return  value > 0 ? value : 1;
+            return value > 0 ? value : 1;
         }
 
         function get__2() {
             var value = require.calcScreenConst(self.screenHeight, 200);
-            return  value > 0 ? value : 1;
+            return value > 0 ? value : 1;
         }
 
         function get__1() {
             var value = require.calcScreenConst(self.screenHeight, 400);
-            return  value > 0 ? value : 1;
+            return value > 0 ? value : 1;
         }
 
         var __4 = get__4();
@@ -331,8 +342,13 @@ var InGameTutorial = (function (require) {
                     self.messages.get(TUTORIAL_MSG_KEY, OK_MSG), 15, FONT, WHITE);
                 self.stage.draw(okButtonTxt);
                 okButton = self.stage.drawFresh(getWidthHalf(), getHeightSixteenth() * 13, BUTTON_PRIM);
-                okTouchable = {id: 'ok_tap', x: okButton.getCornerX(), y: okButton.getCornerY(),
-                    width: okButton.getWidth(), height: okButton.getHeight()};
+                okTouchable = {
+                    id: 'ok_tap',
+                    x: okButton.getCornerX(),
+                    y: okButton.getCornerY(),
+                    width: okButton.getWidth(),
+                    height: okButton.getHeight()
+                };
                 self.resizeRepo.add(okButton, function () {
                     require.changeCoords(okButton, getWidthHalf(), getHeightSixteenth() * 13);
                     require.changeCoords(okButtonTxt, getWidthHalf(), getHeightSixteenth() * 13);
@@ -499,7 +515,7 @@ var InGameTutorial = (function (require) {
     range: range,
     calcScreenConst: calcScreenConst,
     Repository: Repository,
-    GameStuffHelper: GameStuffHelper,
+    GameStuffHelper: drawSharedGameStuff,
     changeCoords: changeCoords,
     changePath: changePath,
     changeTouchable: changeTouchable

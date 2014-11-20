@@ -1,15 +1,18 @@
-var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath,
-    changeTouchable, Repository) {
+var PreGame = (function (Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath,
+    changeTouchable, ButtonFactory) {
     "use strict";
 
-    function PreGame(stage, sceneStorage, tapController, fullScreen, messages, resizeBus, sounds) {
-        this.stage = stage;
-        this.sceneStorage = sceneStorage;
-        this.tapController = tapController;
-        this.fullScreen = fullScreen;
-        this.messages = messages;
-        this.resizeBus = resizeBus;
-        this.sounds = sounds;
+    function PreGame(services) {
+        this.stage = services.stage;
+        this.sceneStorage = services.sceneStorage;
+        this.tap = services.tap;
+        this.fullScreen = services.fullScreen;
+        this.messages = services.messages;
+        this.sounds = services.sounds;
+
+        this.buttons = new ButtonFactory(this.stage, this.tap, services.timer, GAME_FONT, function () {
+            services.sounds.play(CLICK);
+        }, WHITE, VIOLET, WHITE, WHITE)
     }
 
     var SHIP = 'ship';
@@ -17,177 +20,136 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
     var SHIELDS = 'shields';
     var SHIELDS_DOWN = 'shields_down/shields_down';
     var SHIELDS_UP = 'shields_up/shields_up';
-    var BUTTON_SEC = 'button_secondary';
-    var BUTTON_SEC_ACTIVE = 'button_secondary_active';
-    var BUTTON_PRIM = 'button_primary';
-    var BUTTON_PRIM_ACTIVE = 'button_primary_active';
 
     var CLICK = 'click';
-
-    var PRE_GAME_SCENE = 'pre_game_scene';
-    var CREDITS_SCENE = 'credits_scene';
 
     var PRE_GAME_MSG_KEY = 'pre_game';
     var CREDITS_MSG = 'credits';
     var PLAY_MSG = 'play';
 
-    var FONT = 'KenPixel';
-    var FONT_COLOR = '#fff';
+    var GAME_FONT = 'GameFont';
+    var WHITE = '#fff';
     var BLACK = '#000';
+    var VIOLET = '#3a2e3f';
 
-    PreGame.prototype.show = function (nextScene, screenWidth, screenHeight) {
+    PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
         delete this.sceneStorage.logo;
 
-        this.resizeBus.add(PRE_GAME_SCENE, this.resize.bind(this));
-        this.resizeRepo = new Repository();
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
         this.fadeOffSet = false;
 
         var self = this;
 
-        function getFadeOffSet() {
+        function getFadeOffSet(width) {
             if (self.fadeOffSet)
-                return -self.screenWidth;
+                return -width;
             return 0;
         }
 
-        function getWidthHalf() {
-            return calcScreenConst(self.screenWidth, 2) + getFadeOffSet();
+        function getWidthHalf(width) {
+            return calcScreenConst(width, 2) + getFadeOffSet(width);
         }
 
-        function getLogoX() {
-            return getWidthHalf();
+        function getShipStartY(height) {
+            return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + height;
         }
 
-        function getLogoY() {
-            return calcScreenConst(self.screenHeight, 32, 7);
+        function getShipX(width) {
+            return getWidthHalf(width);
         }
 
-        self.resizeRepo.add(logoDrawable, function () {
-            changeCoords(logoDrawable, getLogoX(), getLogoY());
-        });
-
-
-        function getShipStartY() {
-            return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + self.screenHeight;
+        function getShipEndY(height) {
+            return calcScreenConst(height, 2);
         }
 
-        function getShipX() {
-            return getWidthHalf();
+        var shipDrawable = self.stage.moveFresh(getShipX, getShipStartY, SHIP, getShipX, getShipEndY, 60,
+            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
+
+        function getLeftFireX() {
+            return shipDrawable.x - calcScreenConst(shipDrawable.getWidth(), 5);
         }
 
-        function getShipEndY() {
-            return calcScreenConst(self.screenHeight, 2);
+        function getRightFireX() {
+            return shipDrawable.x + calcScreenConst(shipDrawable.getWidth(), 5);
         }
 
-        var shipStartY = getShipStartY();
-        var shipEndY = getShipEndY();
-        var shipX_widthHalf = getShipX();
-        var shipDrawable = self.stage.drawFresh(shipX_widthHalf, shipStartY, SHIP);
-        var shipInPath = self.stage.getPath(shipX_widthHalf, shipStartY, shipX_widthHalf, shipEndY, 60,
-            Transition.EASE_IN_QUAD);
-
-        var fireDrawable = self.stage.animateFresh(shipX_widthHalf, shipStartY, FIRE, 10);
-
-        self.resizeRepo.add(shipDrawable, function () {
-            var shipX = getShipX();
-            changeCoords(shipDrawable, shipX, getShipStartY());
-            changeCoords(fireDrawable, shipX, getShipStartY());
-            changePath(shipInPath, shipX, getShipStartY(), shipX, getShipEndY());
-        });
-
-
-        function getPlayY() {
-            return calcScreenConst(self.screenHeight, 4, 3);
+        function getFireStartY(height) {
+            return getShipStartY(height) + calcScreenConst(shipDrawable.getHeight(), 8, 5);
         }
 
-        var pressPlay = self.stage.getDrawable(shipX_widthHalf, getPlayY(), BUTTON_PRIM);
-
-        var pressPlayTxt = self.stage.getDrawableText(shipX_widthHalf, getPlayY(), 3,
-            self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), 15, FONT, FONT_COLOR);
-        var playTouchable = {id: 'ready_tap', x: pressPlay.getCornerX(), y: pressPlay.getCornerY(),
-            width: pressPlay.getWidth(), height: pressPlay.getHeight()};
-        self.resizeRepo.add(pressPlay, function () {
-            changeCoords(pressPlay, getShipX(), getPlayY());
-            changeCoords(pressPlayTxt, getShipX(), getPlayY());
-            changeTouchable(playTouchable, pressPlay.getCornerX(), pressPlay.getCornerY(), pressPlay.getWidth(),
-                pressPlay.getHeight());
-        });
-
-
-        var credits, lightFrame;
-        var allTouchables = [
-            {touchable: playTouchable, fn: startPlaying, anchor: pressPlay}
-        ];
-
-        function registerTapListener() {
-            allTouchables.forEach(function (wrapper) {
-                changeTouchable(wrapper.touchable, wrapper.anchor.getCornerX(), wrapper.anchor.getCornerY(),
-                    wrapper.anchor.getWidth(), wrapper.anchor.getHeight());
-
-                self.tapController.add(wrapper.touchable, wrapper.fn);
-            });
+        function getFireEndY(height) {
+            return getShipEndY(height) + calcScreenConst(shipDrawable.getHeight(), 8, 5);
         }
 
-        function unRegisterTapListener() {
-            allTouchables.forEach(function (wrapper) {
-                self.tapController.remove(wrapper.touchable);
-            });
-        }
+        var leftFireDrawable = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true,
+            [shipDrawable]).drawable;
+        var rightFireDrawable = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true,
+            [shipDrawable]).drawable;
 
-        self.stage.move(shipDrawable, shipInPath, function () {
-            self.resizeRepo.add(shipDrawable, function () {
-                var shipX = getShipX();
-                var shipY = getShipEndY();
-                changeCoords(shipDrawable, shipX, shipY);
-                changeCoords(fireDrawable, shipX, shipY);
-            });
+        self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
+            [shipDrawable]);
+        self.stage.move(rightFireDrawable, getRightFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
+            [shipDrawable]);
+
+        var pressPlay, pressPlayTxt, credits, creditsButton;
+
+        function shipIsAtEndPosition() {
+
+
+            function createPlayButton() {
+                function getPlayY(height) {
+                    return calcScreenConst(height, 4, 3);
+                }
+
+                function getPlayTxtSize(width, height) {
+                    return calcScreenConst(height, 24);
+                }
+
+                var newWrapper = self.buttons.createPrimaryButton(getShipX, getPlayY,
+                    self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), getPlayTxtSize, startPlaying);
+
+                pressPlayTxt = newWrapper.text;
+            }
+
+            createPlayButton();
 
             shieldsAnimation();
-            self.stage.draw(pressPlay);
-            self.stage.draw(pressPlayTxt);
 
-            function getBottomY() {
-                return calcScreenConst(self.screenHeight, 50, 47);
+            function getBottomY(height) {
+                return calcScreenConst(height, 50, 47);
             }
 
-            var bottomRaster = getBottomY();
-
-            function getButtonX() {
-                return calcScreenConst(self.screenWidth, 4, 3) + getFadeOffSet();
+            function getButtonX(width) {
+                return calcScreenConst(width, 4, 3) + getFadeOffSet(width);
             }
 
-            var xButton = getButtonX();
+            function getCreditsSize(width, height) {
+                return 15;
+            }
 
-            lightFrame = self.stage.drawFresh(xButton, bottomRaster, BUTTON_SEC);
+            credits = self.stage.drawText(getButtonX, getBottomY, self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG),
+                getCreditsSize, GAME_FONT, WHITE, 3, undefined, undefined, 0.5);
 
-            credits = self.stage.getDrawableText(xButton, bottomRaster, 3,
-                self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), 15, FONT, FONT_COLOR, 0, 0.5);
-            self.stage.draw(credits);
+            function getCreditsButtonWidth(width) {
+                return credits.getWidth();
+            }
 
-            var creditsTouchable = {id: 'credits_tap', x: lightFrame.getCornerX(), y: lightFrame.getCornerY(),
-                width: lightFrame.getWidth(), height: lightFrame.getHeight()};
+            function getCreditsButtonHeight(height) {
+                return credits.getHeight();
+            }
 
-            self.resizeRepo.add(credits, function () {
-                changeCoords(lightFrame, getButtonX(), getBottomY());
-                changeCoords(credits, getButtonX(), getBottomY());
-                changeTouchable(creditsTouchable, lightFrame.getCornerX(), lightFrame.getCornerY(),
-                    lightFrame.getWidth(), lightFrame.getHeight());
-            });
+            function getCreditsLineWidth(width, height) {
+                return 1;
+            }
 
-            allTouchables.push({touchable: creditsTouchable, fn: goToCreditsScreen, anchor: lightFrame});
+            var creditsButtonWrapper = self.stage.drawRectangleWithInput(getButtonX, getBottomY, getCreditsButtonWidth,
+                getCreditsButtonHeight, WHITE, false, getCreditsLineWidth, 2, 0.5, undefined, undefined, [credits]);
+
+            creditsButton = creditsButtonWrapper.drawable;
 
             function goToCreditsScreen() {
-                self.sounds.play(CLICK);
-                credits.alpha = 1;
-                lightFrame.data = self.stage.getGraphic(BUTTON_SEC_ACTIVE);
-                window.setTimeout(function () {
-                    credits.alpha = 0.5;
-                    lightFrame.data = self.stage.getGraphic(BUTTON_SEC);
-                }, 1500);
-                var creditsScreen = new Credits(self.stage, self.tapController, self.messages, self.sounds);
+
+                var creditsScreen = new Credits(self.stage, self.tap, self.messages, self.sounds);
 
                 unRegisterTapListener();
 
@@ -197,7 +159,6 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
                     doTheShields = true;
                     shieldsAnimation();
 
-                    self.resizeBus.remove(CREDITS_SCENE);
                 }
 
                 function setFadeOffSet() {
@@ -206,19 +167,18 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
                 doTheShields = false;
                 self.stage.remove(shieldsDrawable);
-                self.resizeBus.add(CREDITS_SCENE, creditsScreen.resize.bind(creditsScreen));
                 creditsScreen.show(continuePreGame, [
-                    credits, lightFrame, pressPlay, pressPlayTxt, logoDrawable, shipDrawable, fireDrawable
+                    credits,
+                    creditsButton,
+                    pressPlay,
+                    pressPlayTxt,
+                    logoDrawable,
+                    shipDrawable,
+                    leftFireDrawable,
+                    rightFireDrawable
                 ], self.screenWidth, self.screenHeight, setFadeOffSet);
             }
-
-            registerTapListener();
-
-        });
-
-        self.stage.move(fireDrawable, shipInPath, function () {
-            fireDrawable.y = shipEndY;
-        });
+        }
 
         function startPlaying() {
             self.sounds.play(CLICK);
@@ -233,10 +193,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
 
         var shieldsDownSprite = self.stage.getSprite(SHIELDS_DOWN, 6, false);
         var shieldsUpSprite = self.stage.getSprite(SHIELDS_UP, 6, false);
-        var shieldsDrawable = self.stage.getDrawable(shipX_widthHalf, shipEndY, SHIELDS);
-        self.resizeRepo.add(shieldsDrawable, function () {
-            changeCoords(shieldsDrawable, getShipX(), getShipEndY());
-        });
+        var shieldsDrawable = self.stage.drawFresh(getShipX, getShipEndY, SHIELDS);
+        self.stage.hide(shieldsDrawable);
 
         var startTimer = 10;
         var doTheShields = true;
@@ -244,22 +202,28 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         function shieldsAnimation() {
 
             self.stage.animateLater({
-                drawable: shieldsDrawable, sprite: shieldsUpSprite, callback: function () {
+                drawable: shieldsDrawable,
+                sprite: shieldsUpSprite,
+                callback: function () {
 
-                shieldsDrawable.data = self.stage.getGraphic(SHIELDS);
+                    shieldsDrawable.data = self.stage.getGraphic(SHIELDS);
                     self.stage.animateLater({
-                        drawable: shieldsDrawable, sprite: shieldsDownSprite, callback: function () {
-                    self.stage.remove(shieldsDrawable);
-                    startTimer = 20;
-                    if (doTheShields) {
-                        shieldsAnimation();
-                    }
-                }}, 48, checkIfShouldStopThisMadness);
-            }}, startTimer, checkIfShouldStopThisMadness);
+                        drawable: shieldsDrawable,
+                        sprite: shieldsDownSprite,
+                        callback: function () {
+                            self.stage.hide(shieldsDrawable);
+                            startTimer = 20;
+                            if (doTheShields) {
+                                shieldsAnimation();
+                            }
+                        }
+                    }, 48, checkIfShouldStopThisMadness);
+                }
+            }, startTimer, checkIfShouldStopThisMadness);
 
             function checkIfShouldStopThisMadness() {
                 if (!doTheShields) {
-                    self.stage.remove(shieldsDrawable);
+                    self.stage.hide(shieldsDrawable);
                 }
             }
         }
@@ -267,15 +231,22 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
         // end of screen
 
         function endOfScreen() {
-            [credits, lightFrame, pressPlay, pressPlayTxt].forEach(self.stage.remove.bind(self.stage));
+            [credits, creditsButton, pressPlay, pressPlayTxt].forEach(self.stage.remove.bind(self.stage));
             // end event
             unRegisterTapListener();
 
             var logoOut = self.stage.getPath(logoDrawable.x, logoDrawable.y, logoDrawable.x,
-                    logoDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
+                logoDrawable.y + self.screenHeight, 30, Transition.EASE_IN_EXPO);
             self.stage.move(logoDrawable, logoOut, function () {
                 self.stage.remove(logoDrawable);
             });
+            function getLogoX(width) {
+                return getWidthHalf(width);
+            }
+
+            function getLogoY(height) {
+                return calcScreenConst(height, 32, 7);
+            }
             self.resizeRepo.add(logoDrawable, function () {
                 changeCoords(logoDrawable, getLogoX(), getLogoY());
                 changePath(logoOut, logoDrawable.x, logoDrawable.y, logoDrawable.x, logoDrawable.y + self.screenHeight);
@@ -305,38 +276,28 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, GameStuff
                 });
 
                 // next scene
-                self.next(nextScene, shipDrawable, fireDrawable, shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
+                self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
+                    shieldsUpSprite, shieldsDownSprite);
             });
 
-            self.stage.move(fireDrawable, dockShipToGamePosition);
+            self.stage.move(leftFireDrawable, dockShipToGamePosition);
+            self.stage.move(rightFireDrawable);
         }
     };
 
-    PreGame.prototype.next = function (nextScene, shipDrawable, fireDrawable, shieldsDrawable, shieldsUpSprite,
+    PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, shields, shieldsUpSprite,
         shieldsDownSprite) {
 
-        this.sceneStorage.ship = shipDrawable;
-        this.sceneStorage.fire = fireDrawable;
-        this.sceneStorage.shields = shieldsDrawable;
+        this.sceneStorage.ship = ship;
+        this.sceneStorage.leftFire = leftFire;
+        this.sceneStorage.rightFire = rightFire;
+        this.sceneStorage.shields = shields;
         this.sceneStorage.shieldsUp = shieldsUpSprite;
         this.sceneStorage.shieldsDown = shieldsDownSprite;
-
-        delete this.resizeRepo;
-        delete this.screenWidth;
-        delete this.screenHeight;
-        this.resizeBus.remove(PRE_GAME_SCENE);
 
         nextScene();
     };
 
-    PreGame.prototype.resize = function (width, height) {
-        this.screenWidth = width;
-        this.screenHeight = height;
-
-        GameStuffHelper.resize(this.stage, this.sceneStorage, width, height);
-        this.resizeRepo.call();
-    };
-
     return PreGame;
-})(Transition, Credits, window, calcScreenConst, GameStuffHelper, changeCoords, changePath, changeTouchable,
-    Repository);
+})(Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath, changeTouchable,
+    ButtonFactory);

@@ -172,8 +172,11 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
             if (--numberOfCallbacks > 0)
                 return;
 
-            var lifeDrawablesDict = {1: lifeOneWrapper.drawable, 2: lifeTwoWrapper.drawable,
-                3: lifeThreeWrapper.drawable};
+            var lifeDrawablesDict = {
+                1: lifeOneWrapper.drawable,
+                2: lifeTwoWrapper.drawable,
+                3: lifeThreeWrapper.drawable
+            };
             var countDrawables = [
                 firstDigitWrapper.drawable,
                 secondDigitWrapper.drawable,
@@ -205,5 +208,5 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, GameStuffHelper,
+})(Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, drawSharedGameStuff,
     EnergyBarHelper, LifeHelper);
