@@ -247,6 +247,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
             function getLogoY(height) {
                 return calcScreenConst(height, 32, 7);
             }
+
             self.resizeRepo.add(logoDrawable, function () {
                 changeCoords(logoDrawable, getLogoX(), getLogoY());
                 changePath(logoOut, logoDrawable.x, logoDrawable.y, logoDrawable.x, logoDrawable.y + self.screenHeight);

@@ -21,12 +21,10 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
             {
                 name: 'SpecialGameFont',
                 url: URL.createObjectURL(specialGameFont.blob)
-            },
-            {
+            }, {
                 name: 'GameFont',
                 url: URL.createObjectURL(gameFont.blob)
-            },
-            {
+            }, {
                 name: 'LogoFont',
                 url: URL.createObjectURL(logoFont.blob)
             }
