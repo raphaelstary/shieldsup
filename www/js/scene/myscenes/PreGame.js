@@ -1,5 +1,5 @@
 var PreGame = (function (Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath,
-    changeTouchable, ButtonFactory) {
+    changeTouchable, ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightThreeQuarter, widthThreeQuarter) {
     "use strict";
 
     function PreGame(services) {
@@ -12,7 +12,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
 
         this.buttons = new ButtonFactory(this.stage, this.tap, services.timer, GAME_FONT, function () {
             services.sounds.play(CLICK);
-        }, WHITE, VIOLET, WHITE, WHITE)
+        }, WHITE, VIOLET, fontSize_30, 2, WHITE, WHITE, fontSize_40, 1.2);
     }
 
     var SHIP = 'ship';
@@ -54,15 +54,11 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
             return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + height;
         }
 
-        function getShipX(width) {
-            return getWidthHalf(width);
-        }
-
         function getShipEndY(height) {
             return calcScreenConst(height, 2);
         }
 
-        var shipDrawable = self.stage.moveFresh(getShipX, getShipStartY, SHIP, getShipX, getShipEndY, 60,
+        var shipDrawable = self.stage.moveFresh(getWidthHalf, getShipStartY, SHIP, getWidthHalf, getShipEndY, 60,
             Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
 
         function getLeftFireX() {
@@ -96,22 +92,10 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
         function shipIsAtEndPosition() {
 
 
-            function createPlayButton() {
-                function getPlayY(height) {
-                    return calcScreenConst(height, 4, 3);
-                }
-
-                function getPlayTxtSize(width, height) {
-                    return calcScreenConst(height, 24);
-                }
-
-                var newWrapper = self.buttons.createPrimaryButton(getShipX, getPlayY,
-                    self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), getPlayTxtSize, startPlaying);
-
-                pressPlayTxt = newWrapper.text;
-            }
-
-            createPlayButton();
+            var playWrapper = self.buttons.createPrimaryButton(widthHalf, heightThreeQuarter,
+                self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
+            pressPlay = playWrapper.background;
+            pressPlayTxt = playWrapper.text;
 
             shieldsAnimation();
 
@@ -119,39 +103,16 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
                 return calcScreenConst(height, 50, 47);
             }
 
-            function getButtonX(width) {
-                return calcScreenConst(width, 4, 3) + getFadeOffSet(width);
-            }
-
-            function getCreditsSize(width, height) {
-                return 15;
-            }
-
-            credits = self.stage.drawText(getButtonX, getBottomY, self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG),
-                getCreditsSize, GAME_FONT, WHITE, 3, undefined, undefined, 0.5);
-
-            function getCreditsButtonWidth(width) {
-                return credits.getWidth();
-            }
-
-            function getCreditsButtonHeight(height) {
-                return credits.getHeight();
-            }
-
-            function getCreditsLineWidth(width, height) {
-                return 1;
-            }
-
-            var creditsButtonWrapper = self.stage.drawRectangleWithInput(getButtonX, getBottomY, getCreditsButtonWidth,
-                getCreditsButtonHeight, WHITE, false, getCreditsLineWidth, 2, 0.5, undefined, undefined, [credits]);
-
-            creditsButton = creditsButtonWrapper.drawable;
+            var creditsWrapper = self.buttons.createSecondaryButton(widthThreeQuarter, getBottomY,
+                self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), goToCreditsScreen);
+            credits = creditsWrapper.text;
+            creditsButton = creditsWrapper.background;
 
             function goToCreditsScreen() {
 
                 var creditsScreen = new Credits(self.stage, self.tap, self.messages, self.sounds);
 
-                unRegisterTapListener();
+                //unRegisterTapListener();
 
                 function continuePreGame() {
                     self.fadeOffSet = false;
@@ -193,7 +154,7 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
 
         var shieldsDownSprite = self.stage.getSprite(SHIELDS_DOWN, 6, false);
         var shieldsUpSprite = self.stage.getSprite(SHIELDS_UP, 6, false);
-        var shieldsDrawable = self.stage.drawFresh(getShipX, getShipEndY, SHIELDS);
+        var shieldsDrawable = self.stage.drawFresh(getWidthHalf, getShipEndY, SHIELDS);
         self.stage.hide(shieldsDrawable);
 
         var startTimer = 10;
@@ -260,8 +221,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
             var dockShipToGamePosition = self.stage.getPath(shipDrawable.x, shipDrawable.y, shipDrawable.x,
                 getShipGamePositionY(), 30, Transition.EASE_IN_OUT_EXPO);
             self.resizeRepo.add(shipDrawable, function () {
-                changeCoords(shipDrawable, getShipX(), getShipEndY());
-                changeCoords(fireDrawable, getShipX(), getShipEndY());
+                changeCoords(shipDrawable, getWidthHalf(), getShipEndY());
+                changeCoords(fireDrawable, getWidthHalf(), getShipEndY());
                 changePath(dockShipToGamePosition, shipDrawable.x, shipDrawable.y, shipDrawable.x,
                     getShipGamePositionY());
             });
@@ -272,8 +233,8 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
 
             self.stage.move(shipDrawable, dockShipToGamePosition, function () {
                 self.resizeRepo.add(shipDrawable, function () {
-                    changeCoords(shipDrawable, getShipX(), getShipGamePositionY());
-                    changeCoords(fireDrawable, getShipX(), getShipGamePositionY());
+                    changeCoords(shipDrawable, getWidthHalf(), getShipGamePositionY());
+                    changeCoords(fireDrawable, getWidthHalf(), getShipGamePositionY());
                 });
 
                 // next scene
@@ -301,4 +262,4 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
 
     return PreGame;
 })(Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath, changeTouchable,
-    ButtonFactory);
+    ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightThreeQuarter, widthThreeQuarter);
