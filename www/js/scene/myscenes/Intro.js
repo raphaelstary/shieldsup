@@ -173,7 +173,8 @@ var Intro = (function ($) {
             var wrapperLogo = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, $.fontSize_15,
                 GAME_LOGO_FONT, DARK_GRAY, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false,
                 function () {
-                    self.next(self.nextScene, wrapperLogo.drawable, speedStripes, scrollingBackGround);
+                    self.next(self.nextScene, wrapperLogo.drawable, wrapperLogoHighlight.drawable, speedStripes,
+                        scrollingBackGround);
                 }, function () {
                     var delay = 30;
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
@@ -197,7 +198,7 @@ var Intro = (function ($) {
         }
     };
 
-    Intro.prototype.next = function (nextScene, logoDrawable, speedStripes, backGround) {
+    Intro.prototype.next = function (nextScene, logoDrawable, logoHighlightDrawable, speedStripes, backGround) {
         delete this.speedos;
         delete this.lastY;
         delete this.hasNotStarted;
@@ -208,6 +209,7 @@ var Intro = (function ($) {
         this.loop.remove('z_parallax');
 
         this.sceneStorage.logo = logoDrawable;
+        this.sceneStorage.logoHighlight = logoHighlightDrawable;
         this.sceneStorage.speedStripes = speedStripes;
         this.sceneStorage.backGround = backGround;
 
