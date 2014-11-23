@@ -1,5 +1,5 @@
 var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf,
-    heightHalf, heightThreeQuarter, widthThreeQuarter, __400) {
+    heightHalf, heightThreeQuarter, widthThreeQuarter, __400, Fire) {
     "use strict";
 
     function PreGame(services) {
@@ -46,21 +46,16 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
         var shipDrawable = self.stage.moveFresh(widthHalf, getShipStartY, SHIP, widthHalf, heightHalf, 60,
             Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
 
-        function getLeftFireX() {
-            return shipDrawable.x - calcScreenConst(shipDrawable.getWidth(), 5);
-        }
-
-        function getRightFireX() {
-            return shipDrawable.x + calcScreenConst(shipDrawable.getWidth(), 5);
-        }
-
         function getFireStartY(height) {
-            return getShipStartY(height) + calcScreenConst(shipDrawable.getHeight(), 8, 5);
+            return getShipStartY(height) + Fire.getShipOffSet(shipDrawable);
         }
 
         function getFireEndY(height) {
-            return heightHalf(height) + calcScreenConst(shipDrawable.getHeight(), 8, 5);
+            return heightHalf(height) + Fire.getShipOffSet(shipDrawable);
         }
+
+        var getLeftFireX = Fire.getLeftX.bind(undefined, shipDrawable);
+        var getRightFireX = Fire.getRightX.bind(undefined, shipDrawable);
 
         var leftFireDrawable = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true,
             [shipDrawable]).drawable;
@@ -108,8 +103,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
                 doTheShields = false;
                 self.stage.remove(shieldsDrawable);
                 creditsScreen.show(continuePreGame, [
-                    credits,
-                    creditsButton, play,
+                    credits, creditsButton, play,
                     pressPlayTxt,
                     logoDrawable,
                     shipDrawable,
@@ -186,13 +180,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite);
             });
-
-            function getFireGamePositionY(height) {
-                return __400(height) + calcScreenConst(shipDrawable.getHeight(), 8, 5);
-            }
-
-            self.stage.move(leftFireDrawable, getLeftFireX, getFireGamePositionY, 30, Transition.EASE_IN_EXPO);
-            self.stage.move(rightFireDrawable, getRightFireX, getFireGamePositionY, 30, Transition.EASE_IN_EXPO);
+            var getFireY = Fire.getY.bind(undefined, shipDrawable);
+            self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
+            self.stage.move(rightFireDrawable, getRightFireX, getFireY, 30, Transition.EASE_IN_EXPO);
         }
     };
 
@@ -200,8 +190,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
         shieldsDownSprite) {
 
         this.sceneStorage.ship = ship;
-        this.sceneStorage.leftFire = leftFire;
-        this.sceneStorage.rightFire = rightFire;
+        this.sceneStorage.fire = {
+            left: leftFire,
+            right: rightFire
+        };
         this.sceneStorage.shields = shields;
         this.sceneStorage.shieldsUp = shieldsUpSprite;
         this.sceneStorage.shieldsDown = shieldsDownSprite;
@@ -211,4 +203,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
 
     return PreGame;
 })(Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightHalf,
-    heightThreeQuarter, widthThreeQuarter, __400);
+    heightThreeQuarter, widthThreeQuarter, __400, Fire);

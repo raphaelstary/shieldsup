@@ -22,15 +22,7 @@ var Intro = (function ($) {
 
     Intro.prototype.show = function (nextScene) {
 
-        this.firstBg = [
-            this.stage.drawFresh($.widthHalf, $.heightHalf, BACKGROUND_STAR, 0, undefined, 1, 0, 0.5),
-            this.stage.drawFresh($.widthThird, $.heightQuarter, BACKGROUND_STAR, 0, undefined, 0.75, 0, 0.75),
-            this.stage.drawFresh($.widthQuarter, $.heightTwoThird, BACKGROUND_STAR, 0, undefined, 0.5, 0, 1),
-            this.stage.drawFresh($.widthThreeQuarter, $.heightThird, BACKGROUND_STAR, 0, undefined, 1, 0, 0.5),
-            this.stage.drawFresh($.widthTwoThird, $.heightHalf, BACKGROUND_STAR, 0, undefined, 0.5, 0, 0.75),
-            this.stage.drawFresh($.widthHalf, $.heightQuarter, BACKGROUND_STAR, 0, undefined, 0.75, 0, 1),
-            this.stage.drawFresh($.widthTwoThird, $.heightThreeQuarter, BACKGROUND_STAR, 0, undefined, 1, 0, 0.5)
-        ];
+        this.firstBg = $.drawBackGround(this.stage);
 
         var self = this;
 
@@ -240,5 +232,6 @@ var Intro = (function ($) {
     add: add,
     subtract: subtract,
     fontSize_15: fontSize_15,
-    fontSize_30: fontSize_30
+    fontSize_30: fontSize_30,
+    drawBackGround: drawBackGround
 });

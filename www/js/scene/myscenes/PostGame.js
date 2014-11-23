@@ -387,5 +387,5 @@ var PostGame = (function (localStorage, Transition, calcScreenConst, BackGroundH
     };
 
     return PostGame;
-})(window.localStorage, Transition, calcScreenConst, BackGroundHelper, Repository, changeCoords, changePath,
+})(window.localStorage, Transition, calcScreenConst, undefined, Repository, changeCoords, changePath,
     changeTouchable);

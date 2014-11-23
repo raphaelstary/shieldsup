@@ -1,20 +1,20 @@
-var drawSharedGameStuff = (function (FireHelper, ShipHelper, BackGroundHelper, drawSpeedStripes) {
+var drawSharedGameStuff = (function (Fire, drawShip, drawBackGround, drawSpeedStripes) {
     "use strict";
 
-    function drawSharedGameStuff(stage, sceneStorage, screenWidth, screenHeight) {
+    function drawSharedGameStuff(stage, sceneStorage) {
         if (!sceneStorage.speedStripes) {
-            sceneStorage.speedStripes = drawSpeedStripes(stage, 0, screenWidth, screenHeight);
+            sceneStorage.speedStripes = drawSpeedStripes(stage, 0);
         }
         if (!sceneStorage.ship) {
-            sceneStorage.ship = ShipHelper.draw(stage, screenWidth, screenHeight);
+            sceneStorage.ship = drawShip(stage);
         }
         if (!sceneStorage.fire) {
-            sceneStorage.fire = FireHelper.draw(stage, screenWidth, screenHeight);
+            sceneStorage.fire = Fire.draw(stage, sceneStorage.ship);
         }
         if (!sceneStorage.backGround) {
-            sceneStorage.backGround = BackGroundHelper.draw(stage, screenWidth, screenHeight);
+            sceneStorage.backGround = drawBackGround(stage);
         }
     }
 
     return drawSharedGameStuff;
-})(FireHelper, ShipHelper, BackGroundHelper, drawSpeedStripes);
+})(Fire, drawShip, drawBackGround, drawSpeedStripes);
