@@ -1,5 +1,5 @@
-var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords,
-    changePath, drawSharedGameStuff, EnergyBarHelper, LifeHelper, add, fontSize_30) {
+var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, drawSharedGameStuff, add, fontSize_30,
+    getBottomRaster) {
     "use strict";
 
     function StartingPosition(services) {
@@ -28,8 +28,12 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
             return x - x * 2;
         }
 
-        function yBottom(height) {
-            return getTopRaster(height) * 19;
+        function lifeTwoEndX(width) {
+            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width;
+        }
+
+        function lifeThreeEndX(width) {
+            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width * 2;
         }
 
         function moveLifeLater(xFn, delay) {
@@ -38,17 +42,7 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
         }
 
         var lifeOneWrapper = moveLifeLater(lifeX, 20);
-
-        function lifeTwoEndX(width) {
-            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width;
-        }
-
         var lifeTwoWrapper = moveLifeLater(lifeTwoEndX, 15);
-
-        function lifeThreeEndX(width) {
-            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width * 2;
-        }
-
         var lifeThreeWrapper = moveLifeLater(lifeThreeEndX, 10);
 
         function energyX(width) {
@@ -60,7 +54,8 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
             return x - x * 2;
         }
 
-        var energyBarWrapper = self.stage.moveFresh(energyStartX, yBottom, ENERGY_FULL, energyX, yBottom, speed,
+        var energyBarWrapper = self.stage.moveFresh(energyStartX, getBottomRaster, ENERGY_FULL, energyX,
+            getBottomRaster, speed,
             spacing, false, goodToGo);
 
         function getScreenOffSet(width) {
@@ -131,5 +126,4 @@ var StartingPosition = (function (Transition, calcScreenConst, CountHelper, getT
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, CountHelper, getTopRaster, Repository, changeCoords, changePath, drawSharedGameStuff,
-    EnergyBarHelper, LifeHelper, add, fontSize_30);
+})(Transition, calcScreenConst, getTopRaster, drawSharedGameStuff, add, fontSize_30, getBottomRaster);

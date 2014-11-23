@@ -1,6 +1,5 @@
-var PreGame = (function (Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath,
-    changeTouchable, ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightHalf, heightThreeQuarter,
-    widthThreeQuarter, __400) {
+var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf,
+    heightHalf, heightThreeQuarter, widthThreeQuarter, __400) {
     "use strict";
 
     function PreGame(services) {
@@ -31,7 +30,6 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
 
     var GAME_FONT = 'GameFont';
     var WHITE = '#fff';
-    var BLACK = '#000';
     var VIOLET = '#3a2e3f';
 
     PreGame.prototype.show = function (nextScene) {
@@ -212,5 +210,5 @@ var PreGame = (function (Transition, Credits, window, calcScreenConst, drawShare
     };
 
     return PreGame;
-})(Transition, Credits, window, calcScreenConst, drawSharedGameStuff, changeCoords, changePath, changeTouchable,
-    ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightHalf, heightThreeQuarter, widthThreeQuarter, __400);
+})(Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightHalf,
+    heightThreeQuarter, widthThreeQuarter, __400);
