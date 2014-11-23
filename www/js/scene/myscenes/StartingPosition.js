@@ -13,7 +13,7 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
     var DARK_GRAY = '#A9A9A9';
 
     StartingPosition.prototype.show = function (nextScene) {
-        //drawSharedGameStuff(this.stage, this.sceneStorage); // todo: missing width & height
+        drawSharedGameStuff(this.stage, this.sceneStorage);
 
         var self = this;
         var spacing = Transition.EASE_IN_OUT_ELASTIC;
