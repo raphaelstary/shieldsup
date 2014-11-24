@@ -26,7 +26,7 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, width, fontSi
                 self.stage.remove(readyDrawable);
 
                 nextScene();
-            });
+            }).drawable;
     };
 
     return GetReady;
