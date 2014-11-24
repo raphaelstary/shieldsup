@@ -1,8 +1,26 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
-    PostGame, SceneManager) {
+    PostGame, SceneManager, ScreenShaker, ButtonFactory, fontSize_30, fontSize_40) {
     "use strict";
 
+    var CLICK = 'click';
+    var GAME_FONT = 'GameFont';
+    var WHITE = '#fff';
+    var VIOLET = '#3a2e3f';
+
     function installMyScenes(sceneServices) {
+
+        // custom game services START
+        var shaker = new ScreenShaker();
+        sceneServices.resize.add('screen_shaker', shaker.resize.bind(shaker));
+        sceneServices.loop.add('screen_shaker', shaker.update.bind(shaker));
+        sceneServices.shaker = shaker;
+
+        sceneServices.buttons = new ButtonFactory(sceneServices.stage, sceneServices.tap, sceneServices.timer,
+            GAME_FONT, function () {
+                sceneServices.sounds.play(CLICK);
+            }, WHITE, VIOLET, fontSize_30, 2, WHITE, WHITE, fontSize_40, 1.2);
+
+        // custom game services END
 
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
@@ -28,4 +46,5 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     }
 
     return installMyScenes;
-})(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager);
+})(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
+    ScreenShaker, ButtonFactory, fontSize_30, fontSize_40);

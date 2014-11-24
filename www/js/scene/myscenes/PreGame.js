@@ -1,5 +1,5 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf,
-    heightHalf, heightThreeQuarter, widthThreeQuarter, __400, Fire) {
+var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, heightHalf, heightThreeQuarter,
+    widthThreeQuarter, __400, Fire) {
     "use strict";
 
     function PreGame(services) {
@@ -10,10 +10,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
         this.messages = services.messages;
         this.sounds = services.sounds;
         this.timer = services.timer;
-
-        this.buttons = new ButtonFactory(this.stage, this.tap, this.timer, GAME_FONT, function () {
-            services.sounds.play(CLICK);
-        }, WHITE, VIOLET, fontSize_30, 2, WHITE, WHITE, fontSize_40, 1.2);
+        this.buttons = services.buttons;
     }
 
     var SHIP = 'ship';
@@ -22,15 +19,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
     var SHIELDS_DOWN = 'shields_down/shields_down';
     var SHIELDS_UP = 'shields_up/shields_up';
 
-    var CLICK = 'click';
-
     var PRE_GAME_MSG_KEY = 'pre_game';
     var CREDITS_MSG = 'credits';
     var PLAY_MSG = 'play';
-
-    var GAME_FONT = 'GameFont';
-    var WHITE = '#fff';
-    var VIOLET = '#3a2e3f';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -202,5 +193,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, ButtonFactory, fo
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, ButtonFactory, fontSize_30, fontSize_40, widthHalf, heightHalf,
-    heightThreeQuarter, widthThreeQuarter, __400, Fire);
+})(Transition, Credits, calcScreenConst, widthHalf, heightHalf, heightThreeQuarter, widthThreeQuarter, __400, Fire);
