@@ -1,47 +1,33 @@
-var GetReady = (function (Transition, calcScreenConst, changeCoords, changePath, GameStuffHelper) {
+var GetReady = (function (Transition, calcScreenConst, changeSign, width, fontSize_15, multiply) {
     "use strict";
 
-    function GetReady(stage, sceneStorage, resizeBus) {
-        this.stage = stage;
-        this.sceneStorage = sceneStorage;
-        this.resizeBus = resizeBus;
+    function GetReady(services) {
+        this.stage = services.stage;
+        this.messages = services.messages;
     }
 
-    var GET_READY_SCENE = 'get_ready_scene';
+    var GAME_MSG_KEY = 'game';
     var GET_READY = 'get_ready';
+    var GAME_FONT = 'GameFont';
+    var LIGHT_GRAY = '#D3D3D3';
 
-    GetReady.prototype.show = function (nextScene, screenWidth, screenHeight) {
+    GetReady.prototype.show = function (nextScene) {
         var self = this;
-        self.resizeBus.add(GET_READY_SCENE, this.resize.bind(this));
-        var heightThird = calcScreenConst(screenHeight, 3);
-        var readyWidth = self.stage.getGraphic(GET_READY).width;
-        self.readyDrawable = self.stage.getDrawable(-readyWidth, heightThird, GET_READY);
 
-        self.readyPath = self.stage.getPath(-readyWidth, heightThird, screenWidth + readyWidth, heightThird, 90,
-            Transition.EASE_OUT_IN_SIN);
+        function getY(height) {
+            return calcScreenConst(height, 3);
+        }
 
-        self.stage.move(self.readyDrawable, self.readyPath, function () {
+        var readyDrawable = self.stage.moveFreshText(changeSign(width), getY,
+            self.messages.get(GAME_MSG_KEY, GET_READY), fontSize_15, GAME_FONT, LIGHT_GRAY, multiply(width, 2), getY,
+            180, Transition.EASE_OUT_IN_SIN, false, function () {
 
-            // create end event method to end scene, this is endGetReadyScene
-            self.stage.remove(self.readyDrawable);
+                // create end event method to end scene, this is endGetReadyScene
+                self.stage.remove(readyDrawable);
 
-            self.resizeBus.remove(GET_READY_SCENE);
-            delete self.readyDrawable;
-            delete self.readyPath;
-            nextScene();
-        });
-    };
-
-    GetReady.prototype.resize = function (width, height) {
-        var heightThird = calcScreenConst(height, 3);
-        var readyWidth = this.stage.getGraphic(GET_READY).width;
-        if (this.readyDrawable)
-            changeCoords(this.readyDrawable, -readyWidth, heightThird);
-        if (this.readyPath)
-            changePath(this.readyPath, -readyWidth, heightThird, width + readyWidth, heightThird);
-
-        GameStuffHelper.resize(this.stage, this.sceneStorage, width, height);
+                nextScene();
+            });
     };
 
     return GetReady;
-})(Transition, calcScreenConst, changeCoords, changePath, drawSharedGameStuff);
+})(Transition, calcScreenConst, changeSign, width, fontSize_15, multiply);

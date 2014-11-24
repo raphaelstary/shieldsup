@@ -33,6 +33,9 @@
             "play": "play",
             "credits": "credits",
             "more_games": "more games"
+        },
+        "game": {
+            "get_ready": "get ready"
         }
     },
     "de": {
