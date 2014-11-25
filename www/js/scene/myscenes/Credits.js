@@ -1,12 +1,10 @@
 var Credits = (function (Transition, window, calcScreenConst, widthHalf, heightQuarter, fontSize_15, subtract,
-    fontSize_30, heightHalf, add, heightThreeQuarter, heightFourFifth, fontSize_35) {
+    fontSize_30, add, heightFourFifth, fontSize_35, fontSize_5, fontSize_60, __400) {
     "use strict";
 
     function Credits(services) {
         this.stage = services.stage;
-        this.tap = services.tap;
         this.messages = services.messages;
-        this.sounds = services.sounds;
         this.buttons = services.buttons;
     }
 
@@ -15,9 +13,9 @@ var Credits = (function (Transition, window, calcScreenConst, widthHalf, heightQ
     var A_MSG = 'a';
     var BACK_MSG = 'back';
     var BY_MSG = 'by';
-    var FACEBOOK = 'facebook.com/RaphaelStary';
-    var TWITTER = 'twitter.com/RaphaelStary';
-    var WWW = 'raphaelstary.com';
+    var FACEBOOK = 'facebook';
+    var TWITTER = 'twitter';
+    var WWW = 'www';
     var GRAPHICS_MSG = 'graphics';
     var KENNEY_MSG = 'Kenney.nl Assets';
 
@@ -50,25 +48,42 @@ var Credits = (function (Transition, window, calcScreenConst, widthHalf, heightQ
             endScene);
         var game_txt = self.stage.drawText(widthHalf, heightQuarter, self.messages.get(KEY, GAME_MSG), fontSize_15,
             SPECIAL_FONT, LIGHT_GREY);
-        var a_txt = self.stage.drawText(widthHalf, subtract(heightQuarter, fontSize_15), self.messages.get(KEY, A_MSG),
-            fontSize_30, SPECIAL_FONT, LIGHT_GREY);
-        var by_txt = self.stage.drawText(widthHalf, add(heightQuarter, fontSize_15), self.messages.get(KEY, BY_MSG),
-            fontSize_30, SPECIAL_FONT, LIGHT_GREY);
+        var a_txt = self.stage.drawText(widthHalf, subtract(heightQuarter, fontSize_15.bind(0, 0)),
+            self.messages.get(KEY, A_MSG), fontSize_30, SPECIAL_FONT, LIGHT_GREY);
+        var by_txt = self.stage.drawText(widthHalf, add(heightQuarter, fontSize_15.bind(0, 0)),
+            self.messages.get(KEY, BY_MSG), fontSize_30, SPECIAL_FONT, LIGHT_GREY);
 
-        var raphaelStary = self.stage.drawText(widthHalf, heightHalf, RAPHAEL_STARY, fontSize_15, LOGO_FONT, WHITE);
-        var fb = self.buttons.createSecondaryButton(widthHalf, add(heightHalf, fontSize_15), FACEBOOK, function () {
+        function getLogoY(height) {
+            return calcScreenConst(height, 48, 22);
+        }
+
+        var raphaelStary = self.stage.drawText(widthHalf, getLogoY, RAPHAEL_STARY, fontSize_5, LOGO_FONT, WHITE);
+
+        function getFbY(height) {
+            return calcScreenConst(height, 48, 28);
+        }
+
+        function getTwitterY(height) {
+            return calcScreenConst(height, 48, 31);
+        }
+
+        function getWwwY(height) {
+            return calcScreenConst(height, 48, 34);
+        }
+
+        var fb = self.buttons.createSecondaryButton(widthHalf, getFbY, FACEBOOK, function () {
             window.open(FACEBOOK_URL, _BLANK);
         }, true);
-        var twitter = self.buttons.createSecondaryButton(widthHalf, add(heightHalf, fontSize_15), TWITTER, function () {
+        var twitter = self.buttons.createSecondaryButton(widthHalf, getTwitterY, TWITTER, function () {
             window.open(TWITTER_URL, _BLANK);
         }, true);
-        var www = self.buttons.createSecondaryButton(widthHalf, add(heightHalf, fontSize_15), WWW, function () {
+        var www = self.buttons.createSecondaryButton(widthHalf, getWwwY, WWW, function () {
             window.open(SITE_URL, _BLANK);
         }, true);
 
-        var graphics_txt = self.stage.drawText(widthHalf, heightThreeQuarter, self.messages.get(KEY, GRAPHICS_MSG),
+        var graphics_txt = self.stage.drawText(widthHalf, heightFourFifth, self.messages.get(KEY, GRAPHICS_MSG),
             fontSize_35, SPECIAL_FONT, LIGHT_GREY);
-        var kenney = self.stage.drawText(widthHalf, heightFourFifth, KENNEY_MSG, fontSize_35, FONT, LIGHT_GREY);
+        var kenney = self.stage.drawText(widthHalf, __400, KENNEY_MSG, fontSize_60, FONT, LIGHT_GREY);
 
         function endScene() {
             function removeDrawables() {
@@ -94,5 +109,5 @@ var Credits = (function (Transition, window, calcScreenConst, widthHalf, heightQ
     };
 
     return Credits;
-})(Transition, window, calcScreenConst, widthHalf, heightQuarter, fontSize_15, subtract, fontSize_30, heightHalf, add,
-    heightThreeQuarter, heightFourFifth, fontSize_35);
+})(Transition, window, calcScreenConst, widthHalf, heightQuarter, fontSize_15, subtract, fontSize_30, add,
+    heightFourFifth, fontSize_35, fontSize_5, fontSize_60, __400);

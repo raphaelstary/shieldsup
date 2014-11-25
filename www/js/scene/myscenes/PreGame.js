@@ -48,10 +48,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
         var getLeftFireX = Fire.getLeftX.bind(undefined, shipDrawable);
         var getRightFireX = Fire.getRightX.bind(undefined, shipDrawable);
 
-        var leftFireDrawable = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true,
-            [shipDrawable]).drawable;
-        var rightFireDrawable = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true,
-            [shipDrawable]).drawable;
+        var leftFireWrapper = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
+        var leftFireDrawable = leftFireWrapper.drawable;
+        var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
+        var rightFireDrawable = rightFireWrapper.drawable;
 
         self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
             [shipDrawable]);
@@ -61,46 +61,47 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
         var playButton, creditsButton;
 
         function shipIsAtEndPosition() {
-            playButton = self.buttons.createPrimaryButton(widthHalf, heightThreeQuarter,
-                self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
+            function createButtons() {
+                playButton = self.buttons.createPrimaryButton(widthHalf, heightThreeQuarter,
+                    self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
 
-            shieldsAnimation();
+                shieldsAnimation();
 
-            function getBottomY(height) {
-                return calcScreenConst(height, 50, 47);
-            }
-
-            creditsButton = self.buttons.createSecondaryButton(widthThreeQuarter, getBottomY,
-                self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), goToCreditsScreen);
-
-            function goToCreditsScreen() {
-
-                var creditsScreen = new Credits(self.stage, self.tap, self.messages, self.sounds);
-
-                //unRegisterTapListener();
-
-                function continuePreGame() {
-                    self.fadeOffSet = false;
-                    registerTapListener();
-                    doTheShields = true;
-                    shieldsAnimation();
-
+                function getBottomY(height) {
+                    return calcScreenConst(height, 50, 47);
                 }
 
-                function setFadeOffSet() {
-                    self.fadeOffSet = true;
+                creditsButton = self.buttons.createSecondaryButton(widthThreeQuarter, getBottomY,
+                    self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), goToCreditsScreen);
+            }
+
+            createButtons();
+            function goToCreditsScreen() {
+
+                var creditsScreen = new Credits({
+                    stage: self.stage,
+                    messages: self.messages,
+                    buttons: self.buttons
+                });
+
+                var stuff = [shipDrawable, leftFireDrawable, rightFireDrawable, logoDrawable, logoHighlightDrawable];
+                stuff.forEach(self.stage.hide.bind(self.stage));
+
+                function continuePreGame() {
+                    doTheShields = true;
+                    createButtons();
+                    stuff.forEach(self.stage.show.bind(self.stage));
+                    self.stage.animate(leftFireDrawable, leftFireWrapper.sprite);
+                    self.stage.animate(rightFireDrawable, rightFireWrapper.sprite);
                 }
 
                 doTheShields = false;
-                self.stage.remove(shieldsDrawable);
-                creditsScreen.show(continuePreGame, [
-                    credits, creditsButton, play,
-                    pressPlayTxt,
-                    logoDrawable,
-                    shipDrawable,
-                    leftFireDrawable,
-                    rightFireDrawable
-                ], self.screenWidth, self.screenHeight, setFadeOffSet);
+                self.stage.hide(shieldsDrawable);
+
+                self.buttons.remove(playButton);
+                self.buttons.remove(creditsButton);
+
+                creditsScreen.show(continuePreGame);
             }
         }
 
