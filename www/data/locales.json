@@ -23,7 +23,8 @@
             "back": "back",
             "kenney": "Kenney"
         },
-        "game_over": {
+        "post_game": {
+            "game_over": "game over",
             "score": "score",
             "best": "best",
             "play_again": "play again"
