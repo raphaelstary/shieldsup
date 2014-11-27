@@ -1,4 +1,4 @@
-var GetReady = (function (Transition, calcScreenConst, changeSign, width, fontSize_15, multiply) {
+var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height, Font, multiply) {
     "use strict";
 
     function GetReady(services) {
@@ -6,28 +6,22 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, width, fontSi
         this.messages = services.messages;
     }
 
-    var GAME_MSG_KEY = 'game';
+    var KEY = 'game';
     var GET_READY = 'get_ready';
-    var GAME_FONT = 'GameFont';
+    var FONT = 'GameFont';
     var LIGHT_GRAY = '#D3D3D3';
 
     GetReady.prototype.show = function (nextScene) {
         var self = this;
 
-        function getY(height) {
-            return calcScreenConst(height, 3);
-        }
+        var readyDrawable = self.stage.moveFreshText(changeSign(Width.FULL), Height.THIRD,
+            self.messages.get(KEY, GET_READY), Font._15, FONT, LIGHT_GRAY, multiply(Width.FULL, 2), Height.THIRD, 180,
+            Transition.EASE_OUT_IN_SIN, false, function () {
 
-        var readyDrawable = self.stage.moveFreshText(changeSign(width), getY,
-            self.messages.get(GAME_MSG_KEY, GET_READY), fontSize_15, GAME_FONT, LIGHT_GRAY, multiply(width, 2), getY,
-            180, Transition.EASE_OUT_IN_SIN, false, function () {
-
-                // create end event method to end scene, this is endGetReadyScene
                 self.stage.remove(readyDrawable);
-
                 nextScene();
             }).drawable;
     };
 
     return GetReady;
-})(Transition, calcScreenConst, changeSign, width, fontSize_15, multiply);
+})(Transition, calcScreenConst, changeSign, Width, Height, Font, multiply);

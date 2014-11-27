@@ -1,33 +1,39 @@
-var CollectView = (function () {
+var CollectView = (function (Math, Transition, wrap) {
     "use strict";
 
-    var COLLECT_HIGHLIGHT = 'collect_highlight/collect_highlight';
-    var SHIP = 'ship';
-    var DAMAGED_SHIP_3 = 'damaged_ship_3';
-    var DAMAGED_SHIP_2 = 'damaged_ship_2';
+    var STAR_SHINE = 'star_shine';
+    var SHIP_WHITE = 'ship_white';
 
-    function CollectView(stage, shipDrawable, initialLives) {
+    function CollectView(stage, shipDrawable) {
         this.stage = stage;
         this.shipDrawable = shipDrawable;
-        this.initialLives = initialLives;
-
-        this.collectSprite = this.stage.getSprite(COLLECT_HIGHLIGHT, 30, false);
     }
 
-    CollectView.prototype.collectStar = function (lives) {
-        var self = this;
-        this.stage.animate(this.shipDrawable, this.collectSprite, setRightShipImgAfterAnimation);
-
-        function setRightShipImgAfterAnimation() {
-            if (lives == self.initialLives - 1) {
-                self.shipDrawable.data = self.stage.getGraphic(DAMAGED_SHIP_2);
-            } else if (lives == self.initialLives - 2) {
-                self.shipDrawable.data = self.stage.getGraphic(DAMAGED_SHIP_3);
-            } else {
-                self.shipDrawable.data = self.stage.getGraphic(SHIP);
+    CollectView.prototype.collectStar = function () {
+        var dep = [this.shipDrawable];
+        var shine = this.stage.drawFresh(wrap(this.shipDrawable.x), wrap(this.shipDrawable.y), STAR_SHINE, 1, dep);
+        this.stage.animateRotation(shine, 2 * Math.PI, 60, Transition.LINEAR, true);
+        var white = this.stage.drawFresh(wrap(this.shipDrawable.x), wrap(this.shipDrawable.y), SHIP_WHITE, 3, dep, 0);
+        this.stage.animateAlphaPattern(white, [
+            {
+                value: 1,
+                duration: 8,
+                easing: $.Transition.LINEAR
+            }, {
+                value: 0,
+                duration: 29,
+                easing: $.Transition.LINEAR,
+                callback: end
             }
+        ], false);
+
+        var self = this;
+
+        function end() {
+            self.stage.remove(shine);
+            self.stage.remove(white);
         }
     };
 
     return CollectView;
-})();
+})(Math, Transition, wrap);

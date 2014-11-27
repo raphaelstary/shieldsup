@@ -1,5 +1,8 @@
-var ScoreBoard = (function (calcScreenConst, getTopRaster, fontSize_20) {
+var ScoreBoard = (function (calcScreenConst, Height, Font) {
     "use strict";
+
+    var SPECIAL_FONT = 'SpecialGameFont';
+    var WHITE = '#fff';
 
     function getDigitOffSet(digitDrawable) {
         return calcScreenConst(digitDrawable.getWidth(), 8, 9);
@@ -26,9 +29,9 @@ var ScoreBoard = (function (calcScreenConst, getTopRaster, fontSize_20) {
         getSecondX: getSecondX,
         getThirdX: getThirdX,
         getFourthX: getFourthX,
-        getY: getTopRaster,
-        getSize: fontSize_20,
-        font: 'SpecialGameFont',
-        color: '#fff'
+        getY: Height.TOP_RASTER,
+        getSize: Font._20,
+        font: SPECIAL_FONT,
+        color: WHITE
     };
-})(calcScreenConst, getTopRaster, fontSize_20);
+})(calcScreenConst, Height, Font);

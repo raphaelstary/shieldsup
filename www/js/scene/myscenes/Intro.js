@@ -14,8 +14,8 @@ var Intro = (function ($) {
     var LOGO_FONT = 'LogoFont';
     var GAME_LOGO_TXT = 'SHIELDS UP';
     var PRESENTS_TXT = 'PRESENTS';
-    var GAME_FONT = 'GameFont';
-    var GAME_LOGO_FONT = 'SpecialGameFont';
+    var FONT = 'GameFont';
+    var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
     var LIGHT_GRAY = '#D3D3D3';
     var DARK_GRAY = '#A9A9A9';
@@ -23,56 +23,23 @@ var Intro = (function ($) {
     Intro.prototype.show = function (nextScene) {
 
         this.firstBg = $.drawBackGround(this.stage);
-
-        var self = this;
-
-        function updateYVelocity() {
-            self.yVelocity = $.calcScreenConst(self.stage.height, 48);
-        }
-
-        function widthSevenEighth(width) {
-            updateYVelocity();
-            return $.calcScreenConst(width, 8, 7);
-        }
-
-        function widthSixTeenth(width) {
-            updateYVelocity();
-            return $.calcScreenConst(width, 16);
-        }
-
-        function widthSevenSixTeenth(width) {
-            updateYVelocity();
-            return $.calcScreenConst(width, 16, 7);
-        }
-
-        function minusHeightFiveSixTeenth(height) {
-            updateYVelocity();
-            return -$.calcScreenConst(height, 16, 5);
-        }
-
         this.speedos = [
-            this.stage.drawFresh($.widthQuarter, $.zero, SPEED, 1),
-            this.stage.drawFresh(widthSevenEighth, $.changeSign($.heightTwoFifth), SPEED, 1),
-            this.stage.drawFresh(widthSixTeenth, $.changeSign($.heightTwoFifth), SPEED, 1),
-            this.stage.drawFresh(widthSevenSixTeenth, $.changeSign($.heightThreeFifth), SPEED, 1),
-            this.stage.drawFresh(widthSixTeenth, $.changeSign($.heightFourFifth), SPEED, 1),
-            this.stage.drawFresh($.widthTwoThird, minusHeightFiveSixTeenth, SPEED, 1)
+            this.stage.drawFresh($.Width.QUARTER, $.zero, SPEED, 1),
+            this.stage.drawFresh($.Width.get(8, 7), $.changeSign($.Height.TWO_FIFTH), SPEED, 1),
+            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.TWO_FIFTH), SPEED, 1),
+            this.stage.drawFresh($.Width.get(16, 7), $.changeSign($.Height.THREE_FIFTH), SPEED, 1),
+            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.FOUR_FIFTH), SPEED, 1),
+            this.stage.drawFresh($.Width.TWO_THIRD, $.changeSign($.Height.get(16, 5)), SPEED, 1)
         ];
         if (!this.logoDrawable)
             this.logoDrawable = {};
 
         this.logoDrawable.y = $.add(y, irgendwasLogo)(this.stage.height);
         this.lastY = this.logoDrawable.y;
-
         this.hasNotStarted = true;
-
-        this.yVelocity = $.calcScreenConst(this.stage.height, 48);
-
+        this.yVelocity = $.calcScreenConst(this.stage.height, 48); // todo resize
         this.nextScene = nextScene;
-
         this.loop.add('z_parallax', this._parallaxUpdate.bind(this));
-
-
     };
 
     function font_97of480(width, height) {
@@ -80,7 +47,7 @@ var Intro = (function ($) {
     }
 
     function y(height) {
-        return $.height(height) + $.calcScreenConst(height, 12);
+        return $.Height.FULL(height) + $.calcScreenConst(height, 12);
     }
 
     function irgendwasLogo(height) {
@@ -131,40 +98,43 @@ var Intro = (function ($) {
             });
 
             var scrollingBackGround = [
-                this.stage.moveFresh($.widthHalf, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthHalf,
-                    $.heightHalf, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
-                this.stage.moveFresh($.widthThird, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthThird,
-                    $.heightQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 0.75),
-                this.stage.moveFresh($.widthQuarter, $.add($.heightTwoThird, $.height), BACKGROUND_STAR, $.widthQuarter,
-                    $.heightTwoThird, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 1),
-                this.stage.moveFresh($.widthThreeQuarter, $.add($.heightThird, $.height), BACKGROUND_STAR,
-                    $.widthThreeQuarter, $.heightThird, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0,
-                    0.5),
-                this.stage.moveFresh($.widthTwoThird, $.add($.heightHalf, $.height), BACKGROUND_STAR, $.widthTwoThird,
-                    $.heightHalf, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0, 0.75),
-                this.stage.moveFresh($.widthHalf, $.add($.heightQuarter, $.height), BACKGROUND_STAR, $.widthHalf,
-                    $.heightQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0, 1),
-                this.stage.moveFresh($.widthTwoThird, $.add($.heightThreeQuarter, $.height), BACKGROUND_STAR,
-                    $.widthTwoThird, $.heightThreeQuarter, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1,
-                    0, 0.5)
+                this.stage.moveFresh($.Width.HALF, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR, $.Width.HALF,
+                    $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
+                this.stage.moveFresh($.Width.THIRD, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.THIRD, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0,
+                    0.75),
+                this.stage.moveFresh($.Width.QUARTER, $.add($.Height.TWO_THIRD, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.QUARTER, $.Height.TWO_THIRD, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5,
+                    0, 1),
+                this.stage.moveFresh($.Width.THREE_QUARTER, $.add($.Height.THIRD, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.THREE_QUARTER, $.Height.THIRD, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1,
+                    0, 0.5),
+                this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.TWO_THIRD, $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0,
+                    0.75),
+                this.stage.moveFresh($.Width.HALF, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.HALF, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0,
+                    1),
+                this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.THREE_QUARTER, $.Height.FULL), BACKGROUND_STAR,
+                    $.Width.TWO_THIRD, $.Height.THREE_QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0,
+                    1, 0, 0.5)
             ];
 
-            this.logoDrawable = self.stage.moveFreshText($.widthHalf, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
-                LOGO_FONT, WHITE, $.widthHalf, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
+            this.logoDrawable = self.stage.moveFreshText($.Width.HALF, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
+                LOGO_FONT, WHITE, $.Width.HALF, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
                 false, function () {
                     self.stage.remove(self.logoDrawable);
                 }).drawable;
 
-            var presentsDrawable = self.stage.moveFreshText($.widthHalf, presentYStart, PRESENTS_TXT, $.fontSize_30,
-                GAME_FONT, LIGHT_GRAY, $.widthHalf, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
-                false, function () {
+            var presentsDrawable = self.stage.moveFreshText($.Width.HALF, presentYStart, PRESENTS_TXT, $.Font._30, FONT,
+                LIGHT_GRAY, $.Width.HALF, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN, false,
+                function () {
                     self.stage.remove(presentsDrawable);
                 }).drawable;
 
             var speedStripes;
-            var wrapperLogo = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, $.fontSize_15,
-                GAME_LOGO_FONT, DARK_GRAY, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false,
-                function () {
+            var wrapperLogo = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15, SPECIAL_FONT,
+                DARK_GRAY, $.Width.HALF, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, function () {
                     self.next(self.nextScene, wrapperLogo.drawable, wrapperLogoHighlight.drawable, speedStripes,
                         scrollingBackGround);
                 }, function () {
@@ -172,8 +142,8 @@ var Intro = (function ($) {
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
                 }, undefined, 2);
 
-            var wrapperLogoHighlight = self.stage.moveFreshTextLater($.widthHalf, y, GAME_LOGO_TXT, $.fontSize_15,
-                GAME_LOGO_FONT, WHITE, $.widthHalf, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
+            var wrapperLogoHighlight = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15,
+                SPECIAL_FONT, WHITE, $.Width.HALF, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
                 function () {
                     self.stage.animateAlphaPattern(wrapperLogoHighlight.drawable, [
                         {
@@ -213,25 +183,12 @@ var Intro = (function ($) {
     Transition: Transition,
     calcScreenConst: calcScreenConst,
     drawSpeedStripes: drawSpeedStripes,
-    widthHalf: widthHalf,
-    heightHalf: heightHalf,
-    widthThird: widthThird,
-    heightThird: heightThird,
-    widthTwoThird: widthTwoThird,
-    heightTwoThird: heightTwoThird,
-    widthQuarter: widthQuarter,
-    heightQuarter: heightQuarter,
-    widthThreeQuarter: widthThreeQuarter,
-    heightThreeQuarter: heightThreeQuarter,
     changeSign: changeSign,
     zero: zero,
-    heightTwoFifth: heightTwoFifth,
-    heightThreeFifth: heightThreeFifth,
-    heightFourFifth: heightFourFifth,
-    height: height,
     add: add,
     subtract: subtract,
-    fontSize_15: fontSize_15,
-    fontSize_30: fontSize_30,
-    drawBackGround: drawBackGround
+    drawBackGround: drawBackGround,
+    Font: Font,
+    Height: Height,
+    Width: Width
 });

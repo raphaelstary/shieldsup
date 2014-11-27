@@ -1,5 +1,5 @@
-var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, drawSharedGameStuff, add, fontSize_30,
-    getBottomRaster) {
+var StartingPosition = (function (Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard,
+    EnergyBar) {
     "use strict";
 
     function StartingPosition(services) {
@@ -9,8 +9,6 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
 
     var PLAYER_LIFE = 'player_life';
     var ENERGY_FULL = 'energy_full';
-    var GAME_FONT = 'GameFont';
-    var DARK_GRAY = '#A9A9A9';
 
     StartingPosition.prototype.show = function (nextScene) {
         drawSharedGameStuff(this.stage, this.sceneStorage);
@@ -37,7 +35,8 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
         }
 
         function moveLifeLater(xFn, delay) {
-            return self.stage.moveFreshLater(lifeStartX, getTopRaster, PLAYER_LIFE, xFn, getTopRaster, speed, spacing,
+            return self.stage.moveFreshLater(lifeStartX, Height.TOP_RASTER, PLAYER_LIFE, xFn, Height.TOP_RASTER, speed,
+                spacing,
                 delay, false, goodToGo);
         }
 
@@ -45,54 +44,34 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
         var lifeTwoWrapper = moveLifeLater(lifeTwoEndX, 15);
         var lifeThreeWrapper = moveLifeLater(lifeThreeEndX, 10);
 
-        function energyX(width) {
-            return calcScreenConst(width, 32, 7);
-        }
-
         function energyStartX(width) {
-            var x = energyX(width);
+            var x = EnergyBar.getX(width);
             return x - x * 2;
         }
 
-        var energyBarWrapper = self.stage.moveFresh(energyStartX, getBottomRaster, ENERGY_FULL, energyX,
-            getBottomRaster, speed,
-            spacing, false, goodToGo);
+        var energyBarWrapper = self.stage.moveFresh(energyStartX, EnergyBar.getY, ENERGY_FULL, EnergyBar.getX,
+            EnergyBar.getY, speed, spacing, false, goodToGo);
 
         function getScreenOffSet(width) {
             return calcScreenConst(width, 5);
         }
 
         function moveDigitLater(xFn, delay, dependencies, callback) {
-            return self.stage.moveFreshTextLater(add(xFn, getScreenOffSet), getTopRaster, '0', fontSize_30, GAME_FONT,
-                DARK_GRAY, xFn, getTopRaster, speed, spacing, delay, false, goodToGo, callback, dependencies);
+            return self.stage.moveFreshTextLater(add(xFn, getScreenOffSet), ScoreBoard.getY, '0', ScoreBoard.getSize,
+                ScoreBoard.font, ScoreBoard.color, xFn, ScoreBoard.getY, speed, spacing, delay, false, goodToGo,
+                callback, dependencies);
         }
 
-        function getFourthX(width) {
-            return calcScreenConst(width, 5, 4);
-        }
+        var secondDigitWrapper, thirdDigitWrapper, fourthDigitWrapper;
+        var firstDigitWrapper = moveDigitLater(ScoreBoard.getFirstX, 10, undefined, function () {
+            var dependencies = [firstDigitWrapper.drawable];
 
-        var firstDigitWrapper, secondDigitWrapper, thirdDigitWrapper;
-        var fourthDigitWrapper = moveDigitLater(getFourthX, 10, undefined, function () {
-            function getDigitOffSet() {
-                return calcScreenConst(fourthDigitWrapper.drawable.getWidth(), 3, 4);
-            }
-
-            function getFirstX(width) {
-                return getFourthX(width) + getDigitOffSet() * 3;
-            }
-
-            function getSecondX(width) {
-                return getFourthX(width) + getDigitOffSet() * 2;
-            }
-
-            function getThirdX(width) {
-                return getFourthX(width) + getDigitOffSet();
-            }
-
-            var dependencies = [fourthDigitWrapper.drawable];
-            firstDigitWrapper = moveDigitLater(getFirstX, 2, dependencies);
-            secondDigitWrapper = moveDigitLater(getSecondX, 3, dependencies);
-            thirdDigitWrapper = moveDigitLater(getThirdX, 7, dependencies);
+            secondDigitWrapper = moveDigitLater(ScoreBoard.getSecondX.bind(undefined, firstDigitWrapper.drawable), 3,
+                dependencies);
+            thirdDigitWrapper = moveDigitLater(ScoreBoard.getThirdX.bind(undefined, firstDigitWrapper.drawable), 7,
+                dependencies);
+            fourthDigitWrapper = moveDigitLater(ScoreBoard.getFourthX.bind(undefined, firstDigitWrapper.drawable), 2,
+                dependencies);
         });
 
         var numberOfCallbacks = 8;
@@ -107,10 +86,8 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
                 3: lifeThreeWrapper.drawable
             };
             var countDrawables = [
-                firstDigitWrapper.drawable,
-                secondDigitWrapper.drawable,
-                thirdDigitWrapper.drawable,
-                fourthDigitWrapper.drawable
+                fourthDigitWrapper.drawable,
+                secondDigitWrapper.drawable, thirdDigitWrapper.drawable, firstDigitWrapper.drawable
             ];
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);
@@ -126,4 +103,4 @@ var StartingPosition = (function (Transition, calcScreenConst, getTopRaster, dra
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, getTopRaster, drawSharedGameStuff, add, fontSize_30, getBottomRaster);
+})(Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard, EnergyBar);

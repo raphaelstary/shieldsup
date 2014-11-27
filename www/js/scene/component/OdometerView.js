@@ -1,50 +1,52 @@
-var OdometerView = (function () {
+var OdometerView = (function (ScoreBoard, Transition) {
     "use strict";
 
     function OdometerView(stage, countDrawables) {
         this.stage = stage;
         this.countDrawables = countDrawables;
-
-        var sprite0_1, sprite1_2, sprite2_3, sprite3_4, sprite4_5, sprite5_6, sprite6_7, sprite7_8, sprite8_9, sprite9_0;
-
-        sprite0_1 = this.stage.getSprite('0_to_1/0_to_1', 15, false);
-        sprite1_2 = this.stage.getSprite('1_to_2/1_to_2', 15, false);
-        sprite2_3 = this.stage.getSprite('2_to_3/2_to_3', 15, false);
-        sprite3_4 = this.stage.getSprite('3_to_4/3_to_4', 15, false);
-        sprite4_5 = this.stage.getSprite('4_to_5/4_to_5', 15, false);
-        sprite5_6 = this.stage.getSprite('5_to_6/5_to_6', 15, false);
-        sprite6_7 = this.stage.getSprite('6_to_7/6_to_7', 15, false);
-        sprite7_8 = this.stage.getSprite('7_to_8/7_to_8', 15, false);
-        sprite8_9 = this.stage.getSprite('8_to_9/8_to_9', 15, false);
-        sprite9_0 = this.stage.getSprite('9_to_0/9_to_0', 15, false);
-        this.countSprites = [
-            sprite0_1, sprite1_2, sprite2_3, sprite3_4, sprite4_5, sprite5_6, sprite6_7, sprite7_8, sprite8_9, sprite9_0
-        ];
-
-        this.countStatics = [
-            this.stage.getGraphic('numeral_0'),
-            this.stage.getGraphic('numeral_1'),
-            this.stage.getGraphic('numeral_2'),
-            this.stage.getGraphic('numeral_3'),
-            this.stage.getGraphic('numeral_4'),
-            this.stage.getGraphic('numeral_5'),
-            this.stage.getGraphic('numeral_6'),
-            this.stage.getGraphic('numeral_7'),
-            this.stage.getGraphic('numeral_8'),
-            this.stage.getGraphic('numeral_9')
-        ];
     }
 
     OdometerView.prototype.animateTransition = function (digitPosition, oldValue, newValue) {
-        var self = this;
-
         var currentDrawable = this.countDrawables[digitPosition];
-        var currentSprite = this.countSprites[oldValue];
 
-        this.stage.animate(currentDrawable, currentSprite, function () {
-            currentDrawable.data = self.countStatics[newValue];
+        var getX;
+        if (digitPosition === 0) {
+            getX = ScoreBoard.getFirstX.bind(undefined, currentDrawable);
+        } else if (digitPosition === 1) {
+            getX = ScoreBoard.getSecondX.bind(undefined, currentDrawable);
+        } else if (digitPosition === 2) {
+            getX = ScoreBoard.getThirdX.bind(undefined, currentDrawable);
+        } else if (digitPosition === 3) {
+            getX = ScoreBoard.getFourthX.bind(undefined, currentDrawable);
+        }
+
+        function getUpperY(height) {
+            return ScoreBoard.getY(height) - currentDrawable.getHeight() * 2;
+        }
+
+        function getLowerY(height) {
+            return ScoreBoard.getY(height) + currentDrawable.getHeight() * 2;
+        }
+
+        var self = this;
+        var speed = 60;
+        var spacing = Transition.LINEAR;
+        this.stage.move(currentDrawable, getX, getUpperY, speed, spacing, false, function () {
+            self.stage.unmask(currentDrawable);
         });
+        var newDrawable = this.stage.moveFreshText(getX, getLowerY, newValue.toString(), ScoreBoard.getSize,
+            ScoreBoard.font, ScoreBoard.color, getX, ScoreBoard.getY, speed, spacing, false, function () {
+                self.stage.unmask(newDrawable);
+            }).drawable;
+        this.countDrawables.splice(digitPosition, 1, newDrawable);
+
+        var first = this.countDrawables[this.countDrawables.length - 1];
+        var last = this.countDrawables[0];
+        this.stage.mask(currentDrawable, first.getCornerX.bind(first), first.getCornerY.bind(first),
+            last.getEndX.bind(last), last.getEndY.bind(last));
+        this.stage.mask(newDrawable, first.getCornerX.bind(first), first.getCornerY.bind(first),
+            last.getEndX.bind(last), last.getEndY.bind(last));
     };
 
     return OdometerView;
-})();
+})(ScoreBoard, Transition);

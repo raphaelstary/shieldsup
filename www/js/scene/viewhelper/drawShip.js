@@ -1,11 +1,11 @@
-var drawShip = (function (widthHalf, __400) {
+var drawShip = (function (Width, Height) {
     "use strict";
 
     var SHIP = 'ship';
 
     function drawShip(stage) {
-        return stage.drawFresh(widthHalf, __400, SHIP);
+        return stage.drawFresh(Width.HALF, Height._400, SHIP);
     }
 
     return drawShip;
-})(widthHalf, __400);
+})(Width, Height);

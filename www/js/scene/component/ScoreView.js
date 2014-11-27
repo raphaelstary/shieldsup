@@ -1,40 +1,40 @@
-var ScoreView = (function (calcScreenConst) {
+var ScoreView = (function (calcScreenConst, wrap, Transition, Font) {
     "use strict";
 
-    function ScoreView(stage, screenWidth, screenHeight) {
+    function ScoreView(stage) {
         this.stage = stage;
-
-        this.scoredPointsSprite = this.stage.getSprite('score_10/score_10', 20, false);
-        this.scoredPointsDrawable = this.stage.getDrawable(0, 0, 'score_10/score_10_0000', 3);
-
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
-    ScoreView.prototype._setDrawablePosition = function (x, y) {
-        var yOffSet = calcScreenConst(this.screenHeight, 48, 5);
-
-        this.scoredPointsDrawable.x = x;
-        this.scoredPointsDrawable.y = y - yOffSet;
-
-        this.lastX = x;
-        this.lastY = y;
-    };
+    var POINTS = '10';
+    var SPECIAL_FONT = 'SpecialGameFont';
+    var WHITE = '#fff';
 
     ScoreView.prototype.showScoredPoints = function (x, y) {
-        this._setDrawablePosition(x, y);
+        function getStartY(height) {
+            return y - calcScreenConst(height, 48, 5);
+        }
+
+        function getEndY(height) {
+            return getStartY(height) - calcScreenConst(height, 48);
+        }
 
         var self = this;
-        this.stage.animate(this.scoredPointsDrawable, this.scoredPointsSprite, function () {
-            self.stage.remove(self.scoredPointsDrawable);
-        });
-    };
-
-    ScoreView.prototype.resize = function (width, height) {
-        this.screenWidth = width;
-        this.screenHeight = height;
-        this._setDrawablePosition(this.lastX, this.lastY);
+        var score = this.stage.moveFreshText(wrap(x), getStartY, POINTS, Font._40, SPECIAL_FONT, WHITE, wrap(x),
+            getEndY, 120, Transition.LINEAR, false, function () {
+                self.stage.remove(score);
+            }, undefined, 3, 0.5);
+        self.stage.animateAlphaPattern(score, [
+            {
+                value: 1,
+                duration: 8,
+                easing: Transition.LINEAR
+            }, {
+                value: 0.5,
+                duration: 29,
+                easing: Transition.LINEAR
+            }
+        ], false);
     };
 
     return ScoreView;
-})(calcScreenConst);
+})(calcScreenConst, wrap, Transition, Font);

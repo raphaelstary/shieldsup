@@ -1,10 +1,8 @@
-var EnergyBar = (function (calcScreenConst, getBottomRaster) {
+var EnergyBar = (function (Width, Height) {
     "use strict";
 
     return {
-        getX: function (width) {
-            return calcScreenConst(width, 32, 7);
-        },
-        getY: getBottomRaster
+        getX: Width.get(32, 7),
+        getY: Height.BOTTOM_RASTER
     };
-})(calcScreenConst, getBottomRaster);
+})(Width, Height);

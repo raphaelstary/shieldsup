@@ -1,5 +1,4 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, heightHalf, heightThreeQuarter,
-    widthThreeQuarter, __400, Fire) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire) {
     "use strict";
 
     function PreGame(services) {
@@ -34,7 +33,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
             return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + height;
         }
 
-        var shipDrawable = self.stage.moveFresh(widthHalf, getShipStartY, SHIP, widthHalf, heightHalf, 60,
+        var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
             Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
 
         function getFireStartY(height) {
@@ -42,7 +41,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
         }
 
         function getFireEndY(height) {
-            return heightHalf(height) + Fire.getShipOffSet(shipDrawable);
+            return Height.HALF(height) + Fire.getShipOffSet(shipDrawable);
         }
 
         var getLeftFireX = Fire.getLeftX.bind(undefined, shipDrawable);
@@ -62,16 +61,12 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
 
         function shipIsAtEndPosition() {
             function createButtons() {
-                playButton = self.buttons.createPrimaryButton(widthHalf, heightThreeQuarter,
+                playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                     self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
 
                 shieldsAnimation();
 
-                function getBottomY(height) {
-                    return calcScreenConst(height, 50, 47);
-                }
-
-                creditsButton = self.buttons.createSecondaryButton(widthThreeQuarter, getBottomY,
+                creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
                     self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), goToCreditsScreen);
             }
 
@@ -112,7 +107,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
 
         var shieldsDownSprite = self.stage.getSprite(SHIELDS_DOWN, 6, false);
         var shieldsUpSprite = self.stage.getSprite(SHIELDS_UP, 6, false);
-        var shieldsDrawable = self.stage.drawFresh(widthHalf, heightHalf, SHIELDS);
+        var shieldsDrawable = self.stage.drawFresh(Width.HALF, Height.HALF, SHIELDS);
         self.stage.hide(shieldsDrawable);
 
         var startTimer = 10;
@@ -156,10 +151,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
                 return calcScreenConst(height, 32, 7) + height;
             }
 
-            self.stage.move(logoDrawable, widthHalf, getLogoY, 30, Transition.EASE_IN_EXPO, false, function () {
+            self.stage.move(logoDrawable, Width.HALF, getLogoY, 30, Transition.EASE_IN_EXPO, false, function () {
                 self.stage.remove(logoDrawable);
             });
-            self.stage.move(logoHighlightDrawable, widthHalf, getLogoY, 30, Transition.EASE_IN_EXPO, false,
+            self.stage.move(logoHighlightDrawable, Width.HALF, getLogoY, 30, Transition.EASE_IN_EXPO, false,
                 function () {
                     self.stage.remove(logoHighlightDrawable);
                 });
@@ -167,7 +162,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
             doTheShields = false;
             self.stage.remove(shieldsDrawable);
 
-            self.stage.move(shipDrawable, widthHalf, __400, 30, Transition.EASE_IN_EXPO, false, function () {
+            self.stage.move(shipDrawable, Width.HALF, Height._400, 30, Transition.EASE_IN_EXPO, false, function () {
                 // next scene
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite);
@@ -194,4 +189,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, widthHalf, height
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, widthHalf, heightHalf, heightThreeQuarter, widthThreeQuarter, __400, Fire);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire);

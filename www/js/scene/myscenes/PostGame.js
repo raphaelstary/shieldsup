@@ -1,5 +1,4 @@
-var PostGame = (function (localStorage, Transition, heightFifth, heightThird, heightHalf, widthHalf, add, height,
-    heightThreeQuarter, fontSize_30, subtract, fontSize_15) {
+var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract) {
     "use strict";
 
     function PostGame(services) {
@@ -29,37 +28,38 @@ var PostGame = (function (localStorage, Transition, heightFifth, heightThird, he
 
         var self = this;
 
-        var gameOverWrapper = self.stage.moveFreshText(widthHalf, subtract(heightFifth, height),
-            self.messages.get(KEY, GAME_OVER), fontSize_15, FONT, DARK_GRAY, widthHalf, heightFifth, 60,
+        var gameOverWrapper = self.stage.moveFreshText(Width.HALF, subtract(Height.FIFTH, Height.FULL),
+            self.messages.get(KEY, GAME_OVER), Font._15, FONT, DARK_GRAY, Width.HALF, Height.FIFTH, 60,
             Transition.EASE_OUT_ELASTIC, false, function () {
 
                 function moveIn(text, yFn, delay, callback) {
-                    return self.stage.moveFreshTextLater(widthHalf, subtract(yFn, height), text, fontSize_30,
-                        SPECIAL_FONT, WHITE, widthHalf, yFn, 60, Transition.EASE_OUT_BOUNCE, delay, false, callback);
+                    return self.stage.moveFreshTextLater(Width.HALF, subtract(yFn, Height.FULL), text, Font._30,
+                        SPECIAL_FONT, WHITE, Width.HALF, yFn, 60, Transition.EASE_OUT_BOUNCE, delay, false, callback);
                 }
 
                 function getNewScoreY(height) {
-                    return heightThird(height) + fontSize_30(0, height) * 2;
+                    return Height.THIRD(height) + Font._30(0, height) * 2;
                 }
 
                 function getHighScoreY(height) {
-                    return heightHalf(height) + fontSize_30(0, height) * 2;
+                    return Height.HALF(height) + Font._30(0, height) * 2;
                 }
 
                 var allTimeHighScore = localStorage.getItem(ALL_TIME_HIGH_SCORE);
                 if (allTimeHighScore == null)
                     allTimeHighScore = '0';
 
-                var scoreWrapper = moveIn(self.messages.get(KEY, SCORE), heightThird, 1);
+                var scoreWrapper = moveIn(self.messages.get(KEY, SCORE), Height.THIRD, 1);
                 var scoreDigitsWrapper = moveIn(points.toString(), getNewScoreY, 5);
-                var bestWrapper = moveIn(self.messages.get(KEY, BEST), heightHalf, 10);
+                var bestWrapper = moveIn(self.messages.get(KEY, BEST), Height.HALF, 10);
                 var highScoreWrapper = moveIn(allTimeHighScore, getHighScoreY, 15, function () {
 
-                    var playButton = self.buttons.createPrimaryButton(widthHalf, heightThreeQuarter,
+                    var playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                         self.messages.get(KEY, PLAY_AGAIN), function () {
 
                             function moveOut(drawable, yFn, delay, callback) {
-                                self.stage.moveLater(drawable, widthHalf, add(yFn, height), 30, Transition.EASE_IN_EXPO,
+                                self.stage.moveLater(drawable, Width.HALF, add(yFn, Height.FULL), 30,
+                                    Transition.EASE_IN_EXPO,
                                     false, function () {
                                         self.stage.remove(drawable);
                                     }, undefined, delay, callback);
@@ -68,10 +68,10 @@ var PostGame = (function (localStorage, Transition, heightFifth, heightThird, he
                             moveOut(highScoreWrapper.drawable, getHighScoreY, 5, function () {
                                 self.buttons.remove(playButton);
                             });
-                            moveOut(bestWrapper.drawable, heightHalf, 10);
+                            moveOut(bestWrapper.drawable, Height.HALF, 10);
                             moveOut(scoreDigitsWrapper.drawable, getNewScoreY, 15);
-                            moveOut(scoreWrapper.drawable, heightThird, 20);
-                            moveOut(gameOverWrapper.drawable, heightFifth, 25, function () {
+                            moveOut(scoreWrapper.drawable, Height.THIRD, 20);
+                            moveOut(gameOverWrapper.drawable, Height.FIFTH, 25, function () {
                                 if (points > parseInt(allTimeHighScore, 10))
                                     localStorage.setItem(ALL_TIME_HIGH_SCORE, points);
 
@@ -83,5 +83,4 @@ var PostGame = (function (localStorage, Transition, heightFifth, heightThird, he
     };
 
     return PostGame;
-})(window.localStorage, Transition, heightFifth, heightThird, heightHalf, widthHalf, add, height, heightThreeQuarter,
-    fontSize_30, subtract, fontSize_15);
+})(window.localStorage, Transition, Height, Width, add, Font, subtract);
