@@ -1,4 +1,4 @@
-var OdometerView = (function (ScoreBoard, Transition) {
+var OdometerView = (function (ScoreBoard, Transition, Math) {
     "use strict";
 
     function OdometerView(stage, countDrawables) {
@@ -21,18 +21,18 @@ var OdometerView = (function (ScoreBoard, Transition) {
         }
 
         function getUpperY(height) {
-            return ScoreBoard.getY(height) - currentDrawable.getHeight() * 2;
+            return ScoreBoard.getY(height) - Math.floor(currentDrawable.getHeight() * 1.2);
         }
 
         function getLowerY(height) {
-            return ScoreBoard.getY(height) + currentDrawable.getHeight() * 2;
+            return ScoreBoard.getY(height) + Math.floor(currentDrawable.getHeight() * 1.2);
         }
 
         var self = this;
         var speed = 60;
         var spacing = Transition.LINEAR;
         this.stage.move(currentDrawable, getX, getUpperY, speed, spacing, false, function () {
-            self.stage.unmask(currentDrawable);
+            self.stage.remove(currentDrawable);
         });
         var newDrawable = this.stage.moveFreshText(getX, getLowerY, newValue.toString(), ScoreBoard.getSize,
             ScoreBoard.font, ScoreBoard.color, getX, ScoreBoard.getY, speed, spacing, false, function () {
@@ -49,4 +49,4 @@ var OdometerView = (function (ScoreBoard, Transition) {
     };
 
     return OdometerView;
-})(ScoreBoard, Transition);
+})(ScoreBoard, Transition, Math);

@@ -1,9 +1,11 @@
 var GameWorld = (function (Object) {
     "use strict";
 
+    var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
+
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, removeFromRepo,
-        endGame, sounds) {
+        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, endGame,
+        sounds, shipHitView, shieldsHitView, livesView) {
         this.stage = stage;
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
@@ -20,21 +22,20 @@ var GameWorld = (function (Object) {
 
         this.shaker = screenShaker;
         this.lifeDrawablesDict = lifeDrawablesDict;
-        this.removeFromRepo = removeFromRepo;
         this.endGame = endGame;
 
         this.sounds = sounds;
+
+        this.shipHitView = shipHitView;
+        this.shieldsHitView = shieldsHitView;
+        this.livesView = livesView;
 
         this.shieldsOn = false; //part of global game state
         this.lives = 3; //3; //part of global game state
         this.initialLives = this.lives;
         this.points = 0; //part of global game state
 
-        this.shieldsGetHitSprite = stage.getSprite('shields_hit/shields_hit', 15, false);
-        this.elemHitsShieldsSprite = stage.getSprite('object_destroyed/object_destroyed', 3, false);
-
-        this.shipHullHitSprite = stage.getSprite('hull_hit/hull_hit', 24, false);
-        this.dumpLifeSprite = stage.getSprite('lost_life/lost_life', 20, false);
+        this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
     }
 
     GameWorld.prototype.checkCollisions = function () {
@@ -45,13 +46,7 @@ var GameWorld = (function (Object) {
             if (this.shieldsOn && needPreciseCollisionDetection(this.shieldsDrawable, asteroid) &&
                 this.shieldsCollision.isHit(asteroid)) {
 
-                this.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
-                    if (self.shieldsOn) {
-                        self.shieldsDrawable.data = self.stage.getGraphic('shields');
-                    } else {
-                        self.stage.remove(self.shieldsDrawable);
-                    }
-                });
+                this.shieldsHitView.hit();
                 (function (asteroid) {
                     self.stage.remove(asteroid);
                     self.stage.animate(asteroid, self.elemHitsShieldsSprite, function () {
@@ -60,14 +55,12 @@ var GameWorld = (function (Object) {
                 })(asteroid);
                 this.shaker.startSmallShake();
                 this.sounds.play('asteroid-explosion');
-                self.removeFromRepo(asteroid);
                 delete this.trackedAsteroids[key];
                 return;
             }
 
             if (needPreciseCollisionDetection(this.shipDrawable, asteroid) && this.shipCollision.isHit(asteroid)) {
                 this.stage.remove(asteroid);
-                self.removeFromRepo(asteroid);
                 delete this.trackedAsteroids[key];
 
                 this._shipGotHit();
@@ -85,13 +78,7 @@ var GameWorld = (function (Object) {
 
             if (this.shieldsOn && needPreciseCollisionDetection(this.shieldsDrawable, star) &&
                 this.shieldsCollision.isHit(star)) {
-                self.stage.animate(this.shieldsDrawable, this.shieldsGetHitSprite, function () {
-                    if (self.shieldsOn) {
-                        self.shieldsDrawable.data = self.stage.getGraphic('shields');
-                    } else {
-                        self.stage.remove(self.shieldsDrawable);
-                    }
-                });
+                this.shieldsHitView.hit();
                 (function (star) {
                     self.stage.remove(star);
                     self.stage.animate(star, self.elemHitsShieldsSprite, function () {
@@ -99,7 +86,6 @@ var GameWorld = (function (Object) {
                     })
                 })(star);
                 self.sounds.play('star-explosion');
-                self.removeFromRepo(star);
                 delete this.trackedStars[key];
                 return;
             }
@@ -113,7 +99,6 @@ var GameWorld = (function (Object) {
                 this.points += score;
 
                 this.stage.remove(star);
-                self.removeFromRepo(star);
                 delete this.trackedStars[key];
                 // return;
             }
@@ -123,22 +108,11 @@ var GameWorld = (function (Object) {
     GameWorld.prototype._shipGotHit = function () {
         var self = this;
         var currentLife = this.lives;
-        self.stage.animate(this.lifeDrawablesDict[currentLife], this.dumpLifeSprite, function () {
-            self.stage.remove(self.lifeDrawablesDict[currentLife]);
-            delete self.lifeDrawablesDict[currentLife];
-        });
+        self.livesView.remove();
 
         if (--this.lives > 0) {
             self.sounds.play('asteroid-explosion');
-            self.stage.animate(this.shipDrawable, this.shipHullHitSprite, function () {
-                if (self.lives == self.initialLives - 1) {
-                    self.shipDrawable.data = self.stage.getGraphic('damaged_ship_2');
-                } else if (self.lives == self.initialLives - 2) {
-                    self.shipDrawable.data = self.stage.getGraphic('damaged_ship_3');
-                } else {
-                    self.shipDrawable.data = self.stage.getGraphic('ship');
-                }
-            });
+            self.shipHitView.hit();
         }
     };
 

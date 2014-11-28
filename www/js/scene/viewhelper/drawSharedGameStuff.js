@@ -1,4 +1,4 @@
-var drawSharedGameStuff = (function (Fire, drawShip, drawBackGround, drawSpeedStripes) {
+var drawSharedGameStuff = (function (Fire, drawShip, drawBackGround, drawSpeedStripes, drawShields) {
     "use strict";
 
     function drawSharedGameStuff(stage, sceneStorage) {
@@ -14,7 +14,10 @@ var drawSharedGameStuff = (function (Fire, drawShip, drawBackGround, drawSpeedSt
         if (!sceneStorage.backGround) {
             sceneStorage.backGround = drawBackGround(stage);
         }
+        if (!sceneStorage.shields) {
+            sceneStorage.shields = drawShields(stage, sceneStorage.ship);
+        }
     }
 
     return drawSharedGameStuff;
-})(Fire, drawShip, drawBackGround, drawSpeedStripes);
+})(Fire, drawShip, drawBackGround, drawSpeedStripes, drawShields);

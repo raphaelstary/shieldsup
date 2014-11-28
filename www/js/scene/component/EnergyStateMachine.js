@@ -36,7 +36,7 @@ var EnergyStateMachine = (function () {
         //        self.sounds.play('shields-down');
         this.world.shieldsOn = false;
         self.stage.animate(self.shieldsDrawable, self.shieldsDownSprite, function () {
-            self.stage.remove(self.shieldsDrawable);
+            self.stage.hide(self.shieldsDrawable);
         });
     };
 

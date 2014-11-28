@@ -15,25 +15,25 @@ var ScoreView = (function (calcScreenConst, wrap, Transition, Font) {
         }
 
         function getEndY(height) {
-            return getStartY(height) - calcScreenConst(height, 48);
+            return getStartY(height) - calcScreenConst(height, 48, 2);
         }
 
         var self = this;
-        var score = this.stage.moveFreshText(wrap(x), getStartY, POINTS, Font._40, SPECIAL_FONT, WHITE, wrap(x),
-            getEndY, 120, Transition.LINEAR, false, function () {
+        var score = this.stage.moveFreshText(wrap(x), getStartY, POINTS, Font._25, SPECIAL_FONT, WHITE, wrap(x),
+            getEndY, 60, Transition.LINEAR, false, function () {
                 self.stage.remove(score);
-            }, undefined, 3, 0.5);
+            }, undefined, 3, 0.5).drawable;
         self.stage.animateAlphaPattern(score, [
             {
                 value: 1,
-                duration: 8,
+                duration: 15,
                 easing: Transition.LINEAR
             }, {
                 value: 0.5,
                 duration: 29,
                 easing: Transition.LINEAR
             }
-        ], false);
+        ]);
     };
 
     return ScoreView;

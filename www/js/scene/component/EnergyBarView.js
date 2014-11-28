@@ -25,13 +25,13 @@ var EnergyBarView = (function (Transition, EnergyBar, changeCoords, changeMask) 
 
     EnergyBarView.prototype.__animateMaskWidth = function (animation, callback) {
         var self = this;
-        this.stage.basicAnimation(this.drawable, function (value) {
-            self.drawable.mask.width = value;
-        }, animation, callback);
-
         var position = 0;
         if (this.stage.stage.animations.has(this.drawable))
             position = LAST_TICK - this.stage.stage.animations.dict[this.drawable.id].time;
+
+        this.stage.basicAnimation(this.drawable, function (value) {
+            self.drawable.mask.width = value;
+        }, animation, callback);
 
         this.stage.stage.animations.dict[this.drawable.id].time = position;
         this.drawable.mask.width = Transition.LINEAR(position, animation.start, animation.length, animation.duration);

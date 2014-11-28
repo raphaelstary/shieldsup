@@ -1,4 +1,4 @@
-var CollectView = (function (Math, Transition, wrap) {
+var CollectView = (function (Math, Transition, calcScreenConst) {
     "use strict";
 
     var STAR_SHINE = 'star_shine';
@@ -10,24 +10,36 @@ var CollectView = (function (Math, Transition, wrap) {
     }
 
     CollectView.prototype.collectStar = function () {
+        var self = this;
         var dep = [this.shipDrawable];
-        var shine = this.stage.drawFresh(wrap(this.shipDrawable.x), wrap(this.shipDrawable.y), STAR_SHINE, 1, dep);
-        this.stage.animateRotation(shine, 2 * Math.PI, 60, Transition.LINEAR, true);
-        var white = this.stage.drawFresh(wrap(this.shipDrawable.x), wrap(this.shipDrawable.y), SHIP_WHITE, 3, dep, 0);
+
+        function getX() {
+            return self.shipDrawable.x;
+        }
+
+        function getY() {
+            return self.shipDrawable.y;
+        }
+
+        function getShineY(height) {
+            return self.shipDrawable.y + calcScreenConst(height, 48);
+        }
+
+        var shine = this.stage.drawFresh(getX, getShineY, STAR_SHINE, 1, dep, 1, 0);
+        this.stage.animateRotation(shine, 2 * Math.PI, 180, Transition.LINEAR, true);
+        var white = this.stage.drawFresh(getX, getY, SHIP_WHITE, 3, dep, 0);
         this.stage.animateAlphaPattern(white, [
             {
                 value: 1,
                 duration: 8,
-                easing: $.Transition.LINEAR
+                easing: Transition.LINEAR
             }, {
                 value: 0,
                 duration: 29,
-                easing: $.Transition.LINEAR,
+                easing: Transition.LINEAR,
                 callback: end
             }
         ], false);
-
-        var self = this;
 
         function end() {
             self.stage.remove(shine);
@@ -36,4 +48,4 @@ var CollectView = (function (Math, Transition, wrap) {
     };
 
     return CollectView;
-})(Math, Transition, wrap);
+})(Math, Transition, calcScreenConst);

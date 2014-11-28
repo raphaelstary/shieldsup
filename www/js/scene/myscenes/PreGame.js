@@ -1,4 +1,4 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields) {
     "use strict";
 
     function PreGame(services) {
@@ -15,8 +15,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var SHIP = 'ship';
     var FIRE = 'fire/fire';
     var SHIELDS = 'shields';
-    var SHIELDS_DOWN = 'shields_down/shields_down';
-    var SHIELDS_UP = 'shields_up/shields_up';
 
     var PRE_GAME_MSG_KEY = 'pre_game';
     var CREDITS_MSG = 'credits';
@@ -34,7 +32,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
 
         var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
-            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
+            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition, undefined, 1).drawable;
 
         function getFireStartY(height) {
             return getShipStartY(height) + Fire.getShipOffSet(shipDrawable);
@@ -47,9 +45,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var getLeftFireX = Fire.getLeftX.bind(undefined, shipDrawable);
         var getRightFireX = Fire.getRightX.bind(undefined, shipDrawable);
 
-        var leftFireWrapper = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
+        var leftFireWrapper = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true, [shipDrawable], 1);
         var leftFireDrawable = leftFireWrapper.drawable;
-        var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
+        var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable], 1);
         var rightFireDrawable = rightFireWrapper.drawable;
 
         self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
@@ -105,10 +103,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.timer.doLater(endOfScreen.bind(self), 31);
         }
 
-        var shieldsDownSprite = self.stage.getSprite(SHIELDS_DOWN, 6, false);
-        var shieldsUpSprite = self.stage.getSprite(SHIELDS_UP, 6, false);
-        var shieldsDrawable = self.stage.drawFresh(Width.HALF, Height.HALF, SHIELDS);
-        self.stage.hide(shieldsDrawable);
+        var shieldsWrapper = drawShields(self.stage);
+        var shieldsDownSprite = shieldsWrapper.downSprite;
+        var shieldsUpSprite = shieldsWrapper.upSprite;
+        var shieldsDrawable = shieldsWrapper.drawable;
 
         var startTimer = 10;
         var doTheShields = true;
@@ -181,12 +179,14 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             left: leftFire,
             right: rightFire
         };
-        this.sceneStorage.shields = shields;
-        this.sceneStorage.shieldsUp = shieldsUpSprite;
-        this.sceneStorage.shieldsDown = shieldsDownSprite;
+        this.sceneStorage.shields = {
+            drawable: shields,
+            upSprite: shieldsUpSprite,
+            downSprite: shieldsDownSprite
+        };
 
         nextScene();
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields);

@@ -11,10 +11,10 @@ var InGameTutorial = (function ($) {
         this.sounds = services.sounds;
         this.resize = services.resize;
         this.shaker = services.shaker;
+        this.timer = services.timer;
+        this.buttons = services.buttons;
     }
 
-    var SHIELDS = 'shields';
-    var SHIP = 'ship';
     var ASTEROID = 'asteroid_1';
 
     var GAME_FONT = 'GameFont';
@@ -42,14 +42,14 @@ var InGameTutorial = (function ($) {
         var self = this;
 
         var shipDrawable = this.sceneStorage.ship;
-        var shieldsDrawable = this.sceneStorage.shields;
+        var shieldsDrawable = this.sceneStorage.shields.drawable;
         var energyBarDrawable = this.sceneStorage.energyBar;
         var lifeDrawablesDict = this.sceneStorage.lives;
         var countDrawables = this.sceneStorage.counts;
         var fireDict = this.sceneStorage.fire;
         var speedStripes = this.sceneStorage.speedStripes;
-        var shieldsUpSprite = this.sceneStorage.shieldsUp;
-        var shieldsDownSprite = this.sceneStorage.shieldsDown;
+        var shieldsUpSprite = this.sceneStorage.shields.upSprite;
+        var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         [
             shipDrawable,
@@ -68,15 +68,17 @@ var InGameTutorial = (function ($) {
 
         var scoreDisplay = new $.Odometer(new $.OdometerView(this.stage, countDrawables));
         var collectAnimator = new $.CollectView(this.stage, shipDrawable, 3);
-
         var scoreAnimator = new $.ScoreView(this.stage);
 
-        var shipCollision = new $.CanvasCollisionDetector(this.stage.getGraphic(SHIP), shipDrawable);
-        var shieldsCollision = new $.CanvasCollisionDetector(this.stage.getGraphic(SHIELDS), shieldsDrawable);
+        var shipCollision = self.stage.getCollisionDetector(shipDrawable);
+        var anotherShieldsDrawable = drawShields(self.stage, shipDrawable).drawable;
+        var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
+        var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer);
+        var livesView = new $.LivesView(self.stage, lifeDrawablesDict);
+        var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer);
         var world = new $.GameWorld(this.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
             scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
-            lifeDrawablesDict, function () {
-            }, endGame, this.sounds);
+            lifeDrawablesDict, endGame, this.sounds, hullHitView, shieldsHitView, livesView);
 
         this.loop.add(COLLISION_TUTORIAL, world.checkCollisions.bind(world));
 
@@ -101,6 +103,12 @@ var InGameTutorial = (function ($) {
             removeStarStuff();
             removeCommonGameLoopStuff();
             unregisterPushRelease();
+            unregisterCollisionStuff();
+        }
+
+        function unregisterCollisionStuff() {
+            self.stage.detachCollisionDetector(shipCollision);
+            self.stage.detachCollisionDetector(shieldsCollision);
         }
 
         function createSkipStuff() {
@@ -148,7 +156,7 @@ var InGameTutorial = (function ($) {
                 return 5;
             }
 
-            var touch_txt = self.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
+            var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                 self.messages.get(TUTORIAL_MSG_KEY, TOUCH_AND_HOLD_MSG), $.Font._30, GAME_FONT, WHITE, 3, undefined,
                 $.Math.PI / 16, 1, $.Width.TWO_THIRD, $.add(Font._30, get5));
 
@@ -156,7 +164,7 @@ var InGameTutorial = (function ($) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
-            var raise_txt = self.drawText(getX, $.Height.HALF,
+            var raise_txt = self.stage.drawText(getX, $.Height.HALF,
                 self.messages.get(TUTORIAL_MSG_KEY, TO_RAISE_SHIELDS_MSG), $.Font._35, GAME_FONT, WHITE, 3, undefined,
                 -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
 
@@ -347,7 +355,6 @@ var InGameTutorial = (function ($) {
     CollectView: CollectView,
     OdometerView: OdometerView,
     ScoreView: ScoreView,
-    CanvasCollisionDetector: CanvasCollisionDetector,
     GameWorld: GameWorld,
     EnergyStateMachine: EnergyStateMachine,
     calcScreenConst: calcScreenConst,
@@ -356,5 +363,11 @@ var InGameTutorial = (function ($) {
     EnergyBarView: EnergyBarView,
     Width: Width,
     Height: Height,
-    Font: Font
+    Font: Font,
+    ShieldsHitView: ShieldsHitView,
+    ShipHitView: ShipHitView,
+    LivesView: LivesView,
+    add: add,
+    subtract: subtract,
+    drawShields: drawShields
 });
