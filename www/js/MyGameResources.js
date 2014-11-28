@@ -1,5 +1,10 @@
-var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, URL) {
+var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, URL,
+    document) {
     "use strict";
+
+    var SPECIAL_FONT = 'SpecialGameFont';
+    var FONT = 'GameFont';
+    var LOGO_FONT = 'LogoFont';
 
     var audioInfo, specialGameFont, gameFont, logoFont, locales, atlases = [], images = {};
 
@@ -19,16 +24,28 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
 
         addFontToDOM([
             {
-                name: 'SpecialGameFont',
+                name: SPECIAL_FONT,
                 url: URL.createObjectURL(specialGameFont.blob)
             }, {
-                name: 'GameFont',
+                name: FONT,
                 url: URL.createObjectURL(gameFont.blob)
             }, {
-                name: 'LogoFont',
+                name: LOGO_FONT,
                 url: URL.createObjectURL(logoFont.blob)
             }
         ]);
+
+        function workAroundForMeasureFontsWithChromeFirefoxOpera() {
+            var ctx = document.createElement('canvas').getContext('2d');
+            ctx.font = 10 + 'px ' + SPECIAL_FONT;
+            ctx.fillText('THIS IS A FONT TEST', 0, 0);
+            ctx.font = 10 + 'px ' + FONT;
+            ctx.fillText('THIS IS A FONT TEST', 0, 0);
+            ctx.font = 10 + 'px ' + LOGO_FONT;
+            ctx.fillText('THIS IS A FONT TEST', 0, 0);
+        }
+
+        workAroundForMeasureFontsWithChromeFirefoxOpera();
 
         var sounds = new SoundSpriteManager();
         sounds.load(audioInfo);
@@ -44,4 +61,5 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         create: registerFiles,
         process: processFiles
     };
-})(addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, window.URL || window.webkitURL);
+})(addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, window.URL || window.webkitURL,
+    window.document);
