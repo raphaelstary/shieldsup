@@ -17,12 +17,12 @@ var InGameTutorial = (function ($) {
 
     var ASTEROID = 'asteroid_1';
 
-    var GAME_FONT = 'GameFont';
+    var FONT = 'GameFont';
     var WHITE = '#fff';
 
     var COLLISION_TUTORIAL = 'collisions_tutorial';
 
-    var TUTORIAL_MSG_KEY = 'tutorial';
+    var KEY = 'tutorial';
     var SKIP_MSG = 'skip';
     var COLLECT_STUFF_MSG = 'collect_stuff';
     var TO_RAISE_SHIELDS_MSG = 'to_raise_shields';
@@ -51,46 +51,58 @@ var InGameTutorial = (function ($) {
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
-        [
-            shipDrawable,
-            shieldsDrawable,
-            energyBarDrawable,
-            lifeDrawablesDict[1],
-            lifeDrawablesDict[2], lifeDrawablesDict[3], fireDict.left, fireDict.right
-        ].forEach(this.shaker.add.bind(this.shaker));
-        countDrawables.forEach(this.shaker.add.bind(this.shaker));
-        speedStripes.forEach(function (wrapper) {
-            self.shaker.add(wrapper.drawable);
-        });
+        function setupShaker() {
+            [
+                shipDrawable,
+                shieldsDrawable,
+                energyBarDrawable,
+                lifeDrawablesDict[1],
+                lifeDrawablesDict[2],
+                lifeDrawablesDict[3],
+                fireDict.left,
+                fireDict.right
+            ].forEach(self.shaker.add.bind(self.shaker));
+            countDrawables.forEach(self.shaker.add.bind(self.shaker));
+            speedStripes.forEach(function (wrapper) {
+                self.shaker.add(wrapper.drawable);
+            });
+        }
 
+        setupShaker();
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        var scoreDisplay = new $.Odometer(new $.OdometerView(this.stage, countDrawables));
-        var collectAnimator = new $.CollectView(this.stage, shipDrawable, 3);
-        var scoreAnimator = new $.ScoreView(this.stage);
-
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
-        var anotherShieldsDrawable = drawShields(self.stage, shipDrawable).drawable;
+        var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
-        var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer);
-        var livesView = new $.LivesView(self.stage, lifeDrawablesDict);
-        var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer);
-        var world = new $.GameWorld(this.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
-            scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
-            lifeDrawablesDict, endGame, this.sounds, hullHitView, shieldsHitView, livesView);
+        var world = createWorld();
 
         this.loop.add(COLLISION_TUTORIAL, world.checkCollisions.bind(world));
 
+        function createWorld() {
+            var scoreDisplay = new $.Odometer(new $.OdometerView(self.stage, countDrawables));
+            var collectAnimator = new $.CollectView(self.stage, shipDrawable, 3);
+            var scoreAnimator = new $.ScoreView(self.stage);
+            var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer);
+            var livesView = new $.LivesView(self.stage, lifeDrawablesDict);
+            var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer);
+            return new $.GameWorld(self.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
+                scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
+                lifeDrawablesDict, endGame, self.sounds, hullHitView, shieldsHitView, livesView);
+        }
+
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
-        var energyBarView = new $.EnergyBarView(this.stage, energyBarDrawable);
-        self.resize.add('energy_bar_view_tutorial', energyBarView.resize.bind(energyBarView));
-        var energyStates = new $.EnergyStateMachine(this.stage, world, shieldsDrawable, shieldsUpSprite,
-            shieldsDownSprite, this.sounds, energyBarView);
+        var energyStates = createEnergyStateMachine();
+
+        function createEnergyStateMachine() {
+            var energyBarView = new $.EnergyBarView(self.stage, energyBarDrawable);
+            return new $.EnergyStateMachine(self.stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite,
+                self.sounds, energyBarView);
+        }
 
         var touchable = new $.Touchable(PUSH_RELEASE_TOUCHABLE, 0, 0, self.resize.getWidth(), self.resize.getHeight());
-        self.resize.add(touchable.id, function (width, height) {
+        self.resize.add(PUSH_RELEASE_TOUCHABLE, function (width, height) {
             $.changeTouchable(touchable, 0, 0, width, height);
         });
 
@@ -101,7 +113,7 @@ var InGameTutorial = (function ($) {
             removeTouchNHoldStuff();
             removeEnergyStuff();
             removeStarStuff();
-            removeCommonGameLoopStuff();
+            removeCommonGameStuff();
             unregisterPushRelease();
             unregisterCollisionStuff();
         }
@@ -109,6 +121,7 @@ var InGameTutorial = (function ($) {
         function unregisterCollisionStuff() {
             self.stage.detachCollisionDetector(shipCollision);
             self.stage.detachCollisionDetector(shieldsCollision);
+            self.stage.remove(anotherShieldsDrawable);
         }
 
         function createSkipStuff() {
@@ -120,8 +133,7 @@ var InGameTutorial = (function ($) {
                 return $.calcScreenConst(width, 8, 6);
             }
 
-            return self.buttons.createSecondaryButton(getX, getY, self.messages.get(TUTORIAL_MSG_KEY, SKIP_MSG),
-                function () {
+            return self.buttons.createSecondaryButton(getX, getY, self.messages.get(KEY, SKIP_MSG), function () {
                     self.timer.doLater(function () {
                         removeEveryThing();
                         endGame();
@@ -157,16 +169,15 @@ var InGameTutorial = (function ($) {
             }
 
             var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
-                self.messages.get(TUTORIAL_MSG_KEY, TOUCH_AND_HOLD_MSG), $.Font._30, GAME_FONT, WHITE, 3, undefined,
-                $.Math.PI / 16, 1, $.Width.TWO_THIRD, $.add(Font._30, get5));
+                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
+                $.Width.TWO_THIRD, $.add(Font._30, get5));
 
             function getX(width) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
-            var raise_txt = self.stage.drawText(getX, $.Height.HALF,
-                self.messages.get(TUTORIAL_MSG_KEY, TO_RAISE_SHIELDS_MSG), $.Font._35, GAME_FONT, WHITE, 3, undefined,
-                -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
+            var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
+                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
 
 
             return [touch_txt, raise_txt];
@@ -231,18 +242,18 @@ var InGameTutorial = (function ($) {
         function showEnergyTxtSubScene() {
             function createEnergyTxt() {
 
-                drainTxt = self.stage.drawText($.Width.HALF, $.Height.THIRD,
-                    self.messages.get(TUTORIAL_MSG_KEY, DRAIN_ENERGY_MSG), $.Font._30, GAME_FONT, WHITE);
+                drainTxt = self.stage.drawText($.Width.HALF, $.Height.THIRD, self.messages.get(KEY, DRAIN_ENERGY_MSG),
+                    $.Font._30, FONT, WHITE);
 
-                energyTxt = self.stage.drawText($.Width.HALF, $.Height.TWO_THIRD,
-                    self.messages.get(TUTORIAL_MSG_KEY, NO_ENERGY_MSG), $.Font._30, GAME_FONT, WHITE);
+                energyTxt = self.stage.drawText($.Width.HALF, $.Height.TWO_THIRD, self.messages.get(KEY, NO_ENERGY_MSG),
+                    $.Font._30, FONT, WHITE);
 
                 function getY(height) {
                     return $.calcScreenConst(height, 16, 13);
                 }
 
-                okButton = self.buttons.createPrimaryButton($.Width.HALF, getY,
-                    self.messages.get(TUTORIAL_MSG_KEY, OK_MSG), function () {
+                okButton = self.buttons.createPrimaryButton($.Width.HALF, getY, self.messages.get(KEY, OK_MSG),
+                    function () {
                         self.timer.doLater(function () {
                             removeEnergyStuff();
                             registerPushRelease();
@@ -286,8 +297,8 @@ var InGameTutorial = (function ($) {
 
             function createCollectTxt() {
                 var collectTxt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
-                    self.messages.get(TUTORIAL_MSG_KEY, COLLECT_STUFF_MSG), $.Font._30, GAME_FONT, WHITE, 3, undefined,
-                    $.Math.PI / 16, 1, $.Width.HALF, $.Font._30);
+                    self.messages.get(KEY, COLLECT_STUFF_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
+                    $.Width.HALF, $.Font._30);
 
                 return [collectTxt];
             }
@@ -333,7 +344,8 @@ var InGameTutorial = (function ($) {
                 self.pushRelease.remove(touchable);
         }
 
-        function removeCommonGameLoopStuff() {
+        function removeCommonGameStuff() {
+            self.shaker.reset();
             self.loop.remove(COLLISION_TUTORIAL);
             self.resize.remove(PUSH_RELEASE_TOUCHABLE);
             self.resize.remove(MOVE_STUFF);

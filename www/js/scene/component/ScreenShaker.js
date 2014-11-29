@@ -4,6 +4,10 @@ var ScreenShaker = (function (Math) {
     function ScreenShaker(initialDrawables) {
         this.shaker = initialDrawables ? initialDrawables.slice() : [];
 
+        this.__init();
+    }
+
+    ScreenShaker.prototype.__init = function () {
         this.shaking = false;
         this.smallShaking = false;
         this.bigShaking = false;
@@ -11,7 +15,7 @@ var ScreenShaker = (function (Math) {
         this.time = 0;
         this.duration = 60;
         this.lastOffSetY = 0;
-    }
+    };
 
     ScreenShaker.prototype.startBigShake = function () {
         if (this.shaking) {
@@ -135,6 +139,11 @@ var ScreenShaker = (function (Math) {
                 item._startValueX = item.x;
             }
         });
+    };
+
+    ScreenShaker.prototype.reset = function () {
+        this.shaker = [];
+        this.__init();
     };
 
     return ScreenShaker;

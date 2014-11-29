@@ -1,4 +1,4 @@
-var EnergyBarView = (function (Transition, EnergyBar, changeCoords, changeMask) {
+var EnergyBarView = (function (Transition) {
     "use strict";
 
     var TIME = 120;
@@ -7,9 +7,36 @@ var EnergyBarView = (function (Transition, EnergyBar, changeCoords, changeMask) 
     function EnergyBarView(stage, drawable) {
         this.stage = stage;
         this.drawable = drawable;
+        var self = this;
 
-        this.stage.mask(drawable, drawable.getCornerX.bind(drawable), drawable.getCornerY.bind(drawable),
-            drawable.getEndX.bind(drawable), drawable.getEndY.bind(drawable));
+        function getA_x() {
+            // hack for animation dependency on drawable
+            var width = drawable.getWidth();
+            if (self.loadAnimation) {
+                self.loadAnimation.end = width;
+                self.loadAnimation.length = width;
+            }
+            if (self.drainAnimation) {
+                self.drainAnimation.start = width;
+                self.drainAnimation.length = -width;
+            }
+
+            return drawable.getCornerX();
+        }
+
+        function getA_y() {
+            return drawable.getCornerY();
+        }
+
+        function getB_x() {
+            return drawable.getEndX();
+        }
+
+        function getB_y() {
+            return drawable.getEndY();
+        }
+
+        this.stage.mask(drawable, getA_x, getA_y, getB_x, getB_y);
 
         this.loadAnimation = this.stage.getAnimation(0, this.drawable.getWidth(), TIME, Transition.LINEAR, false);
         this.drainAnimation = this.stage.getAnimation(this.drawable.getWidth(), 0, TIME, Transition.LINEAR, false);
@@ -37,11 +64,5 @@ var EnergyBarView = (function (Transition, EnergyBar, changeCoords, changeMask) 
         this.drawable.mask.width = Transition.LINEAR(position, animation.start, animation.length, animation.duration);
     };
 
-    EnergyBarView.prototype.resize = function (width, height) {
-        changeCoords(this.drawable, EnergyBar.getX(width), EnergyBar.getY(height));
-        changeMask(this.drawable.mask, this.drawable.getCornerX(), this.drawable.getCornerY(), this.drawable.getEndX(),
-            this.drawable.getEndY());
-    };
-
     return EnergyBarView;
-})(Transition, EnergyBar, changeCoords, changeMask);
+})(Transition);
