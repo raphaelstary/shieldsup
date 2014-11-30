@@ -26,13 +26,12 @@ var KillScreen = (function () {
         });
 
         var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 22, false);
+        self.stage.remove(fire.left);
+        self.stage.remove(fire.right);
 
         self.sounds.play(SHIP_EXPLOSION);
         self.stage.animate(shipDrawable, explosionSprite, function () {
             self.stage.remove(shipDrawable);
-            self.stage.remove(fire.left);
-            self.stage.remove(fire.right);
-
             countDrawables.forEach(function (count) {
                 self.stage.remove(count);
             });

@@ -62,6 +62,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                     self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
 
+                shieldsDrawable.x = shipDrawable.x;
+                shieldsDrawable.y = shipDrawable.y;
                 shieldsAnimation();
 
                 creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
