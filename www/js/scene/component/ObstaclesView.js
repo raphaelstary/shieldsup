@@ -1,118 +1,166 @@
 var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords, changePath, Math) {
     "use strict";
 
-    function ObstaclesView(stage, trackedAsteroids, trackedStars, resizeRepo, screenWidth, screenHeight) {
+    function ObstaclesView(stage, trackedAsteroids, trackedStars) {
         this.stage = stage;
 
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
-
-        this.resizeRepo = resizeRepo;
-
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
-    ObstaclesView.prototype.resize = function (width, height) {
-        this.screenWidth = width;
-        this.screenHeight = height;
+    var STAR = 'star';
+    var STAR_WHITE = 'star_white';
+    var ASTEROID = 'asteroid';
+    var _ = '_';
+    var SHIP = 'ship';
+    var Z_INDEX = 7;
 
-        this.resizeRepo.call();
-    };
+    ObstaclesView.prototype.drawStar = function (rotation, xFn, speed) {
+        var self = this;
 
-    ObstaclesView.prototype.drawStar = function (imgName, x, speed, relativePosition) {
-        var starHeightHalf = calcScreenConst(this.stage.getGraphic('star_1/star_1_0000').height, 2);
-        var responsiveTime = calcScreenConst(this.screenHeight, 480, speed);
-
-        var star = this.stage.animateFresh(x, -starHeightHalf, imgName, 30);
-        var path = this.stage.getPath(x, -starHeightHalf, x, this.screenHeight + starHeightHalf, responsiveTime,
-            Transition.LINEAR);
-
-        this.stage.move(star, path);
-        this.trackedStars[star.id] = star;
-
-        if (relativePosition) {
-            var self = this;
-            self.resizeRepo.add(star, function () {
-                var startRange = self._getStarStartRange();
-                var newX = Math.floor((self._getStarEndRange(startRange) - startRange) / 100 * relativePosition +
-                startRange);
-                changeCoords(star, newX, -starHeightHalf);
-                changePath(path, newX, -starHeightHalf, newX, self.screenHeight + starHeightHalf);
-                path.duration = calcScreenConst(self.screenHeight, 480, speed)
-            });
+        function getStartY() {
+            return -calcScreenConst(self.stage.getGraphic(STAR).height, 2);
         }
-        return star;
+
+        function getEndY(height) {
+            return height + Math.abs(getStartY());
+        }
+
+        function moveStar(img, zIndex, alpha, scale) {
+            return self.stage.moveFresh(xFn, getStartY, img, xFn, getEndY, speed, Transition.LINEAR, false, undefined,
+                undefined, zIndex, alpha, rotation, scale);
+        }
+
+        var starWrapper = moveStar(STAR, Z_INDEX, 1, 0.75);
+        var highlightWrapper = moveStar(STAR_WHITE, Z_INDEX + 1, 0, 1);
+
+        var DURATION = 15;
+        this.stage.animateAlphaPattern(highlightWrapper.drawable, [
+            {
+                value: 1,
+                duration: DURATION,
+                easing: Transition.LINEAR
+            }, {
+                value: 0,
+                duration: DURATION,
+                easing: Transition.LINEAR
+            }
+        ], true);
+
+        //this.stage.animateScalePattern(highlightWrapper.drawable, [
+        //    {
+        //        value: 1,
+        //        duration: DURATION,
+        //        easing: Transition.LINEAR
+        //    }, {
+        //        value: 0.75,
+        //        duration: DURATION,
+        //        easing: Transition.LINEAR
+        //    }
+        //], true);
+
+        this.stage.animateScalePattern(starWrapper.drawable, [
+            {
+                value: 1,
+                duration: DURATION,
+                easing: Transition.LINEAR
+            }, {
+                value: 0.75,
+                duration: DURATION,
+                easing: Transition.LINEAR
+            }
+        ], true);
+
+
+        this.trackedStars[starWrapper.drawable.id] = {
+            star: starWrapper.drawable,
+            highlight: highlightWrapper.drawable
+        };
+
+        return {
+            star: starWrapper,
+            highlight: highlightWrapper
+        };
     };
 
     ObstaclesView.prototype._getStarStartRange = function () {
-        var singleStarWidth = this.stage.getGraphic('star_1/star_1_0000').width;
-        var shipWidth = this.stage.getGraphic('ship').width;
+        // todo it's not safe if gfx get scaled with scaling factor through the rendering engine,
+        // or is it? because everything would get scaled the same way?
+        var singleStarWidth = this.stage.getGraphic(STAR).width;
+        var shipWidth = this.stage.getGraphic(SHIP).width;
 
-        return calcScreenConst(this.screenWidth + shipWidth, 2) - singleStarWidth;
+        return function (width) {
+            return calcScreenConst(width + shipWidth, 2) - singleStarWidth;
+        }
     };
 
     ObstaclesView.prototype._getStarEndRange = function (startRange) {
-        return this.screenWidth - startRange;
+        return function (width) {
+            return width - startRange(width);
+        };
     };
 
     ObstaclesView.prototype.drawRandomStar = function (speed) {
-        var starNum = range(1, 4);
-        var starPath = 'star_' + starNum + '/star_' + starNum;
+        var startRangeFn = this._getStarStartRange();
+        var endRangeFn = this._getStarEndRange(startRangeFn);
+        var relativePosition = range(0, 100);
 
-        var startRange = this._getStarStartRange();
-        var endRange = this._getStarEndRange(startRange);
-
-        var x = range(startRange, endRange);
-
-        var relativePosition = (x - startRange) / ((endRange - startRange) / 100);
-
-        return this.drawStar(starPath, x, speed, relativePosition);
-    };
-
-    ObstaclesView.prototype.drawAsteroid = function (imgName, x, speed, relativePosition) {
-        var asteroidHeightHalf = calcScreenConst(this.stage.getGraphic(imgName).height, 2);
-        var responsiveTime = calcScreenConst(this.screenHeight, 480, speed);
-
-        var asteroid = this.stage.moveFresh(x, -asteroidHeightHalf, imgName, x, this.screenHeight + asteroidHeightHalf,
-            responsiveTime, Transition.LINEAR);
-        this.trackedAsteroids[asteroid.drawable.id] = asteroid.drawable;
-
-        if (relativePosition) {
-            var self = this;
-            this.resizeRepo.add(asteroid.drawable, function () {
-                var startRange = self._getAsteroidStartRange(imgName);
-                var newX = Math.floor((self._getAsteroidEndRange(startRange) - startRange) / 100 * relativePosition +
-                startRange);
-                changeCoords(asteroid.drawable, newX, -asteroidHeightHalf);
-                changePath(asteroid.path, newX, -asteroidHeightHalf, newX, self.screenHeight + asteroidHeightHalf);
-                asteroid.path.duration = calcScreenConst(self.screenHeight, 480, speed);
-            });
+        function getX(width) {
+            var start = startRangeFn(width);
+            var length = endRangeFn(width) - start;
+            return start + calcScreenConst(length, 100, relativePosition);
         }
 
-        return asteroid.drawable;
+        return this.drawStar(range(0, 2 * Math.PI), getX, speed);
+    };
+
+    ObstaclesView.prototype.drawAsteroid = function (imgName, xFn, speed) {
+        var self = this;
+
+        function getStartY() {
+            return -calcScreenConst(self.stage.getGraphic(imgName).height, 2);
+        }
+
+        function getEndY(height) {
+            return height + Math.abs(getStartY());
+        }
+
+        var asteroidWrapper = this.stage.moveFresh(xFn, getStartY, imgName, xFn, getEndY, speed, Transition.LINEAR,
+            undefined, undefined, undefined, Z_INDEX);
+        this.trackedAsteroids[asteroidWrapper.drawable.id] = asteroidWrapper.drawable;
+
+        return asteroidWrapper;
     };
 
     ObstaclesView.prototype.drawRandomAsteroid = function (speed) {
-        var asteroidPath = 'asteroid_' + range(1, 4);
+        var asteroidPath = ASTEROID + _ + range(1, 4);
 
-        var startRange = this._getAsteroidStartRange(asteroidPath);
-        var endRange = this._getAsteroidEndRange(startRange);
-        var x = range(startRange, endRange);
-        var relativePosition = (x - startRange) / ((endRange - startRange) / 100);
+        var startRangeFn = this._getAsteroidStartRange(asteroidPath);
+        var endRangeFn = this._getAsteroidEndRange(startRangeFn);
+        var relativePosition = range(0, 100);
 
-        return this.drawAsteroid(asteroidPath, x, speed, relativePosition);
+        function getX(width) {
+            var start = startRangeFn(width);
+            var length = endRangeFn(width) - start;
+            return start + calcScreenConst(length, 100, relativePosition);
+        }
+
+        return this.drawAsteroid(asteroidPath, getX, speed);
     };
 
     ObstaclesView.prototype._getAsteroidStartRange = function (asteroidPath) {
         var asteroidWidth = this.stage.getGraphic(asteroidPath).width;
         var shipWidth = this.stage.getGraphic('ship').width;
 
-        return calcScreenConst(this.screenWidth + shipWidth, 2) - asteroidWidth;
+        return function (width) {
+            return calcScreenConst(width + shipWidth, 2) - asteroidWidth;
+        }
     };
 
     ObstaclesView.prototype._getAsteroidEndRange = function (startRange) {
-        return this.screenWidth - startRange;
+        return function (width) {
+            return width - startRange(width);
+        }
     };
 
     return ObstaclesView;

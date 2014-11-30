@@ -1,140 +1,145 @@
 var PlayGame = (function ($) {
     "use strict";
 
-    function PlayGame(stage, sceneStorage, gameLoop, gameController, resizeBus, sounds) {
-        this.stage = stage;
-        this.sceneStorage = sceneStorage;
-        this.gameLoop = gameLoop;
-        this.gameController = gameController;
-        this.resizeBus = resizeBus;
-        this.sounds = sounds;
+    function PlayGame(services) {
+        this.stage = services.stage;
+        this.sceneStorage = services.sceneStorage;
+        this.loop = services.loop;
+        this.pushRelease = services.pushRelease;
+        this.resize = services.resize;
+        this.sounds = services.sounds;
+        this.shaker = services.shaker;
+        this.timer = services.timer;
     }
 
-    PlayGame.prototype.resize = function (width, height) {
-        this.screenWidth = width;
-        this.screenHeight = height;
-        $.GameStuffHelper.resize(this.stage, this.sceneStorage, width, height);
-        this.resizeRepo.call();
-        this.resizeShaker();
-    };
+    var PUSH_RELEASE = 'game_controller';
+    var COLLISION = 'collisions';
+    var LEVEL = 'level';
 
-    PlayGame.prototype.show = function (nextScene, screenWidth, screenHeight) {
-        this.resizeBus.add('play_game_scene', this.resize.bind(this));
-        this.resizeRepo = new $.Repository();
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
-
+    PlayGame.prototype.show = function (nextScene) {
         var self = this;
 
-        var shipDrawable = this.sceneStorage.ship, shieldsDrawable = this.sceneStorage.shields ||
-            (this.sceneStorage.shields = this.stage.getDrawable($.calcScreenConst(self.screenWidth, 2), Height._400,
-                'shields')), energyBarDrawable = this.sceneStorage.energyBar, lifeDrawablesDict = this.sceneStorage.lives, countDrawables = this.sceneStorage.counts, fireDrawable = this.sceneStorage.fire, speedStripes = this.sceneStorage.speedStripes, shieldsUpSprite = this.sceneStorage.shieldsUp ||
-            this.stage.getSprite('shields_up/shields_up', 6,
-                false), shieldsDownSprite = this.sceneStorage.shieldsDown ||
-            this.stage.getSprite('shields_down/shields_down', 6, false);
+        var shipDrawable = this.sceneStorage.ship;
+        var shieldsDrawable = this.sceneStorage.shields.drawable;
+        var energyBarDrawable = this.sceneStorage.energyBar;
+        var lifeDrawablesDict = this.sceneStorage.lives;
+        var countDrawables = this.sceneStorage.counts;
+        var fireDict = this.sceneStorage.fire;
+        var speedStripes = this.sceneStorage.speedStripes;
+        var shieldsUpSprite = this.sceneStorage.shields.upSprite;
+        var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
-        var shaker = new $.ScreenShaker([
-            shipDrawable,
-            shieldsDrawable,
-            energyBarDrawable,
-            lifeDrawablesDict[1],
-            lifeDrawablesDict[2],
-            lifeDrawablesDict[3],
-            fireDrawable
-        ]);
-        countDrawables.forEach(shaker.add.bind(shaker));
-        speedStripes.forEach(function (wrapper) {
-            shaker.add(wrapper.drawable);
-        });
+        function setupShaker() {
+            var add = self.shaker.add.bind(self.shaker);
+            [
+                shipDrawable,
+                shieldsDrawable,
+                energyBarDrawable,
+                lifeDrawablesDict[1],
+                lifeDrawablesDict[2],
+                lifeDrawablesDict[3],
+                fireDict.left,
+                fireDict.right
+            ].forEach(add);
+            countDrawables.forEach(add);
+            speedStripes.forEach(function (wrapper) {
+                self.shaker.add(wrapper.drawable);
+            });
+        }
 
-        this.resizeShaker = shaker.resize.bind(shaker);
+        setupShaker();
 
         var trackedAsteroids = {};
         var trackedStars = {};
-        var obstaclesResizeRepo = new $.Repository();
-        var obstaclesView = new $.ObstaclesView(this.stage, trackedAsteroids, trackedStars, obstaclesResizeRepo,
-            self.screenWidth, self.screenHeight);
-        self.resizeRepo.add({id: 'obstacle_view'}, function () {
-            obstaclesView.resize(self.screenWidth, self.screenHeight);
-        });
-        var level = new $.LevelGenerator(obstaclesView);
 
-        var scoreDisplay = new $.Odometer(new $.OdometerView(this.stage, countDrawables));
-        var collectAnimator = new $.CollectView(this.stage, shipDrawable, 3);
-        var scoreAnimator = new $.ScoreView(this.stage, self.screenWidth, self.screenHeight);
-        self.resizeRepo.add({id: 'score_view_game'}, function () {
-            scoreAnimator.resize(self.screenWidth, self.screenHeight);
-        });
-        var shipCollision = new $.CanvasCollisionDetector(this.stage.getGraphic('ship'), shipDrawable);
-        var shieldsCollision = new $.CanvasCollisionDetector(this.stage.getGraphic('shields'), shieldsDrawable);
+        function createLevel() {
+            var obstaclesView = new $.ObstaclesView(self.stage, trackedAsteroids, trackedStars);
+            var level = new $.LevelGenerator(obstaclesView);
 
-        var world = new $.GameWorld(this.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
-            scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker, lifeDrawablesDict,
-            obstaclesResizeRepo.remove.bind(obstaclesResizeRepo), endGame, this.sounds);
+            self.loop.add(LEVEL, level.update.bind(level));
+        }
 
-        this.gameLoop.add('shake', shaker.update.bind(shaker));
-        this.gameLoop.add('collisions', world.checkCollisions.bind(world));
-        this.gameLoop.add('level', level.update.bind(level));
+        createLevel();
+
+        var shipCollision = self.stage.getCollisionDetector(shipDrawable);
+        var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
+        var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
+
+        function createWorld() {
+            var scoreDisplay = new $.Odometer(new $.OdometerView(self.stage, countDrawables, self.shaker));
+            var collectAnimator = new $.CollectView(self.stage, shipDrawable, self.shaker);
+            var scoreAnimator = new $.ScoreView(self.stage);
+            var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer, self.shaker);
+            var livesView = new $.LivesView(self.stage, lifeDrawablesDict, self.shaker);
+            var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer, self.shaker);
+            var world = new $.GameWorld(self.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
+                scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
+                lifeDrawablesDict, endGame, self.sounds, hullHitView, shieldsHitView, livesView);
+
+            self.loop.add(COLLISION, world.checkCollisions.bind(world));
+
+            return world;
+        }
+
+        var world = createWorld();
 
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
 
-        var energyStates = new $.EnergyStateMachine(this.stage, world, shieldsDrawable, shieldsUpSprite,
-            shieldsDownSprite, energyBarDrawable, this.sounds);
+        function createEnergyStateMachine() {
+            var energyBarView = new $.EnergyBarView(self.stage, energyBarDrawable);
+            return new $.EnergyStateMachine(self.stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite,
+                self.sounds, energyBarView);
+        }
 
-        var touchable = {
-            id: 'shields_up',
-            x: 0,
-            y: 0,
-            width: self.screenWidth,
-            height: self.screenHeight
-        };
-        self.resizeRepo.add(touchable, function () {
-            $.changeTouchable(touchable, 0, 0, self.screenWidth, self.screenHeight);
-        });
-        this.gameController.add(touchable, energyStates.drainEnergy.bind(energyStates),
-            energyStates.loadEnergy.bind(energyStates));
+        var energyStates = createEnergyStateMachine();
 
-        //end scene todo move to own scene
+        function createGameController() {
+            var touchable = new $.Touchable(PUSH_RELEASE, 0, 0, self.resize.getWidth(), self.resize.getHeight());
+            self.resize.add(touchable.id, function (width, height) {
+                $.changeTouchable(touchable, 0, 0, width, height);
+            });
+            self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
+                energyStates.loadEnergy.bind(energyStates));
+            return touchable;
+        }
+
+        var touchable = createGameController();
+
         function endGame(points) {
-            var remove = self.stage.remove.bind(self.stage);
-            $.iterateEntries(trackedAsteroids, remove);
-            $.iterateEntries(trackedStars, remove);
-            $.iterateEntries(lifeDrawablesDict, remove);
+            function removeEverything() {
+                var remove = self.stage.remove.bind(self.stage);
+                $.iterateEntries(trackedAsteroids, remove);
+                $.iterateEntries(trackedStars, function (wrapper) {
+                    self.stage.remove(wrapper.star);
+                    self.stage.remove(wrapper.highlight);
+                });
+                $.iterateEntries(lifeDrawablesDict, remove);
+                self.loop.remove(COLLISION);
+                self.loop.remove(LEVEL);
+                self.pushRelease.remove(touchable);
+                self.resize.remove(PUSH_RELEASE);
+                self.shaker.reset();
+                self.stage.detachCollisionDetector(shipCollision);
+                self.stage.detachCollisionDetector(shieldsCollision);
+                self.stage.remove(anotherShieldsDrawable);
+            }
 
-            self.gameLoop.remove('shake');
-            self.gameLoop.remove('collisions');
-            self.gameLoop.remove('level');
+            removeEverything();
 
-            self.gameController.remove(touchable);
-            var outOffSet = $.calcScreenConst(self.screenWidth, 3);
-            var barOut = self.stage.getPath(energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
-                energyBarDrawable.y + outOffSet, 60, $.Transition.EASE_OUT_EXPO);
-
-            self.resizeRepo.add(energyBarDrawable, function () {
-                var outOffSet = $.calcScreenConst(self.screenWidth, 3);
-                $.changePath(energyBarDrawable, energyBarDrawable.x, energyBarDrawable.y, energyBarDrawable.x,
-                    energyBarDrawable.y + outOffSet)
-            });
-
-            self.stage.move(energyBarDrawable, barOut, function () {
-                self.stage.remove(energyBarDrawable);
-            });
+            self.stage.move(energyBarDrawable, EnergyBar.getX, $.add($.EnergyBar.getY, $.Height.THIRD), 60,
+                $.Transition.EASE_OUT_EXPO, false, function () {
+                    self.stage.remove(energyBarDrawable);
+                });
 
             self.next(nextScene, points);
         }
     };
 
     PlayGame.prototype.next = function (nextScene, points) {
-        delete this.resizeRepo;
-        this.resizeBus.remove('play_game_scene');
-        delete this.resizeShaker;
-
         delete this.sceneStorage.shields;
         delete this.sceneStorage.energyBar;
         delete this.sceneStorage.lives;
-        delete this.sceneStorage.shieldsUp;
-        delete this.sceneStorage.shieldsDown;
 
         this.sceneStorage.points = points;
 
@@ -144,21 +149,23 @@ var PlayGame = (function ($) {
     return PlayGame;
 })({
     Transition: Transition,
-    ScreenShaker: ScreenShaker,
     LevelGenerator: LevelGenerator,
     Odometer: Odometer,
     CollectView: CollectView,
     ObstaclesView: ObstaclesView,
     OdometerView: OdometerView,
     ScoreView: ScoreView,
-    CanvasCollisionDetector: CanvasCollisionDetector,
     GameWorld: GameWorld,
     EnergyStateMachine: EnergyStateMachine,
-    calcScreenConst: calcScreenConst,
-    GameStuffHelper: drawSharedGameStuff,
-    Repository: Repository,
+    EnergyBarView: EnergyBarView,
     changeTouchable: changeTouchable,
-    changeCoords: changeCoords,
-    changePath: changePath,
-    iterateEntries: iterateEntries
+    iterateEntries: iterateEntries,
+    ShieldsHitView: ShieldsHitView,
+    ShipHitView: ShipHitView,
+    LivesView: LivesView,
+    drawShields: drawShields,
+    EnergyBar: EnergyBar,
+    add: add,
+    Height: Height,
+    Touchable: Touchable
 });

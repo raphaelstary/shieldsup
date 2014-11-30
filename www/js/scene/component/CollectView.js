@@ -4,9 +4,10 @@ var CollectView = (function (Math, Transition, calcScreenConst) {
     var STAR_SHINE = 'star_shine';
     var SHIP_WHITE = 'ship_white';
 
-    function CollectView(stage, shipDrawable) {
+    function CollectView(stage, shipDrawable, shaker) {
         this.stage = stage;
         this.shipDrawable = shipDrawable;
+        this.shaker = shaker;
     }
 
     CollectView.prototype.collectStar = function () {
@@ -27,7 +28,9 @@ var CollectView = (function (Math, Transition, calcScreenConst) {
 
         var shine = this.stage.drawFresh(getX, getShineY, STAR_SHINE, 1, dep, 1, 0);
         this.stage.animateRotation(shine, 2 * Math.PI, 180, Transition.LINEAR, true);
+        this.shaker.add(shine);
         var white = this.stage.drawFresh(getX, getY, SHIP_WHITE, 3, dep, 0);
+        this.shaker.add(white);
         this.stage.animateAlphaPattern(white, [
             {
                 value: 1,
@@ -39,11 +42,13 @@ var CollectView = (function (Math, Transition, calcScreenConst) {
                 easing: Transition.LINEAR,
                 callback: end
             }
-        ], false);
+        ]);
 
         function end() {
             self.stage.remove(shine);
             self.stage.remove(white);
+            self.shaker.remove(shine);
+            self.shaker.remove(white);
         }
     };
 

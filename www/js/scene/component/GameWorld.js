@@ -2,6 +2,8 @@ var GameWorld = (function (Object) {
     "use strict";
 
     var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
+    var ASTEROID_EXPLOSION = 'asteroid-explosion';
+    var STAR_EXPLOSION = 'star-explosion';
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
         shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, endGame,
@@ -54,7 +56,7 @@ var GameWorld = (function (Object) {
                     })
                 })(asteroid);
                 this.shaker.startSmallShake();
-                this.sounds.play('asteroid-explosion');
+                this.sounds.play(ASTEROID_EXPLOSION);
                 delete this.trackedAsteroids[key];
                 return;
             }
@@ -74,18 +76,21 @@ var GameWorld = (function (Object) {
         }, this);
 
         Object.keys(this.trackedStars).forEach(function (key) {
-            var star = this.trackedStars[key];
+            var wrapper = this.trackedStars[key];
+            var star = wrapper.star;
+            var highlight = wrapper.highlight;
 
             if (this.shieldsOn && needPreciseCollisionDetection(this.shieldsDrawable, star) &&
                 this.shieldsCollision.isHit(star)) {
                 this.shieldsHitView.hit();
-                (function (star) {
+                (function (star, highlight) {
+                    self.stage.remove(highlight);
                     self.stage.remove(star);
                     self.stage.animate(star, self.elemHitsShieldsSprite, function () {
                         self.stage.remove(star);
                     })
-                })(star);
-                self.sounds.play('star-explosion');
+                })(star, highlight);
+                self.sounds.play(STAR_EXPLOSION);
                 delete this.trackedStars[key];
                 return;
             }
@@ -99,6 +104,7 @@ var GameWorld = (function (Object) {
                 this.points += score;
 
                 this.stage.remove(star);
+                this.stage.remove(highlight);
                 delete this.trackedStars[key];
                 // return;
             }
@@ -108,10 +114,10 @@ var GameWorld = (function (Object) {
     GameWorld.prototype._shipGotHit = function () {
         var self = this;
         var currentLife = this.lives;
-        self.livesView.remove();
+        self.livesView.remove(currentLife);
 
         if (--this.lives > 0) {
-            self.sounds.play('asteroid-explosion');
+            self.sounds.play(ASTEROID_EXPLOSION);
             self.shipHitView.hit();
         }
     };

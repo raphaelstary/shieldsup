@@ -1,9 +1,10 @@
 var OdometerView = (function (ScoreBoard, Transition, Math) {
     "use strict";
 
-    function OdometerView(stage, countDrawables) {
+    function OdometerView(stage, countDrawables, shaker) {
         this.stage = stage;
         this.countDrawables = countDrawables;
+        this.shaker = shaker;
     }
 
     OdometerView.prototype.animateTransition = function (digitPosition, oldValue, newValue) {
@@ -33,12 +34,14 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
         var spacing = Transition.LINEAR;
         this.stage.move(currentDrawable, getX, getUpperY, speed, spacing, false, function () {
             self.stage.remove(currentDrawable);
+            self.shaker.remove(currentDrawable);
         });
         var newDrawable = this.stage.moveFreshText(getX, getLowerY, newValue.toString(), ScoreBoard.getSize,
             ScoreBoard.font, ScoreBoard.color, getX, ScoreBoard.getY, speed, spacing, false, function () {
                 self.stage.unmask(newDrawable);
             }).drawable;
         this.countDrawables.splice(digitPosition, 1, newDrawable);
+        this.shaker.add(newDrawable);
 
         var first = this.countDrawables[this.countDrawables.length - 1];
         var last = this.countDrawables[0];
