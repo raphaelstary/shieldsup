@@ -32,6 +32,7 @@ var InGameTutorial = (function ($) {
     var ASTEROID_MOVEMENT = 'asteroid_movement';
     var DRAIN_ENERGY_MSG = 'drain_energy';
     var STAR = 'star';
+    var STAR_WHITE = 'star_white';
     var OK_MSG = 'ok';
     var NO_ENERGY_MSG = 'no_energy';
 
@@ -75,33 +76,19 @@ var InGameTutorial = (function ($) {
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
-        var world = createWorld();
+        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+            shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
+            shieldsCollision, endGame);
 
         this.loop.add(COLLISION_TUTORIAL, world.checkCollisions.bind(world));
 
-        function createWorld() {
-            var scoreDisplay = new $.Odometer(new $.OdometerView(self.stage, countDrawables));
-            var collectAnimator = new $.CollectView(self.stage, shipDrawable, 3);
-            var scoreAnimator = new $.ScoreView(self.stage);
-            var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer);
-            var livesView = new $.LivesView(self.stage, lifeDrawablesDict);
-            var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer);
-            return new $.GameWorld(self.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
-                scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
-                lifeDrawablesDict, endGame, self.sounds, hullHitView, shieldsHitView, livesView);
-        }
-
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
-        var energyStates = createEnergyStateMachine();
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        function createEnergyStateMachine() {
-            var energyBarView = new $.EnergyBarView(self.stage, energyBarDrawable);
-            return new $.EnergyStateMachine(self.stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite,
-                self.sounds, energyBarView);
-        }
-
-        var touchable = new $.Touchable(PUSH_RELEASE_TOUCHABLE, 0, 0, self.resize.getWidth(), self.resize.getHeight());
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.resize.getWidth(),
+            self.resize.getHeight());
         self.resize.add(PUSH_RELEASE_TOUCHABLE, function (width, height) {
             $.changeTouchable(touchable, 0, 0, width, height);
         });
@@ -134,11 +121,11 @@ var InGameTutorial = (function ($) {
             }
 
             return self.buttons.createSecondaryButton(getX, getY, self.messages.get(KEY, SKIP_MSG), function () {
-                    self.timer.doLater(function () {
-                        removeEveryThing();
-                        endGame();
-                    }, 60);
-                });
+                self.timer.doLater(function () {
+                    removeEveryThing();
+                    endGame();
+                }, 60);
+            });
         }
 
         var skipButton = createSkipStuff();
@@ -275,7 +262,7 @@ var InGameTutorial = (function ($) {
                 self.buttons.remove(okButton);
         }
 
-        var starTxts, star;
+        var starTxts, star, highlight;
 
         function collectStarsSubScene() {
             function createFirstStar() {
@@ -288,11 +275,46 @@ var InGameTutorial = (function ($) {
                     return $.calcScreenConst(self.stage.getGraphic(STAR).height, 2);
                 }
 
+                var Z_INDEX = 7;
                 var star = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,
-                    STAR);
-                trackedStars[star.id] = star;
+                    STAR, Z_INDEX, undefined, 1, 0, 0.75);
+                var highlight = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,
+                    STAR_WHITE, Z_INDEX + 1, [star], 0, 0, 1);
 
-                return star;
+                var DURATION = 15;
+                self.stage.animateAlphaPattern(highlight, [
+                    {
+                        value: 1,
+                        duration: DURATION,
+                        easing: Transition.LINEAR
+                    }, {
+                        value: 0,
+                        duration: DURATION,
+                        easing: Transition.LINEAR
+                    }
+                ], true);
+
+                self.stage.animateScalePattern(star, [
+                    {
+                        value: 1,
+                        duration: DURATION,
+                        easing: Transition.LINEAR
+                    }, {
+                        value: 0.75,
+                        duration: DURATION,
+                        easing: Transition.LINEAR
+                    }
+                ], true);
+
+                trackedStars[star.id] = {
+                    star: star,
+                    highlight: highlight
+                };
+
+                return {
+                    star: star,
+                    highlight: highlight
+                };
             }
 
             function createCollectTxt() {
@@ -306,13 +328,18 @@ var InGameTutorial = (function ($) {
             function moveMyFirstStar() {
                 if (star.y < heightQuarter) {
                     star.y += __4;
+                    highlight.y += __4;
                 } else if (!world.shieldsOn) {
                     star.y += __1;
+                    highlight.y += __1;
                 } else if (star.y > heightQuarter) {
                     star.y -= __2;
+                    highlight.y -= __2;
                 }
                 if (world.points < 1 && !self.stage.has(star)) {
-                    star = createFirstStar();
+                    var wrapper = createFirstStar();
+                    star = wrapper.star;
+                    highlight = wrapper.highlight;
                 }
                 if (!self.stage.has(star)) {
                     removeEveryThing();
@@ -321,7 +348,9 @@ var InGameTutorial = (function ($) {
             }
 
             starTxts = createCollectTxt();
-            star = createFirstStar();
+            var wrapper = createFirstStar();
+            star = wrapper.star;
+            highlight = wrapper.highlight;
 
             self.loop.add(STAR_MOVEMENT, moveMyFirstStar);
         }
@@ -332,6 +361,8 @@ var InGameTutorial = (function ($) {
             self.loop.remove(STAR_MOVEMENT);
             if (star)
                 self.stage.remove(star);
+            if (highlight)
+                self.stage.remove(highlight);
         }
 
         function registerPushRelease() {
@@ -363,23 +394,13 @@ var InGameTutorial = (function ($) {
     return InGameTutorial;
 })({
     Math: Math,
-    Odometer: Odometer,
-    CollectView: CollectView,
-    OdometerView: OdometerView,
-    ScoreView: ScoreView,
-    GameWorld: GameWorld,
-    EnergyStateMachine: EnergyStateMachine,
     calcScreenConst: calcScreenConst,
-    Touchable: Touchable,
     changeTouchable: changeTouchable,
-    EnergyBarView: EnergyBarView,
     Width: Width,
     Height: Height,
     Font: Font,
-    ShieldsHitView: ShieldsHitView,
-    ShipHitView: ShipHitView,
-    LivesView: LivesView,
     add: add,
     subtract: subtract,
-    drawShields: drawShields
+    drawShields: drawShields,
+    PlayFactory: PlayFactory
 });

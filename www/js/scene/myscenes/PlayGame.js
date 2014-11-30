@@ -52,59 +52,36 @@ var PlayGame = (function ($) {
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        function createLevel() {
-            var obstaclesView = new $.ObstaclesView(self.stage, trackedAsteroids, trackedStars);
-            var level = new $.LevelGenerator(obstaclesView);
-
-            self.loop.add(LEVEL, level.update.bind(level));
-        }
-
-        createLevel();
+        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars);
+        self.loop.add(LEVEL, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
 
-        function createWorld() {
-            var scoreDisplay = new $.Odometer(new $.OdometerView(self.stage, countDrawables, self.shaker));
-            var collectAnimator = new $.CollectView(self.stage, shipDrawable, self.shaker);
-            var scoreAnimator = new $.ScoreView(self.stage);
-            var hullHitView = new $.ShipHitView(self.stage, shipDrawable, self.timer, self.shaker);
-            var livesView = new $.LivesView(self.stage, lifeDrawablesDict, self.shaker);
-            var shieldsHitView = new $.ShieldsHitView(self.stage, shieldsDrawable, self.timer, self.shaker);
-            var world = new $.GameWorld(self.stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator,
-                scoreAnimator, shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, self.shaker,
-                lifeDrawablesDict, endGame, self.sounds, hullHitView, shieldsHitView, livesView);
 
-            self.loop.add(COLLISION, world.checkCollisions.bind(world));
-
-            return world;
-        }
-
-        var world = createWorld();
+        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+            shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
+            shieldsCollision, endGame);
+        self.loop.add(COLLISION, world.checkCollisions.bind(world));
 
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
 
-        function createEnergyStateMachine() {
-            var energyBarView = new $.EnergyBarView(self.stage, energyBarDrawable);
-            return new $.EnergyStateMachine(self.stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite,
-                self.sounds, energyBarView);
-        }
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var energyStates = createEnergyStateMachine();
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.resize.getWidth(), self.resize.getHeight());
 
-        function createGameController() {
-            var touchable = new $.Touchable(PUSH_RELEASE, 0, 0, self.resize.getWidth(), self.resize.getHeight());
-            self.resize.add(touchable.id, function (width, height) {
+        function setupGameController(touchable, energyStates) {
+            self.resize.add(PUSH_RELEASE, function (width, height) {
                 $.changeTouchable(touchable, 0, 0, width, height);
             });
             self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
                 energyStates.loadEnergy.bind(energyStates));
-            return touchable;
         }
 
-        var touchable = createGameController();
+        setupGameController(touchable, energyStates);
 
         function endGame(points) {
             function removeEverything() {
@@ -149,23 +126,11 @@ var PlayGame = (function ($) {
     return PlayGame;
 })({
     Transition: Transition,
-    LevelGenerator: LevelGenerator,
-    Odometer: Odometer,
-    CollectView: CollectView,
-    ObstaclesView: ObstaclesView,
-    OdometerView: OdometerView,
-    ScoreView: ScoreView,
-    GameWorld: GameWorld,
-    EnergyStateMachine: EnergyStateMachine,
-    EnergyBarView: EnergyBarView,
     changeTouchable: changeTouchable,
     iterateEntries: iterateEntries,
-    ShieldsHitView: ShieldsHitView,
-    ShipHitView: ShipHitView,
-    LivesView: LivesView,
     drawShields: drawShields,
     EnergyBar: EnergyBar,
     add: add,
     Height: Height,
-    Touchable: Touchable
+    PlayFactory: PlayFactory
 });

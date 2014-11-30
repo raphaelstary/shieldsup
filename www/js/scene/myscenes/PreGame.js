@@ -103,7 +103,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.timer.doLater(endOfScreen.bind(self), 31);
         }
 
-        var shieldsWrapper = drawShields(self.stage);
+        var shieldsWrapper = drawShields(self.stage, shipDrawable);
         var shieldsDownSprite = shieldsWrapper.downSprite;
         var shieldsUpSprite = shieldsWrapper.upSprite;
         var shieldsDrawable = shieldsWrapper.drawable;
