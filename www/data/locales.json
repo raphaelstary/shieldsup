@@ -70,10 +70,10 @@
             "play_again": "play again"
         },
         "pre_game": {
-            "settings": "settings",
-            "play": "play",
-            "credits": "credits",
-            "more_games": "more games"
+            "settings": "Einstellungen",
+            "play": "Spielen!",
+            "credits": "Credits",
+            "more_games": "mehr Spiele"
         },
         "game": {
             "get_ready": "get ready"

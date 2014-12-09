@@ -10,15 +10,17 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.sounds = services.sounds;
         this.timer = services.timer;
         this.buttons = services.buttons;
+        this.resize = services.resize;
     }
 
     var SHIP = 'ship';
     var FIRE = 'fire/fire';
     var SHIELDS = 'shields';
 
-    var PRE_GAME_MSG_KEY = 'pre_game';
-    var CREDITS_MSG = 'credits';
-    var PLAY_MSG = 'play';
+    var KEY = 'pre_game';
+    var CREDITS = 'credits';
+    var PLAY = 'play';
+    var SETTINGS = 'settings';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -55,19 +57,27 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         self.stage.move(rightFireDrawable, getRightFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
             [shipDrawable]);
 
-        var playButton, creditsButton;
+        var playButton, creditsButton, settingsButton;
 
         function shipIsAtEndPosition() {
             function createButtons() {
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-                    self.messages.get(PRE_GAME_MSG_KEY, PLAY_MSG), startPlaying);
+                    self.messages.get(KEY, PLAY), startPlaying);
 
                 shieldsDrawable.x = shipDrawable.x;
                 shieldsDrawable.y = shipDrawable.y;
                 shieldsAnimation();
 
                 creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
-                    self.messages.get(PRE_GAME_MSG_KEY, CREDITS_MSG), goToCreditsScreen);
+                    self.messages.get(KEY, CREDITS), goToCreditsScreen);
+                settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
+                    self.messages.get(KEY, SETTINGS), function () {
+                        self.messages.setLanguage('de');
+                        playButton.text.data.msg = self.messages.get(KEY, PLAY);
+                        creditsButton.text.data.msg = self.messages.get(KEY, CREDITS);
+                        settingsButton.text.data.msg = self.messages.get(KEY, SETTINGS);
+                        self.resize.forceResize();
+                    });
             }
 
             createButtons();
