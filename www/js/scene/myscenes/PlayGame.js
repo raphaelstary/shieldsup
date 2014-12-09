@@ -10,6 +10,7 @@ var PlayGame = (function ($) {
         this.sounds = services.sounds;
         this.shaker = services.shaker;
         this.timer = services.timer;
+        this.buttons = services.buttons;
     }
 
     var PUSH_RELEASE = 'game_controller';
@@ -28,6 +29,14 @@ var PlayGame = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
+
+        // simple pause button
+        function getPauseX(width) {
+            return calcScreenConst(width, 10, 9) + 20;
+        }
+
+        this.buttons.createSecondaryButton(getPauseX, Height.TOP_RASTER, 'P', pause);
+        // end simple pause button
 
         function setupShaker() {
             var add = self.shaker.add.bind(self.shaker);
@@ -82,6 +91,34 @@ var PlayGame = (function ($) {
         }
 
         setupGameController(touchable, energyStates);
+
+        function pause() {
+            self.pushRelease.disable(touchable);
+            self.loop.disable(LEVEL);
+            self.loop.disable(COLLISION);
+            speedStripes.forEach(function (wrapper) {
+                self.stage.pause(wrapper.drawable);
+            });
+            $.iterateEntries(fireDict, function (fire) {
+                self.stage.pause(fire);
+            });
+            self.stage.pause(shieldsDrawable);
+            countDrawables.forEach(function (count) {
+                self.stage.pause(count);
+            });
+            $.iterateEntries(lifeDrawablesDict, function (life) {
+                self.stage.pause(life);
+            });
+            self.stage.pause(energyBarDrawable);
+            self.loop.disable('screen_shaker');
+            $.iterateEntries(trackedAsteroids, function (asteroid) {
+                self.stage.pause(asteroid);
+            });
+            $.iterateEntries(trackedStars, function (wrapper) {
+                self.stage.pause(wrapper.star);
+                self.stage.pause(wrapper.highlight);
+            });
+        }
 
         function endGame(points) {
             function removeEverything() {
