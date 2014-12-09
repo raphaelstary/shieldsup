@@ -31,8 +31,8 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton(Width.HALF, Height.TOP_RASTER, ' = ', pause);
-        pauseButton.text.rotation = Math.PI / 2;
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', pause);
+        pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
 
@@ -120,18 +120,18 @@ var PlayGame = (function ($) {
                 self.stage.pause(wrapper.highlight);
             });
 
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
+            backBlur = self.stage.drawRectangle($.Width.HALF, $.Height.HALF, $.Width.FULL, $.Height.FULL, '#000', true,
                 undefined, 7, 0.8);
-            menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.THREE_QUARTER,
-                Height.THREE_QUARTER, '#fff', true, undefined, 8, 0.5);
-            self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
-                resumeButton = self.buttons.createSecondaryButton(Width.HALF, Height.HALF, 'resume', resume);
+            menuBack = self.stage.drawRectangle($.changeSign($.Width.HALF), $.Height.HALF, $.Width.THREE_QUARTER,
+                $.Height.THREE_QUARTER, '#fff', true, undefined, 8, 0.5);
+            self.stage.move(menuBack, $.Width.HALF, $.Height.HALF, 15, $.Transition.EASE_IN_EXPO, false, function () {
+                resumeButton = self.buttons.createSecondaryButton($.Width.HALF, $.Height.HALF, 'resume', resume);
             });
         }
 
         function resume() {
             self.buttons.remove(resumeButton);
-            self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
+            self.stage.move(menuBack, $.changeSign($.Width.HALF), $.Height.HALF, 15, $.Transition.EASE_OUT_EXPO, false,
                 function () {
                     self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
@@ -219,5 +219,8 @@ var PlayGame = (function ($) {
     EnergyBar: EnergyBar,
     add: add,
     Height: Height,
-    PlayFactory: PlayFactory
+    PlayFactory: PlayFactory,
+    changeSign: changeSign,
+    Width: Width,
+    Math: Math
 });
