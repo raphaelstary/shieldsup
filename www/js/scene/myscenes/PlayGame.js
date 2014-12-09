@@ -31,16 +31,15 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         // simple pause button
-        function getPauseX(width) {
-            return calcScreenConst(width, 10, 9) + 20;
-        }
-
-        var pauseButton = this.buttons.createSecondaryButton(getPauseX, Height.TOP_RASTER, 'P', pause);
-        // end simple pause button
+        var pauseButton = this.buttons.createSecondaryButton(Width.HALF, Height.TOP_RASTER, ' = ', pause);
+        pauseButton.text.rotation = Math.PI / 2;
+        pauseButton.text.scale = 2;
+        self.stage.hide(pauseButton.background);
 
         function setupShaker() {
             var add = self.shaker.add.bind(self.shaker);
             [
+                pauseButton.text,
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
@@ -94,6 +93,7 @@ var PlayGame = (function ($) {
 
         var backBlur, menuBack, resumeButton;
         function pause() {
+            self.stage.hide(pauseButton.text);
             self.pushRelease.disable(touchable);
             self.loop.disable(LEVEL);
             self.loop.disable(COLLISION);
@@ -136,6 +136,7 @@ var PlayGame = (function ($) {
                     self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
 
+                    self.stage.show(pauseButton.text);
                     pauseButton.used = false;
 
                     // resume everything
@@ -169,6 +170,8 @@ var PlayGame = (function ($) {
 
         function endGame(points) {
             function removeEverything() {
+                self.buttons.remove(pauseButton);
+
                 var remove = self.stage.remove.bind(self.stage);
                 $.iterateEntries(trackedAsteroids, remove);
                 $.iterateEntries(trackedStars, function (wrapper) {
