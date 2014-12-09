@@ -35,7 +35,7 @@ var PlayGame = (function ($) {
             return calcScreenConst(width, 10, 9) + 20;
         }
 
-        this.buttons.createSecondaryButton(getPauseX, Height.TOP_RASTER, 'P', pause);
+        var pauseButton = this.buttons.createSecondaryButton(getPauseX, Height.TOP_RASTER, 'P', pause);
         // end simple pause button
 
         function setupShaker() {
@@ -92,6 +92,7 @@ var PlayGame = (function ($) {
 
         setupGameController(touchable, energyStates);
 
+        var backBlur, menuBack, resumeButton;
         function pause() {
             self.pushRelease.disable(touchable);
             self.loop.disable(LEVEL);
@@ -118,6 +119,52 @@ var PlayGame = (function ($) {
                 self.stage.pause(wrapper.star);
                 self.stage.pause(wrapper.highlight);
             });
+
+            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
+                undefined, 7, 0.8);
+            menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.THREE_QUARTER,
+                Height.THREE_QUARTER, '#fff', true, undefined, 8, 0.5);
+            self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
+                resumeButton = self.buttons.createSecondaryButton(Width.HALF, Height.HALF, 'resume', resume);
+            });
+        }
+
+        function resume() {
+            self.buttons.remove(resumeButton);
+            self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
+                function () {
+                    self.stage.remove(menuBack);
+                    self.stage.remove(backBlur);
+
+                    pauseButton.used = false;
+
+                    // resume everything
+                    self.pushRelease.enable(touchable);
+                    self.loop.enable(LEVEL);
+                    self.loop.enable(COLLISION);
+                    speedStripes.forEach(function (wrapper) {
+                        self.stage.play(wrapper.drawable);
+                    });
+                    $.iterateEntries(fireDict, function (fire) {
+                        self.stage.play(fire);
+                    });
+                    self.stage.play(shieldsDrawable);
+                    countDrawables.forEach(function (count) {
+                        self.stage.play(count);
+                    });
+                    $.iterateEntries(lifeDrawablesDict, function (life) {
+                        self.stage.play(life);
+                    });
+                    self.stage.play(energyBarDrawable);
+                    self.loop.enable('screen_shaker');
+                    $.iterateEntries(trackedAsteroids, function (asteroid) {
+                        self.stage.play(asteroid);
+                    });
+                    $.iterateEntries(trackedStars, function (wrapper) {
+                        self.stage.play(wrapper.star);
+                        self.stage.play(wrapper.highlight);
+                    });
+                });
         }
 
         function endGame(points) {
