@@ -21,6 +21,16 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var CREDITS = 'credits';
     var PLAY = 'play';
     var SETTINGS = 'settings';
+    var OK = 'ok';
+    var FULL_SCREEN = 'full_screen';
+    var SOUND = 'sound';
+    var MUSIC = 'music';
+    var LANGUAGE = 'language';
+    var ON = 'on';
+    var OFF = 'off';
+
+    var FONT = 'GameFont';
+    var WHITE = '#fff';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -71,13 +81,186 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
                     self.messages.get(KEY, CREDITS), goToCreditsScreen);
                 settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), function () {
-                        self.messages.setLanguage('de');
-                        playButton.text.data.msg = self.messages.get(KEY, PLAY);
-                        creditsButton.text.data.msg = self.messages.get(KEY, CREDITS);
-                        settingsButton.text.data.msg = self.messages.get(KEY, SETTINGS);
-                        self.resize.forceResize();
+                    self.messages.get(KEY, SETTINGS), showSettings);
+            }
+
+            var backBlur, menuBack, resumeButton, fsText, fsOnButton, fsOffButton, soundText, soundOnButton;
+            var soundOffButton, musicText, musicOnButton, musicOffButton, languageText, germanButton, englishButton;
+            var spanishButton, frenchButton, italianButton, portugueseButton;
+
+            function showSettings() {
+                hideButton(playButton);
+                hideButton(settingsButton);
+                hideButton(creditsButton);
+                function hideButton(button) {
+                    self.stage.hide(button.text);
+                    self.stage.hide(button.background);
+                    self.tap.disable(button.input);
+                }
+
+                backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
+                    undefined, 7, 0.8);
+                menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.get(10, 9),
+                    Height.get(10, 9), '#fff', true, undefined, 8, 0.5);
+                self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
+
+                    fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
+                    fsOnButton = getOnButton(Height.get(20, 5), undefined, false);
+                    fsOffButton = getOffButton(Height.get(20, 5), undefined, true);
+                    soundText = getMenuText(Height.get(20, 7), SOUND);
+                    soundOnButton = getOnButton(Height.get(20, 8), undefined, true);
+                    soundOffButton = getOffButton(Height.get(20, 8), undefined, false);
+                    musicText = getMenuText(Height.get(20, 10), MUSIC);
+                    musicOnButton = getOnButton(Height.get(20, 11), undefined, true);
+                    musicOffButton = getOffButton(Height.get(20, 11), undefined, false);
+                    languageText = getMenuText(Height.get(20, 13), LANGUAGE);
+                    englishButton = getLanguageButton(Width.get(10, 3), Height.get(20, 14), 'english', setEnglish,
+                        false);
+                    germanButton = getLanguageButton(Width.get(10, 7), Height.get(20, 14), 'deutsch', setGerman, false);
+                    frenchButton = getLanguageButton(Width.get(10, 3), Height.get(40, 31), 'Francais', undefined,
+                        false);
+                    spanishButton = getLanguageButton(Width.get(10, 7), Height.get(40, 31), 'Espanol', undefined,
+                        false);
+                    portugueseButton = getLanguageButton(Width.get(10, 3), Height.get(40, 34), 'Portugues', undefined,
+                        false);
+                    italianButton = getLanguageButton(Width.get(10, 7), Height.get(40, 34), 'Italiano', undefined,
+                        false);
+
+                    var usedLanguageButton;
+                    var currentLanguage = self.messages.language;
+                    if (currentLanguage == 'en') {
+                        usedLanguageButton = englishButton;
+                    } else if (currentLanguage == 'de') {
+                        usedLanguageButton = germanButton;
+                    }
+                    styleSelectButton(usedLanguageButton);
+                    function setEnglish() {
+                        resetButton(usedLanguageButton);
+                        usedLanguageButton = englishButton;
+                        changeLanguage('en');
+                    }
+
+                    function setGerman() {
+                        resetButton(usedLanguageButton);
+                        usedLanguageButton = germanButton;
+                        changeLanguage('de');
+                    }
+
+                    function resetButton(button) {
+                        button.text.alpha = 0.5;
+                        button.background.data.filled = false;
+                        button.used = false;
+                    }
+
+                    function styleSelectButton(button) {
+                        button.text.alpha = 1;
+                        button.background.data.filled = true;
+                        button.used = true;
+                    }
+
+                    function getMenuText(yFn, msgKey) {
+                        return self.stage.drawText(Width.HALF, yFn, self.messages.get('settings', msgKey), Font._30,
+                            FONT, WHITE, 9);
+                    }
+
+                    function getOnButton(yFn, callback, selected) {
+                        return getOnOffButton(Width.get(10, 4), yFn, ON, callback, selected);
+                    }
+
+                    function getOffButton(yFn, callback, selected) {
+                        return getOnOffButton(Width.get(10, 6), yFn, OFF, callback, selected);
+                    }
+
+                    function getLanguageButton(xFn, yFn, msg, callback, selected) {
+                        var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback);
+                        button.reset = false;
+                        if (selected) {
+                            styleSelectButton(button);
+                        }
+
+                        return button;
+                    }
+
+                    function getOnOffButton(xFn, yFn, msgKey, callback, selected) {
+                        var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get('settings', msgKey),
+                            callback);
+                        if (selected) {
+                            button.text.alpha = 1;
+                            button.background.data.filled = true;
+                        }
+                        button.used = true;
+                        return button;
+                    }
+
+                    resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
+                        self.messages.get('settings', OK), hideSettings);
+
+                });
+            }
+
+            function hideSettings() {
+                self.stage.remove(fsText);
+                self.buttons.remove(fsOnButton);
+                self.buttons.remove(fsOffButton);
+                self.stage.remove(soundText);
+                self.buttons.remove(soundOnButton);
+                self.buttons.remove(soundOffButton);
+                self.stage.remove(musicText);
+                self.buttons.remove(musicOnButton);
+                self.buttons.remove(musicOffButton);
+                self.stage.remove(languageText);
+                self.buttons.remove(englishButton);
+                self.buttons.remove(germanButton);
+                self.buttons.remove(frenchButton);
+                self.buttons.remove(spanishButton);
+                self.buttons.remove(portugueseButton);
+                self.buttons.remove(italianButton);
+                self.buttons.remove(resumeButton);
+
+                self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
+                    function () {
+                        self.stage.remove(menuBack);
+                        self.stage.remove(backBlur);
+
+                        showButton(playButton);
+                        showButton(settingsButton);
+                        settingsButton.used = false;
+                        showButton(creditsButton);
+
+                        function showButton(button) {
+                            self.stage.show(button.text);
+                            self.stage.show(button.background);
+                            self.tap.enable(button.input);
+                        }
                     });
+            }
+
+            function changeLanguage(languageCode) {
+                self.messages.setLanguage(languageCode);
+                playButton.text.data.msg = self.messages.get(KEY, PLAY);
+                creditsButton.text.data.msg = self.messages.get(KEY, CREDITS);
+                settingsButton.text.data.msg = self.messages.get(KEY, SETTINGS);
+
+                function setMenuButtonMsg(button, msgKey) {
+                    button.text.data.msg = self.messages.get('settings', msgKey);
+                }
+
+                function setMenuTxtMsg(drawable, msgKey) {
+                    drawable.data.msg = self.messages.get('settings', msgKey);
+                }
+
+                setMenuTxtMsg(fsText, FULL_SCREEN);
+                setMenuButtonMsg(fsOnButton, ON);
+                setMenuButtonMsg(fsOffButton, OFF);
+                setMenuTxtMsg(soundText, SOUND);
+                setMenuButtonMsg(soundOnButton, ON);
+                setMenuButtonMsg(soundOffButton, OFF);
+                setMenuTxtMsg(musicText, MUSIC);
+                setMenuButtonMsg(musicOnButton, ON);
+                setMenuButtonMsg(musicOffButton, OFF);
+                setMenuTxtMsg(languageText, LANGUAGE);
+
+                self.resize.forceResize();
             }
 
             createButtons();
@@ -105,6 +288,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
                 self.buttons.remove(playButton);
                 self.buttons.remove(creditsButton);
+                self.buttons.remove(settingsButton);
 
                 creditsScreen.show(continuePreGame);
             }

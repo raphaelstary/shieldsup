@@ -35,6 +35,15 @@
             "credits": "credits",
             "more_games": "more games"
         },
+        "settings": {
+            "ok": "ok",
+            "full_screen": "full screen",
+            "sound": "sound",
+            "music": "music",
+            "language": "language",
+            "on": "on",
+            "off": "off"
+        },
         "game": {
             "get_ready": "get ready"
         }
@@ -74,6 +83,15 @@
             "play": "Spielen!",
             "credits": "Credits",
             "more_games": "mehr Spiele"
+        },
+        "settings": {
+            "ok": "ok",
+            "full_screen": "full screen",
+            "sound": "sound",
+            "music": "Musik",
+            "language": "Sprache",
+            "on": "an",
+            "off": "aus"
         },
         "game": {
             "get_ready": "get ready"
