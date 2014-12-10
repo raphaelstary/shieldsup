@@ -11,6 +11,7 @@ var PlayGame = (function ($) {
         this.shaker = services.shaker;
         this.timer = services.timer;
         this.buttons = services.buttons;
+        this.messages = services.messages;
     }
 
     var PUSH_RELEASE = 'game_controller';
@@ -91,7 +92,7 @@ var PlayGame = (function ($) {
 
         setupGameController(touchable, energyStates);
 
-        var backBlur, menuBack, resumeButton;
+        //var backBlur, menuBack, resumeButton;
         function pause() {
             self.stage.hide(pauseButton.text);
             self.pushRelease.disable(touchable);
@@ -120,21 +121,28 @@ var PlayGame = (function ($) {
                 self.stage.pause(wrapper.highlight);
             });
 
-            backBlur = self.stage.drawRectangle($.Width.HALF, $.Height.HALF, $.Width.FULL, $.Height.FULL, '#000', true,
-                undefined, 7, 0.8);
-            menuBack = self.stage.drawRectangle($.changeSign($.Width.HALF), $.Height.HALF, $.Width.THREE_QUARTER,
-                $.Height.THREE_QUARTER, '#fff', true, undefined, 8, 0.5);
-            self.stage.move(menuBack, $.Width.HALF, $.Height.HALF, 15, $.Transition.EASE_IN_EXPO, false, function () {
-                resumeButton = self.buttons.createSecondaryButton($.Width.HALF, $.Height.HALF, 'resume', resume);
+            //backBlur = self.stage.drawRectangle($.Width.HALF, $.Height.HALF, $.Width.FULL, $.Height.FULL, '#000', true,
+            //    undefined, 7, 0.8);
+            //menuBack = self.stage.drawRectangle($.changeSign($.Width.HALF), $.Height.HALF, $.Width.THREE_QUARTER,
+            //    $.Height.THREE_QUARTER, '#fff', true, undefined, 8, 0.5);
+            //self.stage.move(menuBack, $.Width.HALF, $.Height.HALF, 15, $.Transition.EASE_IN_EXPO, false, function () {
+            //    resumeButton = self.buttons.createSecondaryButton($.Width.HALF, $.Height.HALF, 'resume', resume);
+            //});
+            var settings = new $.Settings({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                resize: self.resize
             });
+            settings.show(resume);
         }
 
         function resume() {
-            self.buttons.remove(resumeButton);
-            self.stage.move(menuBack, $.changeSign($.Width.HALF), $.Height.HALF, 15, $.Transition.EASE_OUT_EXPO, false,
-                function () {
-                    self.stage.remove(menuBack);
-                    self.stage.remove(backBlur);
+            //self.buttons.remove(resumeButton);
+            //self.stage.move(menuBack, $.changeSign($.Width.HALF), $.Height.HALF, 15, $.Transition.EASE_OUT_EXPO, false,
+            //    function () {
+            //        self.stage.remove(menuBack);
+            //        self.stage.remove(backBlur);
 
                     self.stage.show(pauseButton.text);
                     pauseButton.used = false;
@@ -165,7 +173,7 @@ var PlayGame = (function ($) {
                         self.stage.play(wrapper.star);
                         self.stage.play(wrapper.highlight);
                     });
-                });
+            //});
         }
 
         function endGame(points) {
@@ -222,5 +230,6 @@ var PlayGame = (function ($) {
     PlayFactory: PlayFactory,
     changeSign: changeSign,
     Width: Width,
-    Math: Math
+    Math: Math,
+    Settings: Settings
 });
