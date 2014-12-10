@@ -21,6 +21,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var CREDITS = 'credits';
     var PLAY = 'play';
     var SETTINGS = 'settings';
+
+    var SETTINGS_KEY = 'settings';
     var OK = 'ok';
     var FULL_SCREEN = 'full_screen';
     var SOUND = 'sound';
@@ -73,6 +75,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             function createButtons() {
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                     self.messages.get(KEY, PLAY), startPlaying);
+                self.messages.add(playButton.text, playButton.text.data, KEY, PLAY);
 
                 shieldsDrawable.x = shipDrawable.x;
                 shieldsDrawable.y = shipDrawable.y;
@@ -80,8 +83,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
                 creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
                     self.messages.get(KEY, CREDITS), goToCreditsScreen);
+                self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
                 settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
                     self.messages.get(KEY, SETTINGS), showSettings);
+                self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
             }
 
             var backBlur, menuBack, resumeButton, fsText, fsOnButton, fsOffButton, soundText, soundOnButton;
@@ -159,8 +164,12 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                     }
 
                     function getMenuText(yFn, msgKey) {
-                        return self.stage.drawText(Width.HALF, yFn, self.messages.get('settings', msgKey), Font._30,
+                        var drawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(SETTINGS_KEY, msgKey),
+                            Font._30,
                             FONT, WHITE, 9);
+                        self.messages.add(drawable, drawable.data, SETTINGS_KEY, msgKey);
+
+                        return drawable;
                     }
 
                     function getOnButton(yFn, callback, selected) {
@@ -182,8 +191,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                     }
 
                     function getOnOffButton(xFn, yFn, msgKey, callback, selected) {
-                        var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get('settings', msgKey),
+                        var button = self.buttons.createSecondaryButton(xFn, yFn,
+                            self.messages.get(SETTINGS_KEY, msgKey),
                             callback);
+                        self.messages.add(button.text, button.text.data, SETTINGS_KEY, msgKey);
                         if (selected) {
                             button.text.alpha = 1;
                             button.background.data.filled = true;
@@ -193,29 +204,40 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                     }
 
                     resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
-                        self.messages.get('settings', OK), hideSettings);
+                        self.messages.get(SETTINGS_KEY, OK), hideSettings);
+                    self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
 
                 });
             }
 
             function hideSettings() {
-                self.stage.remove(fsText);
-                self.buttons.remove(fsOnButton);
-                self.buttons.remove(fsOffButton);
-                self.stage.remove(soundText);
-                self.buttons.remove(soundOnButton);
-                self.buttons.remove(soundOffButton);
-                self.stage.remove(musicText);
-                self.buttons.remove(musicOnButton);
-                self.buttons.remove(musicOffButton);
-                self.stage.remove(languageText);
-                self.buttons.remove(englishButton);
-                self.buttons.remove(germanButton);
-                self.buttons.remove(frenchButton);
-                self.buttons.remove(spanishButton);
-                self.buttons.remove(portugueseButton);
-                self.buttons.remove(italianButton);
-                self.buttons.remove(resumeButton);
+                removeTxt(fsText);
+                removeBtn(fsOnButton);
+                removeBtn(fsOffButton);
+                removeTxt(soundText);
+                removeBtn(soundOnButton);
+                removeBtn(soundOffButton);
+                removeTxt(musicText);
+                removeBtn(musicOnButton);
+                removeBtn(musicOffButton);
+                removeTxt(languageText);
+                removeBtn(englishButton);
+                removeBtn(germanButton);
+                removeBtn(frenchButton);
+                removeBtn(spanishButton);
+                removeBtn(portugueseButton);
+                removeBtn(italianButton);
+                removeBtn(resumeButton);
+
+                function removeBtn(button) {
+                    self.messages.remove(button.text);
+                    self.buttons.remove(button);
+                }
+
+                function removeTxt(drawable) {
+                    self.messages.remove(drawable);
+                    self.stage.remove(drawable);
+                }
 
                 self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
                     function () {
@@ -237,29 +259,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             function changeLanguage(languageCode) {
                 self.messages.setLanguage(languageCode);
-                playButton.text.data.msg = self.messages.get(KEY, PLAY);
-                creditsButton.text.data.msg = self.messages.get(KEY, CREDITS);
-                settingsButton.text.data.msg = self.messages.get(KEY, SETTINGS);
-
-                function setMenuButtonMsg(button, msgKey) {
-                    button.text.data.msg = self.messages.get('settings', msgKey);
-                }
-
-                function setMenuTxtMsg(drawable, msgKey) {
-                    drawable.data.msg = self.messages.get('settings', msgKey);
-                }
-
-                setMenuTxtMsg(fsText, FULL_SCREEN);
-                setMenuButtonMsg(fsOnButton, ON);
-                setMenuButtonMsg(fsOffButton, OFF);
-                setMenuTxtMsg(soundText, SOUND);
-                setMenuButtonMsg(soundOnButton, ON);
-                setMenuButtonMsg(soundOffButton, OFF);
-                setMenuTxtMsg(musicText, MUSIC);
-                setMenuButtonMsg(musicOnButton, ON);
-                setMenuButtonMsg(musicOffButton, OFF);
-                setMenuTxtMsg(languageText, LANGUAGE);
-
                 self.resize.forceResize();
             }
 
@@ -339,7 +338,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         // end of screen
 
         function endOfScreen() {
-            [playButton, creditsButton].forEach(self.buttons.remove.bind(self.buttons));
+            [playButton, creditsButton, settingsButton].forEach(self.buttons.remove.bind(self.buttons));
             // end event
             function getLogoY(height) {
                 return calcScreenConst(height, 32, 7) + height;
