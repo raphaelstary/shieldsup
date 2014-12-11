@@ -46,6 +46,9 @@
         },
         "game": {
             "get_ready": "get ready"
+        },
+        "splash_screen": {
+            "touch_to_start": "touch to start"
         }
     },
     "de": {

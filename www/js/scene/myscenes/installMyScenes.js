@@ -1,5 +1,5 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
-    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font) {
+    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen) {
     "use strict";
 
     var CLICK = 'click';
@@ -21,7 +21,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
             }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2, 8);
 
         // custom game services END
-
+        var splashScreen = new SplashScreen(sceneServices);
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
         var startingPosition = new StartingPosition(sceneServices);
@@ -32,7 +32,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var postGame = new PostGame(sceneServices);
 
         var sceneManager = new SceneManager();
-
+        sceneManager.add(splashScreen.show.bind(splashScreen), true);
         sceneManager.add(intro.show.bind(intro), true);
         sceneManager.add(preGame.show.bind(preGame), true);
         sceneManager.add(startingPosition.show.bind(startingPosition));
@@ -47,4 +47,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
-    ScreenShaker, ButtonFactory, Font);
+    ScreenShaker, ButtonFactory, Font, SplashScreen);
