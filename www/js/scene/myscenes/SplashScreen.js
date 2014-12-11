@@ -5,6 +5,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
         this.stage = services.stage;
         this.messages = services.messages;
         this.buttons = services.buttons;
+        this.fullScreen = services.fullScreen;
     }
 
     var KEY = 'splash_screen';
@@ -58,7 +59,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
 
         var self = this;
 
-        function goFullScreen() {
+        function removeSceneStuff() {
             self.buttons.remove(startButton);
             self.stage.remove(asteroidOne);
             self.stage.remove(asteroidTwo);
@@ -69,6 +70,13 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
             self.stage.remove(shields);
             self.stage.remove(fireDict.left);
             self.stage.remove(fireDict.right);
+
+        }
+
+        function goFullScreen() {
+            removeSceneStuff();
+
+            self.fullScreen.request();
 
             next();
         }
