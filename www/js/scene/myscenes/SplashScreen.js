@@ -1,4 +1,5 @@
-var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
+var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, ScreenOrientation,
+    installOneTimeTap) {
     "use strict";
 
     function SplashScreen(services) {
@@ -67,39 +68,10 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
         parent.replaceChild(wrapper, screen);
         wrapper.appendChild(screen);
 
-        if (window.PointerEvent) {
-            wrapper.addEventListener('pointerdown', handleClick);
-
-        } else if (window.MSPointerEvent) {
-            wrapper.addEventListener('MSPointerDown', handleClick);
-
-        } else {
-            if ('ontouchstart' in window) {
-                wrapper.addEventListener('touchstart', handleClick);
-            }
-
-            wrapper.addEventListener('click', handleClick);
-        }
-        function handleClick(event) {
-            event.preventDefault();
-
-            if (window.PointerEvent) {
-                wrapper.removeEventListener('pointerdown', handleClick);
-
-            } else if (window.MSPointerEvent) {
-                wrapper.removeEventListener('MSPointerDown', handleClick);
-
-            } else {
-                if ('ontouchstart' in window) {
-                    wrapper.removeEventListener('touchstart', handleClick);
-                }
-
-                wrapper.removeEventListener('click', handleClick);
-            }
-
+        installOneTimeTap(wrapper, function () {
             wrapper.parentNode.replaceChild(screen, wrapper);
             goFullScreen();
-        }
+        });
 
         var self = this;
 
@@ -121,23 +93,10 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
             removeSceneStuff();
 
             self.fullScreen.request();
-
-            if ('orientation' in window.screen && 'angle' in window.screen.orientation) {
-                window.screen.orientation.lock('portrait-primary');
-            } else { // old API version
-                //if (self.device.isMobile) {
-                if (window.screen.lockOrientation) {
-                    window.screen.lockOrientation('portrait-primary');
-                } else if (window.screen.msLockOrientation) {
-                    window.screen.msLockOrientation('portrait-primary');
-                } else if (window.mozLockOrientation) {
-                    window.screen.mozLockOrientation('portrait-primary');
-                }
-                //}
-            }
+            ScreenOrientation.lock('portrait-primary');
             next();
         }
     };
 
     return SplashScreen;
-})(Width, Height, Math, Font, Transition, Fire);
+})(Width, Height, Math, Font, Transition, Fire, document, ScreenOrientation, installOneTimeTap);
