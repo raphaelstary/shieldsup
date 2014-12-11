@@ -6,6 +6,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
         this.messages = services.messages;
         this.buttons = services.buttons;
         this.fullScreen = services.fullScreen;
+        this.device = services.device;
     }
 
     var KEY = 'splash_screen';
@@ -55,7 +56,50 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
             }
         ], true);
         var startButton = this.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-            this.messages.get(KEY, TOUCH_TO_START), goFullScreen);
+            this.messages.get(KEY, TOUCH_TO_START), function () {
+                // sadly not working on IE11
+            });
+
+        // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
+        var screen = document.getElementsByTagName('canvas')[0];
+        var parent = screen.parentNode;
+        var wrapper = document.createElement('div');
+        parent.replaceChild(wrapper, screen);
+        wrapper.appendChild(screen);
+
+        if (window.PointerEvent) {
+            wrapper.addEventListener('pointerdown', handleClick);
+
+        } else if (window.MSPointerEvent) {
+            wrapper.addEventListener('MSPointerDown', handleClick);
+
+        } else {
+            if ('ontouchstart' in window) {
+                wrapper.addEventListener('touchstart', handleClick);
+            }
+
+            wrapper.addEventListener('click', handleClick);
+        }
+        function handleClick(event) {
+            event.preventDefault();
+
+            if (window.PointerEvent) {
+                wrapper.removeEventListener('pointerdown', handleClick);
+
+            } else if (window.MSPointerEvent) {
+                wrapper.removeEventListener('MSPointerDown', handleClick);
+
+            } else {
+                if ('ontouchstart' in window) {
+                    wrapper.removeEventListener('touchstart', handleClick);
+                }
+
+                wrapper.removeEventListener('click', handleClick);
+            }
+
+            wrapper.parentNode.replaceChild(screen, wrapper);
+            goFullScreen();
+        }
 
         var self = this;
 
@@ -78,6 +122,19 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire) {
 
             self.fullScreen.request();
 
+            if ('orientation' in window.screen && 'angle' in window.screen.orientation) {
+                window.screen.orientation.lock('portrait-primary');
+            } else { // old API version
+                //if (self.device.isMobile) {
+                if (window.screen.lockOrientation) {
+                    window.screen.lockOrientation('portrait-primary');
+                } else if (window.screen.msLockOrientation) {
+                    window.screen.msLockOrientation('portrait-primary');
+                } else if (window.mozLockOrientation) {
+                    window.screen.mozLockOrientation('portrait-primary');
+                }
+                //}
+            }
             next();
         }
     };
