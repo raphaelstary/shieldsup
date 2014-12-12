@@ -1,5 +1,5 @@
-var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, ScreenOrientation,
-    installOneTimeTap) {
+var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, ScreenOrientation,
+    installOneTimeTap, window) {
     "use strict";
 
     function SplashScreen(services) {
@@ -62,14 +62,14 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             });
 
         // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
-        var screen = document.getElementsByTagName('canvas')[0];
-        var parent = screen.parentNode;
+        var screenElement = document.getElementsByTagName('canvas')[0];
+        var parent = screenElement.parentNode;
         var wrapper = document.createElement('div');
-        parent.replaceChild(wrapper, screen);
-        wrapper.appendChild(screen);
+        parent.replaceChild(wrapper, screenElement);
+        wrapper.appendChild(screenElement);
 
         installOneTimeTap(wrapper, function () {
-            wrapper.parentNode.replaceChild(screen, wrapper);
+            wrapper.parentNode.replaceChild(screenElement, wrapper);
             goFullScreen();
         });
 
@@ -92,11 +92,139 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         function goFullScreen() {
             removeSceneStuff();
 
-            self.fullScreen.request();
-            ScreenOrientation.lock('portrait-primary');
-            next();
+            if (self.fullScreen.isSupported) {
+                document.addEventListener("fullscreenchange", fullScreenHandler);
+                document.addEventListener("webkitfullscreenchange", fullScreenHandler);
+                document.addEventListener("mozfullscreenchange", fullScreenHandler);
+                document.addEventListener("MSFullscreenChange", fullScreenHandler);
+
+            }
+
+            var isFs = self.fullScreen.request();
+            var locked = ScreenOrientation.lock('portrait-primary');
+
+            if (!locked && self.device.isMobile) {
+                var currentOrientation = Orientation.PORTRAIT;
+
+                if ('orientation' in screen && 'angle' in screen.orientation) {
+                    screen.orientation.addEventListener('change', function () {
+                        var rightOrientation = /portrait/i.test(screen.orientation.type);
+                        if (rightOrientation) {
+                            removeRotateDeviceAdvice();
+                            next();
+                        }
+                    });
+
+                    currentOrientation = /portrait/i.test(screen.orientation.type) ? Orientation.PORTRAIT :
+                        Orientation.LANDSCAPE;
+
+                } else if (screen.orientation || screen.mozOrientation || screen.msOrientation) {
+                    screen.addEventListener("orientationchange", screenOrientationHandler);
+                    screen.addEventListener("MSOrientationChange", screenOrientationHandler);
+                    screen.addEventListener("mozorientationchange", screenOrientationHandler);
+
+                    var screenOrientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+                    currentOrientation = /portrait/i.test(screenOrientation) ? Orientation.PORTRAIT :
+                        Orientation.LANDSCAPE;
+
+                } else if (window.orientation) {
+                    window.addEventListener("orientationchange", function () {
+                        var current;
+                        switch (window.orientation) {
+                            case 0:
+                                current = Orientation.PORTRAIT;
+                                break;
+                            case -90:
+                                current = Orientation.LANDSCAPE;
+                                break;
+                            case 90:
+                                current = Orientation.LANDSCAPE;
+                                break;
+                            case 180:
+                                current = Orientation.PORTRAIT;
+                                break;
+                        }
+                        if (current === Orientation.PORTRAIT) {
+                            removeRotateDeviceAdvice();
+                            next();
+                        }
+                    }); // or should it be on body??
+                    switch (window.orientation) {
+                        case 0:
+                            currentOrientation = Orientation.PORTRAIT;
+                            break;
+                        case -90:
+                            currentOrientation = Orientation.LANDSCAPE;
+                            break;
+                        case 90:
+                            currentOrientation = Orientation.LANDSCAPE;
+                            break;
+                        case 180:
+                            currentOrientation = Orientation.PORTRAIT;
+                            break;
+                    }
+                } else {
+                    window.addEventListener("resize", function () {
+                        var current = (window.innerWidth > window.innerHeight) ? Orientation.LANDSCAPE :
+                            Orientation.PORTRAIT;
+                        if (current === Orientation.PORTRAIT) {
+                            removeRotateDeviceAdvice();
+                            next();
+                        }
+                    });
+                    currentOrientation = (window.innerWidth > window.innerHeight) ? Orientation.LANDSCAPE :
+                        Orientation.PORTRAIT;
+                }
+
+                if (currentOrientation === Orientation.LANDSCAPE) {
+                    showRotateDeviceAdvice();
+                }
+            }
+            if (!isFs && self.device.isMobile) {
+                // do black magic
+            }
+            if (!self.device.isMobile || currentOrientation === Orientation.PORTRAIT)
+                next();
+        }
+
+        function fullScreenHandler() {
+            if (self.fullScreen.isFullScreen())
+                return;
+
+            console.log('game exited full screen mode');
+            // pause everything & ask to go fs again
+        }
+
+        function screenOrientationHandler() {
+            var screenOrientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
+            var current = /portrait/i.test(screenOrientation) ? Orientation.PORTRAIT : Orientation.LANDSCAPE;
+            //var orientation = event.target.msOrientation;
+            if (current === Orientation.PORTRAIT) {
+                removeRotateDeviceAdvice();
+                next();
+            }
+        }
+
+        var backBlur, rotateText;
+
+        function showRotateDeviceAdvice() {
+            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
+                undefined, 7, 0.8);
+            rotateText = self.stage.drawText(Width.HALF, Height.HALF, 'ROTATE DEVICE', Font._15, SPECIAL_FONT, WHITE,
+                8);
+        }
+
+        function removeRotateDeviceAdvice() {
+            self.stage.remove(backBlur);
+            self.stage.remove(rotateText);
         }
     };
 
+    var Orientation = {
+        PORTRAIT: 0,
+        LANDSCAPE: 1
+    };
+
     return SplashScreen;
-})(Width, Height, Math, Font, Transition, Fire, document, ScreenOrientation, installOneTimeTap);
+})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, ScreenOrientation, installOneTimeTap,
+    window);
