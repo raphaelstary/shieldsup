@@ -1,5 +1,5 @@
 var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, ScreenOrientation,
-    installOneTimeTap, window) {
+    installOneTimeTap, window, Orientation) {
     "use strict";
 
     function SplashScreen(services) {
@@ -8,6 +8,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.buttons = services.buttons;
         this.fullScreen = services.fullScreen;
         this.device = services.device;
+        this.orientation = services.orientation;
     }
 
     var KEY = 'splash_screen';
@@ -104,77 +105,19 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             var locked = ScreenOrientation.lock('portrait-primary');
 
             if (!locked && self.device.isMobile) {
-                var currentOrientation = Orientation.PORTRAIT;
 
-                if ('orientation' in screen && 'angle' in screen.orientation) {
-                    screen.orientation.addEventListener('change', function () {
-                        var rightOrientation = /portrait/i.test(screen.orientation.type);
-                        if (rightOrientation) {
-                            removeRotateDeviceAdvice();
-                            next();
-                        }
-                    });
+                var currentOrientation = self.orientation.getOrientation();
 
-                    currentOrientation = /portrait/i.test(screen.orientation.type) ? Orientation.PORTRAIT :
-                        Orientation.LANDSCAPE;
-
-                } else if (screen.orientation || screen.mozOrientation || screen.msOrientation) {
-                    screen.addEventListener("orientationchange", screenOrientationHandler);
-                    screen.addEventListener("MSOrientationChange", screenOrientationHandler);
-                    screen.addEventListener("mozorientationchange", screenOrientationHandler);
-
-                    var screenOrientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
-                    currentOrientation = /portrait/i.test(screenOrientation) ? Orientation.PORTRAIT :
-                        Orientation.LANDSCAPE;
-
-                } else if (window.orientation) {
-                    window.addEventListener("orientationchange", function () {
-                        var current;
-                        switch (window.orientation) {
-                            case 0:
-                                current = Orientation.PORTRAIT;
-                                break;
-                            case -90:
-                                current = Orientation.LANDSCAPE;
-                                break;
-                            case 90:
-                                current = Orientation.LANDSCAPE;
-                                break;
-                            case 180:
-                                current = Orientation.PORTRAIT;
-                                break;
-                        }
-                        if (current === Orientation.PORTRAIT) {
-                            removeRotateDeviceAdvice();
-                            next();
-                        }
-                    }); // or should it be on body??
-                    switch (window.orientation) {
-                        case 0:
-                            currentOrientation = Orientation.PORTRAIT;
-                            break;
-                        case -90:
-                            currentOrientation = Orientation.LANDSCAPE;
-                            break;
-                        case 90:
-                            currentOrientation = Orientation.LANDSCAPE;
-                            break;
-                        case 180:
-                            currentOrientation = Orientation.PORTRAIT;
-                            break;
+                self.orientation.add(function (orientation) {
+                    if (orientation === Orientation.PORTRAIT) {
+                        removeRotateDeviceAdvice();
+                        next();
+                        //self.events.fire('resume');
+                    } else {
+                        showRotateDeviceAdvice();
+                        //self.events.fire('stop');
                     }
-                } else {
-                    window.addEventListener("resize", function () {
-                        var current = (window.innerWidth > window.innerHeight) ? Orientation.LANDSCAPE :
-                            Orientation.PORTRAIT;
-                        if (current === Orientation.PORTRAIT) {
-                            removeRotateDeviceAdvice();
-                            next();
-                        }
-                    });
-                    currentOrientation = (window.innerWidth > window.innerHeight) ? Orientation.LANDSCAPE :
-                        Orientation.PORTRAIT;
-                }
+                });
 
                 if (currentOrientation === Orientation.LANDSCAPE) {
                     showRotateDeviceAdvice();
@@ -183,7 +126,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             if (!isFs && self.device.isMobile) {
                 // do black magic
             }
-            if (!self.device.isMobile || currentOrientation === Orientation.PORTRAIT)
+            if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT)
                 next();
         }
 
@@ -193,16 +136,6 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
             console.log('game exited full screen mode');
             // pause everything & ask to go fs again
-        }
-
-        function screenOrientationHandler() {
-            var screenOrientation = screen.orientation || screen.mozOrientation || screen.msOrientation;
-            var current = /portrait/i.test(screenOrientation) ? Orientation.PORTRAIT : Orientation.LANDSCAPE;
-            //var orientation = event.target.msOrientation;
-            if (current === Orientation.PORTRAIT) {
-                removeRotateDeviceAdvice();
-                next();
-            }
         }
 
         var backBlur, rotateText;
@@ -220,11 +153,6 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         }
     };
 
-    var Orientation = {
-        PORTRAIT: 0,
-        LANDSCAPE: 1
-    };
-
     return SplashScreen;
 })(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, ScreenOrientation, installOneTimeTap,
-    window);
+    window, Orientation);
