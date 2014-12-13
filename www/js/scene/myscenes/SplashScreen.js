@@ -93,16 +93,10 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         function goFullScreen() {
             removeSceneStuff();
 
-            if (self.fullScreen.isSupported) {
-                document.addEventListener("fullscreenchange", fullScreenHandler);
-                document.addEventListener("webkitfullscreenchange", fullScreenHandler);
-                document.addEventListener("mozfullscreenchange", fullScreenHandler);
-                document.addEventListener("MSFullscreenChange", fullScreenHandler);
-
-            }
-
             var isFs = self.fullScreen.request();
             var locked = ScreenOrientation.lock('portrait-primary');
+
+            self.fullScreen.add(fullScreenHandler);
 
             if (!locked && self.device.isMobile) {
 
@@ -130,11 +124,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 next();
         }
 
-        function fullScreenHandler() {
-            if (self.fullScreen.isFullScreen())
-                return;
+        function fullScreenHandler(isFullScreen) {
+            if (isFullScreen)
+                console.log('game entered fs'); else
+                console.log('game exited fs');
 
-            console.log('game exited full screen mode');
             // pause everything & ask to go fs again
         }
 
@@ -154,5 +148,5 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     };
 
     return SplashScreen;
-})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, ScreenOrientation, installOneTimeTap,
+})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, OrientationLock, installOneTimeTap,
     window, Orientation);
