@@ -13,7 +13,7 @@ var GameLoop = (function (requestAnimationFrame, Object) {
         var self = this;
         Object.keys(self.tickBus).forEach(function (key) {
             var fn = self.tickBus[key];
-            if (fn) 
+            if (fn)
                 fn();
         });
     };
