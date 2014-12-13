@@ -91,14 +91,26 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         }
 
-        var isFs = false;
         function goFullScreen() {
             removeSceneStuff();
 
-            isFs = self.fullScreen.request();
-            var locked = ScreenOrientation.lock('portrait-primary');
+            var usedOnce = false;
+            self.fullScreen.add(function (isFullScreen) {
+                if (isFullScreen) {
+                    if (!usedOnce) {
+                        usedOnce = true;
+                        return;
+                    }
+                    self.events.fire('remove_go_full_screen');
+                    self.events.fire('resume');
+                } else {
+                    self.events.fire('show_go_full_screen');
+                    self.events.fire('stop');
+                }
+            });
 
-            self.fullScreen.add(fullScreenHandler);
+            var isFs = self.fullScreen.request();
+            var locked = ScreenOrientation.lock('portrait-primary');
 
             if (!locked && self.device.isMobile) {
 
@@ -121,26 +133,14 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             }
             if (!isFs && self.device.isMobile) {
                 // do black magic
+                window.scrollTo(0, 1);
             }
             if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT)
                 next();
         }
 
-        function fullScreenHandler(isFullScreen) {
-            if (isFullScreen) {
-                if (isFs) {
-                    return;
-                }
-                self.events.fire('remove_go_full_screen');
-                self.events.fire('resume');
-            } else {
-                self.events.fire('show_go_full_screen');
-                self.events.fire('stop');
-            }
-        }
-
         var resume = self.events.subscribe('resume', function () {
-            isFs = false;
+
             self.events.unsubscribe(resume);
             next();
 
