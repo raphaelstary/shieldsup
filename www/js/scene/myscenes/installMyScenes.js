@@ -1,5 +1,5 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
-    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, BrowserOracle) {
+    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice) {
     "use strict";
 
     var CLICK = 'click';
@@ -19,9 +19,11 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
             function () {
                 sceneServices.sounds.play(CLICK);
             }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2, 8);
-        sceneServices.device = new BrowserOracle();
 
         // custom game services END
+
+        var goFullScreen = new GoFullScreen(sceneServices);
+        var rotateDevice = new RotateDevice(sceneServices);
         var splashScreen = new SplashScreen(sceneServices);
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
@@ -33,6 +35,8 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var postGame = new PostGame(sceneServices);
 
         var sceneManager = new SceneManager();
+        sceneManager.add(goFullScreen.show.bind(goFullScreen), true);
+        sceneManager.add(rotateDevice.show.bind(rotateDevice), true);
         sceneManager.add(splashScreen.show.bind(splashScreen), true);
         sceneManager.add(intro.show.bind(intro), true);
         sceneManager.add(preGame.show.bind(preGame), true);
@@ -48,4 +52,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
-    ScreenShaker, ButtonFactory, Font, SplashScreen, BrowserOracle);
+    ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice);

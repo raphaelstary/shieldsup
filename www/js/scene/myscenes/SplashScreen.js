@@ -9,6 +9,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.fullScreen = services.fullScreen;
         this.device = services.device;
         this.orientation = services.orientation;
+        this.events = services.events;
     }
 
     var KEY = 'splash_screen';
@@ -90,10 +91,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         }
 
+        var isFs = false;
         function goFullScreen() {
             removeSceneStuff();
 
-            var isFs = self.fullScreen.request();
+            isFs = self.fullScreen.request();
             var locked = ScreenOrientation.lock('portrait-primary');
 
             self.fullScreen.add(fullScreenHandler);
@@ -104,17 +106,17 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
                 self.orientation.add(function (orientation) {
                     if (orientation === Orientation.PORTRAIT) {
-                        removeRotateDeviceAdvice();
-                        next();
-                        //self.events.fire('resume');
+                        self.events.fire('remove_rotate_device');
+                        self.events.fire('resume');
                     } else {
-                        showRotateDeviceAdvice();
-                        //self.events.fire('stop');
+                        self.events.fire('show_rotate_device');
+                        self.events.fire('stop');
                     }
                 });
 
                 if (currentOrientation === Orientation.LANDSCAPE) {
-                    showRotateDeviceAdvice();
+                    self.events.fire('show_rotate_device');
+                    self.events.fire('stop');
                 }
             }
             if (!isFs && self.device.isMobile) {
@@ -125,26 +127,24 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         }
 
         function fullScreenHandler(isFullScreen) {
-            if (isFullScreen)
-                console.log('game entered fs'); else
-                console.log('game exited fs');
-
-            // pause everything & ask to go fs again
+            if (isFullScreen) {
+                if (isFs) {
+                    return;
+                }
+                self.events.fire('remove_go_full_screen');
+                self.events.fire('resume');
+            } else {
+                self.events.fire('show_go_full_screen');
+                self.events.fire('stop');
+            }
         }
 
-        var backBlur, rotateText;
+        var resume = self.events.subscribe('resume', function () {
+            isFs = false;
+            self.events.unsubscribe(resume);
+            next();
 
-        function showRotateDeviceAdvice() {
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
-                undefined, 7, 0.8);
-            rotateText = self.stage.drawText(Width.HALF, Height.HALF, 'ROTATE DEVICE', Font._15, SPECIAL_FONT, WHITE,
-                8);
-        }
-
-        function removeRotateDeviceAdvice() {
-            self.stage.remove(backBlur);
-            self.stage.remove(rotateText);
-        }
+        });
     };
 
     return SplashScreen;
