@@ -13,6 +13,7 @@ var InGameTutorial = (function ($) {
         this.shaker = services.shaker;
         this.timer = services.timer;
         this.buttons = services.buttons;
+        this.events = services.events;
     }
 
     var ASTEROID = 'asteroid_1';
@@ -52,8 +53,18 @@ var InGameTutorial = (function ($) {
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
+        // simple pause button
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+            pause();
+            showSettings();
+        });
+        pauseButton.text.rotation = $.Math.PI / 2;
+        pauseButton.text.scale = 2;
+        self.stage.hide(pauseButton.background);
+
         function setupShaker() {
             [
+                pauseButton.text,
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
@@ -213,13 +224,15 @@ var InGameTutorial = (function ($) {
 
         var touchTxts = createTouchNHoldTxt();
         var asteroid = createFirstAsteroid();
-
+        var asteroidMoves = true;
+        var starMoves = false;
         self.loop.add(ASTEROID_MOVEMENT, moveMyFirstAsteroids);
 
         function removeTouchNHoldStuff() {
             if (touchTxts)
                 touchTxts.forEach(self.stage.remove.bind(self.stage));
             self.loop.remove(ASTEROID_MOVEMENT);
+            asteroidMoves = false;
             if (asteroid)
                 self.stage.remove(asteroid); //double remove just in case
         }
@@ -351,7 +364,7 @@ var InGameTutorial = (function ($) {
             var wrapper = createFirstStar();
             star = wrapper.star;
             highlight = wrapper.highlight;
-
+            starMoves = true;
             self.loop.add(STAR_MOVEMENT, moveMyFirstStar);
         }
 
@@ -359,6 +372,7 @@ var InGameTutorial = (function ($) {
             if (starTxts)
                 starTxts.forEach(self.stage.remove.bind(self.stage));
             self.loop.remove(STAR_MOVEMENT);
+            starMoves = false;
             if (star)
                 self.stage.remove(star);
             if (highlight)
@@ -380,10 +394,94 @@ var InGameTutorial = (function ($) {
             self.loop.remove(COLLISION_TUTORIAL);
             self.resize.remove(PUSH_RELEASE_TOUCHABLE);
             self.resize.remove(MOVE_STUFF);
+            self.buttons.remove(pauseButton);
+            self.events.unsubscribe(stopId);
+            self.events.unsubscribe(resumeId);
         }
 
         function endGame() {
             self.next(nextScene);
+        }
+
+        var stopId = self.events.subscribe('stop', pause);
+
+        var resumeId = self.events.subscribe('resume', resume);
+
+        function pause() {
+            self.stage.hide(pauseButton.text);
+            self.pushRelease.disable(touchable);
+            if (starMoves)
+                self.loop.disable(STAR_MOVEMENT);
+            if (asteroidMoves)
+                self.loop.disable(ASTEROID_MOVEMENT);
+            self.loop.disable(COLLISION_TUTORIAL);
+            speedStripes.forEach(function (wrapper) {
+                self.stage.pause(wrapper.drawable);
+            });
+            $.iterateEntries(fireDict, function (fire) {
+                self.stage.pause(fire);
+            });
+            self.stage.pause(shieldsDrawable);
+            countDrawables.forEach(function (count) {
+                self.stage.pause(count);
+            });
+            $.iterateEntries(lifeDrawablesDict, function (life) {
+                self.stage.pause(life);
+            });
+            self.stage.pause(energyBarDrawable);
+            self.loop.disable('screen_shaker');
+            $.iterateEntries(trackedAsteroids, function (asteroid) {
+                self.stage.pause(asteroid);
+            });
+            $.iterateEntries(trackedStars, function (wrapper) {
+                self.stage.pause(wrapper.star);
+                self.stage.pause(wrapper.highlight);
+            });
+        }
+
+        function showSettings() {
+            var settings = new $.Settings({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                resize: self.resize
+            });
+            settings.show(resume);
+        }
+
+        function resume() {
+            self.stage.show(pauseButton.text);
+            pauseButton.used = false;
+
+            // resume everything
+            self.pushRelease.enable(touchable);
+            if (starMoves)
+                self.loop.enable(STAR_MOVEMENT);
+            if (asteroidMoves)
+                self.loop.enable(ASTEROID_MOVEMENT);
+            self.loop.enable(COLLISION_TUTORIAL);
+            speedStripes.forEach(function (wrapper) {
+                self.stage.play(wrapper.drawable);
+            });
+            $.iterateEntries(fireDict, function (fire) {
+                self.stage.play(fire);
+            });
+            self.stage.play(shieldsDrawable);
+            countDrawables.forEach(function (count) {
+                self.stage.play(count);
+            });
+            $.iterateEntries(lifeDrawablesDict, function (life) {
+                self.stage.play(life);
+            });
+            self.stage.play(energyBarDrawable);
+            self.loop.enable('screen_shaker');
+            $.iterateEntries(trackedAsteroids, function (asteroid) {
+                self.stage.play(asteroid);
+            });
+            $.iterateEntries(trackedStars, function (wrapper) {
+                self.stage.play(wrapper.star);
+                self.stage.play(wrapper.highlight);
+            });
         }
     };
 

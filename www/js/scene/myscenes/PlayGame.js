@@ -92,7 +92,6 @@ var PlayGame = (function ($) {
 
         setupGameController(touchable, energyStates);
 
-        //var backBlur, menuBack, resumeButton;
         function pause() {
             self.stage.hide(pauseButton.text);
             self.pushRelease.disable(touchable);
