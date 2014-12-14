@@ -4,6 +4,7 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
     function GetReady(services) {
         this.stage = services.stage;
         this.messages = services.messages;
+        this.events = services.events;
     }
 
     var KEY = 'game';
@@ -19,8 +20,17 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
             Transition.EASE_OUT_IN_SIN, false, function () {
 
                 self.stage.remove(readyDrawable);
+                self.events.unsubscribe(stop);
+                self.events.unsubscribe(resume);
                 nextScene();
             }).drawable;
+
+        var stop = this.events.subscribe('stop', function () {
+            self.stage.pause(readyDrawable);
+        });
+        var resume = this.events.subscribe('resume', function () {
+            self.stage.play(readyDrawable);
+        });
     };
 
     return GetReady;

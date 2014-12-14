@@ -133,7 +133,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             }
             if (!isFs && self.device.isMobile) {
                 // do black magic
-                window.scrollTo(0, 1);
+                window.scrollTo(0, 1); //maybe scrolling with larger screen element on newer browsers
             }
             if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT)
                 next();
