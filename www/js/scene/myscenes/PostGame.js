@@ -4,8 +4,6 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     function PostGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.tap = services.tap;
-        this.resize = services.resize;
         this.sounds = services.sounds;
         this.messages = services.messages;
         this.buttons = services.buttons;
@@ -75,11 +73,16 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                                 if (points > parseInt(allTimeHighScore, 10))
                                     localStorage.setItem(ALL_TIME_HIGH_SCORE, points);
 
+                                self.events.unsubscribe(stop);
+                                self.events.unsubscribe(resume);
                                 nextScene();
                             });
                         });
                 });
             });
+
+        var stop = self.events.subscribe('stop', self.stage.pauseAll.bind(self.stage));
+        var resume = self.events.subscribe('resume', self.stage.playAll.bind(self.stage));
     };
 
     return PostGame;
