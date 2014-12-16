@@ -10,6 +10,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.timer = services.timer;
         this.buttons = services.buttons;
         this.resize = services.resize;
+
+        this.events = services.events;
     }
 
     var SHIP = 'ship';
@@ -202,6 +204,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             self.stage.move(shipDrawable, Width.HALF, Height._400, 30, Transition.EASE_IN_EXPO, false, function () {
                 // next scene
+                self.events.unsubscribe(stop);
+                self.events.unsubscribe(resume);
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite);
             });
@@ -209,6 +213,17 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
             self.stage.move(rightFireDrawable, getRightFireX, getFireY, 30, Transition.EASE_IN_EXPO);
         }
+
+        var stop = self.events.subscribe('stop', function () {
+            self.stage.pauseAll();
+            self.tap.disableAll();
+            self.timer.pause();
+        });
+        var resume = self.events.subscribe('resume', function () {
+            self.stage.playAll();
+            self.tap.enableAll();
+            self.timer.resume();
+        });
     };
 
     PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, shields, shieldsUpSprite,
