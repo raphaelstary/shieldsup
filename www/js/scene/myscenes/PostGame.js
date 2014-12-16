@@ -81,8 +81,14 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                 });
             });
 
-        var stop = self.events.subscribe('stop', self.stage.pauseAll.bind(self.stage));
-        var resume = self.events.subscribe('resume', self.stage.playAll.bind(self.stage));
+        var stop = self.events.subscribe('stop', function () {
+            self.stage.pauseAll();
+            self.buttons.disableAll();
+        });
+        var resume = self.events.subscribe('resume', function () {
+            self.stage.playAll();
+            self.buttons.enableAll();
+        });
     };
 
     return PostGame;
