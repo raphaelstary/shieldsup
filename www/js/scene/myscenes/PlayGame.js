@@ -32,7 +32,10 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', pause);
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+            pause();
+            showSettings();
+        });
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -119,7 +122,9 @@ var PlayGame = (function ($) {
                 self.stage.pause(wrapper.star);
                 self.stage.pause(wrapper.highlight);
             });
+        }
 
+        function showSettings() {
             var settings = new $.Settings({
                 stage: self.stage,
                 buttons: self.buttons,
@@ -128,6 +133,9 @@ var PlayGame = (function ($) {
             });
             settings.show(resume);
         }
+
+        var stopId = self.events.subscribe('stop', pause);
+        var resumeId = self.events.subscribe('resume', resume);
 
         function resume() {
             self.stage.show(pauseButton.text);
@@ -180,6 +188,9 @@ var PlayGame = (function ($) {
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);
+
+                self.events.unsubscribe(stopId);
+                self.events.unsubscribe(resumeId);
             }
 
             removeEverything();
