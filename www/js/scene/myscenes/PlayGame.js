@@ -4,19 +4,18 @@ var PlayGame = (function ($) {
     function PlayGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.loop = services.loop;
         this.pushRelease = services.pushRelease;
-        this.resize = services.resize;
         this.sounds = services.sounds;
         this.shaker = services.shaker;
         this.timer = services.timer;
         this.buttons = services.buttons;
         this.messages = services.messages;
+        this.resize = services.resize;
+        this.device = services.device;
+        this.events = services.events;
     }
 
     var PUSH_RELEASE = 'game_controller';
-    var COLLISION = 'collisions';
-    var LEVEL = 'level';
 
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
@@ -34,7 +33,9 @@ var PlayGame = (function ($) {
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
-            showSettings();
+            self.events.fire($.Event.PAUSE);
+            $.showSettings(self.stage, self.buttons, self.messages, self.resize, self.events, self.sceneStorage,
+                resume);
         });
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
@@ -65,7 +66,7 @@ var PlayGame = (function ($) {
         var trackedStars = {};
 
         var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars);
-        self.loop.add(LEVEL, level.update.bind(level));
+        var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
@@ -75,7 +76,7 @@ var PlayGame = (function ($) {
         var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame);
-        self.loop.add(COLLISION, world.checkCollisions.bind(world));
+        var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
@@ -83,10 +84,11 @@ var PlayGame = (function ($) {
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.resize.getWidth(), self.resize.getHeight());
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.device.getWidth(), self.device.getHeight());
+        var gameTouchableId;
 
         function setupGameController(touchable, energyStates) {
-            self.resize.add(PUSH_RELEASE, function (width, height) {
+            gameTouchableId = self.events.subscribe($.Event.RESIZE, function (width, height) {
                 $.changeTouchable(touchable, 0, 0, width, height);
             });
             self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
@@ -97,76 +99,11 @@ var PlayGame = (function ($) {
 
         function pause() {
             self.stage.hide(pauseButton.text);
-            self.pushRelease.disable(touchable);
-            self.loop.disable(LEVEL);
-            self.loop.disable(COLLISION);
-            speedStripes.forEach(function (wrapper) {
-                self.stage.pause(wrapper.drawable);
-            });
-            $.iterateEntries(fireDict, function (fire) {
-                self.stage.pause(fire);
-            });
-            self.stage.pause(shieldsDrawable);
-            countDrawables.forEach(function (count) {
-                self.stage.pause(count);
-            });
-            $.iterateEntries(lifeDrawablesDict, function (life) {
-                self.stage.pause(life);
-            });
-            self.stage.pause(energyBarDrawable);
-            self.loop.disable('screen_shaker');
-            $.iterateEntries(trackedAsteroids, function (asteroid) {
-                self.stage.pause(asteroid);
-            });
-            $.iterateEntries(trackedStars, function (wrapper) {
-                self.stage.pause(wrapper.star);
-                self.stage.pause(wrapper.highlight);
-            });
         }
-
-        function showSettings() {
-            var settings = new $.Settings({
-                stage: self.stage,
-                buttons: self.buttons,
-                messages: self.messages,
-                resize: self.resize
-            });
-            settings.show(resume);
-        }
-
-        var stopId = self.events.subscribe('stop', pause);
-        var resumeId = self.events.subscribe('resume', resume);
 
         function resume() {
             self.stage.show(pauseButton.text);
             pauseButton.used = false;
-
-            // resume everything
-            self.pushRelease.enable(touchable);
-            self.loop.enable(LEVEL);
-            self.loop.enable(COLLISION);
-            speedStripes.forEach(function (wrapper) {
-                self.stage.play(wrapper.drawable);
-            });
-            $.iterateEntries(fireDict, function (fire) {
-                self.stage.play(fire);
-            });
-            self.stage.play(shieldsDrawable);
-            countDrawables.forEach(function (count) {
-                self.stage.play(count);
-            });
-            $.iterateEntries(lifeDrawablesDict, function (life) {
-                self.stage.play(life);
-            });
-            self.stage.play(energyBarDrawable);
-            self.loop.enable('screen_shaker');
-            $.iterateEntries(trackedAsteroids, function (asteroid) {
-                self.stage.play(asteroid);
-            });
-            $.iterateEntries(trackedStars, function (wrapper) {
-                self.stage.play(wrapper.star);
-                self.stage.play(wrapper.highlight);
-            });
         }
 
         function endGame(points) {
@@ -180,10 +117,10 @@ var PlayGame = (function ($) {
                     self.stage.remove(wrapper.highlight);
                 });
                 $.iterateEntries(lifeDrawablesDict, remove);
-                self.loop.remove(COLLISION);
-                self.loop.remove(LEVEL);
+                self.events.unsubscribe(collisionId);
+                self.events.unsubscribe(levelId);
                 self.pushRelease.remove(touchable);
-                self.resize.remove(PUSH_RELEASE);
+                self.events.unsubscribe(gameTouchableId);
                 self.shaker.reset();
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
@@ -227,5 +164,6 @@ var PlayGame = (function ($) {
     changeSign: changeSign,
     Width: Width,
     Math: Math,
-    Settings: Settings
+    showSettings: showSettings,
+    Event: Event
 });

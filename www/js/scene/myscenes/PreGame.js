@@ -1,4 +1,4 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, Settings) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event) {
     "use strict";
 
     function PreGame(services) {
@@ -10,7 +10,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.timer = services.timer;
         this.buttons = services.buttons;
         this.resize = services.resize;
-
         this.events = services.events;
     }
 
@@ -74,40 +73,18 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                     self.messages.get(KEY, CREDITS), goToCreditsScreen);
                 self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
                 settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), showSettings);
+                    self.messages.get(KEY, SETTINGS), showSettingsScreen);
                 self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
             }
 
-            function showSettings() {
-                hideButton(playButton);
-                hideButton(settingsButton);
-                hideButton(creditsButton);
-                function hideButton(button) {
-                    self.stage.hide(button.text);
-                    self.stage.hide(button.background);
-                    self.tap.disable(button.input);
-                }
-
-                var settings = new Settings({
-                    stage: self.stage,
-                    buttons: self.buttons,
-                    messages: self.messages,
-                    resize: self.resize
-                });
-                settings.show(hideSettings);
+            function showSettingsScreen() {
+                self.events.fire(Event.PAUSE);
+                showSettings(self.stage, self.buttons, self.messages, self.resize, self.events, self.sceneStorage,
+                    hideSettings)
             }
 
             function hideSettings() {
-                showButton(playButton);
-                showButton(settingsButton);
                 settingsButton.used = false;
-                showButton(creditsButton);
-
-                function showButton(button) {
-                    self.stage.show(button.text);
-                    self.stage.show(button.background);
-                    self.tap.enable(button.input);
-                }
             }
 
             createButtons();
@@ -204,8 +181,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             self.stage.move(shipDrawable, Width.HALF, Height._400, 30, Transition.EASE_IN_EXPO, false, function () {
                 // next scene
-                self.events.unsubscribe(stop);
-                self.events.unsubscribe(resume);
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite);
             });
@@ -213,17 +188,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
             self.stage.move(rightFireDrawable, getRightFireX, getFireY, 30, Transition.EASE_IN_EXPO);
         }
-
-        var stop = self.events.subscribe('stop', function () {
-            self.stage.pauseAll();
-            self.tap.disableAll();
-            self.timer.pause();
-        });
-        var resume = self.events.subscribe('resume', function () {
-            self.stage.playAll();
-            self.tap.enableAll();
-            self.timer.resume();
-        });
     };
 
     PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, shields, shieldsUpSprite,
@@ -244,4 +208,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, Settings);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event);

@@ -5,7 +5,6 @@ var KillScreen = (function () {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
         this.sounds = services.sounds;
-        this.events = services.events;
     }
 
     var FINAL_EXPLOSION = 'final_explosion/final_explosion';
@@ -37,18 +36,7 @@ var KillScreen = (function () {
                 self.stage.remove(count);
             });
 
-            self.events.unsubscribe(stop);
-            self.events.unsubscribe(resume);
-
             nextScene();
-        });
-
-        var stop = this.events.subscribe('stop', function () {
-            self.stage.pauseAll();
-        });
-
-        var resume = this.events.subscribe('resume', function () {
-            self.stage.playAll();
         });
     };
 

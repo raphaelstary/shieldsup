@@ -57,8 +57,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
                             function moveOut(drawable, yFn, delay, callback) {
                                 self.stage.moveLater(drawable, Width.HALF, add(yFn, Height.FULL), 30,
-                                    Transition.EASE_IN_EXPO,
-                                    false, function () {
+                                    Transition.EASE_IN_EXPO, false, function () {
                                         self.stage.remove(drawable);
                                     }, undefined, delay, callback);
                             }
@@ -73,22 +72,11 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                                 if (points > parseInt(allTimeHighScore, 10))
                                     localStorage.setItem(ALL_TIME_HIGH_SCORE, points);
 
-                                self.events.unsubscribe(stop);
-                                self.events.unsubscribe(resume);
                                 nextScene();
                             });
                         });
                 });
             });
-
-        var stop = self.events.subscribe('stop', function () {
-            self.stage.pauseAll();
-            self.buttons.disableAll();
-        });
-        var resume = self.events.subscribe('resume', function () {
-            self.stage.playAll();
-            self.buttons.enableAll();
-        });
     };
 
     return PostGame;

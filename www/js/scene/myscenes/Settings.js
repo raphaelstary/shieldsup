@@ -1,4 +1,4 @@
-var Settings = (function (Width, Height, changeSign, Transition) {
+var Settings = (function (Width, Height, changeSign, Transition, Event) {
     "use strict";
 
     function Settings(services) {
@@ -6,6 +6,8 @@ var Settings = (function (Width, Height, changeSign, Transition) {
         this.buttons = services.buttons;
         this.messages = services.messages;
         this.resize = services.resize;
+        this.events = services.events;
+        this.sceneStorage = services.sceneStorage;
     }
 
     var SETTINGS_KEY = 'settings';
@@ -21,12 +23,32 @@ var Settings = (function (Width, Height, changeSign, Transition) {
     var WHITE = '#fff';
 
     Settings.prototype.show = function (next) {
+        this.sceneStorage.settingsOn = true;
         var self = this;
         var backBlur, menuBack, resumeButton, fsText, fsOnButton, fsOffButton, soundText, soundOnButton;
         var soundOffButton, musicText, musicOnButton, musicOffButton, languageText, germanButton, englishButton;
         var spanishButton, frenchButton, italianButton, portugueseButton;
 
+        var resume = self.events.subscribe(Event.RESUME_SETTINGS, function () {
+            sceneButtons.forEach(self.buttons.enable.bind(self.buttons));
+        });
+
         showSettings();
+        var sceneButtons = [
+            resumeButton,
+            fsOnButton,
+            fsOffButton,
+            soundOnButton,
+            soundOffButton,
+            musicOnButton,
+            musicOffButton,
+            germanButton,
+            englishButton,
+            spanishButton,
+            frenchButton,
+            italianButton,
+            portugueseButton
+        ];
 
         function showSettings() {
 
@@ -132,6 +154,8 @@ var Settings = (function (Width, Height, changeSign, Transition) {
         }
 
         function hideSettings() {
+            self.events.unsubscribe(resume);
+
             removeTxt(fsText);
             removeBtn(fsOnButton);
             removeBtn(fsOffButton);
@@ -164,7 +188,8 @@ var Settings = (function (Width, Height, changeSign, Transition) {
                 function () {
                     self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
-
+                    self.events.fire(Event.RESUME);
+                    self.sceneStorage.settingsOn = false;
                     next();
                 });
         }
@@ -176,4 +201,4 @@ var Settings = (function (Width, Height, changeSign, Transition) {
     };
 
     return Settings;
-})(Width, Height, changeSign, Transition);
+})(Width, Height, changeSign, Transition, Event);

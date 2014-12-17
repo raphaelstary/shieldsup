@@ -5,7 +5,6 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
     function StartingPosition(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.events = services.events;
     }
 
     var PLAYER_LIFE = 'player_life';
@@ -91,13 +90,8 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
                 secondDigitWrapper.drawable, thirdDigitWrapper.drawable, firstDigitWrapper.drawable
             ];
 
-            self.events.unsubscribe(stop);
-            self.events.unsubscribe(resume);
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);
         }
-
-        var stop = self.events.subscribe('stop', self.stage.pauseAll.bind(self.stage));
-        var resume = self.events.subscribe('resume', self.stage.playAll.bind(self.stage));
     };
 
     StartingPosition.prototype.next = function (nextScene, energyBarDrawable, lifeDrawablesDict, countDrawables) {

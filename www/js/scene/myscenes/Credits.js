@@ -5,7 +5,6 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
         this.stage = services.stage;
         this.messages = services.messages;
         this.buttons = services.buttons;
-        this.events = services.events;
     }
 
     var KEY = 'credits';
@@ -78,24 +77,10 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
                 buttons.forEach(self.buttons.remove.bind(self.buttons));
             }
 
-            function removeEvents() {
-                self.events.unsubscribe(stop);
-                self.events.unsubscribe(resume);
-            }
-
             removeDrawables();
             removeButtons();
-            removeEvents();
             nextScene();
         }
-
-        var stop = self.events.subscribe('stop', function () {
-            buttons.forEach(self.buttons.disable.bind(self.buttons));
-        });
-
-        var resume = self.events.subscribe('resume', function () {
-            buttons.forEach(self.buttons.enable.bind(self.buttons));
-        });
     };
 
     return Credits;

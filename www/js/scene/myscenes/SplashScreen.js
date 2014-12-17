@@ -1,5 +1,5 @@
 var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, ScreenOrientation,
-    installOneTimeTap, window, Orientation) {
+    installOneTimeTap, window, Orientation, Event) {
     "use strict";
 
     function SplashScreen(services) {
@@ -10,6 +10,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.device = services.device;
         this.orientation = services.orientation;
         this.events = services.events;
+        this.loop = services.loop;
+        this.tap = services.tap;
+        this.pushRelease = services.pushRelease;
+        this.timer = services.timer;
+        this.sceneStorage = services.sceneStorage;
     }
 
     var KEY = 'splash_screen';
@@ -94,18 +99,30 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         function goFullScreen() {
             removeSceneStuff();
 
+            var goFsScreen = false;
+            var rotateScreen = false;
+
             var usedOnce = false;
-            self.fullScreen.add(function (isFullScreen) {
+            self.events.subscribe(Event.FULL_SCREEN, function (isFullScreen) {
                 if (isFullScreen) {
                     if (!usedOnce) {
                         usedOnce = true;
                         return;
                     }
-                    self.events.fire('remove_go_full_screen');
-                    self.events.fire('resume');
+                    goFsScreen = false;
+                    self.events.fire(Event.REMOVE_GO_FULL_SCREEN);
+                    if (!rotateScreen) {
+                        if (self.sceneStorage.settingsOn) {
+                            self.events.fire(Event.RESUME_SETTINGS);
+                        } else {
+                            self.events.fire(Event.RESUME);
+                        }
+                    }
                 } else {
-                    self.events.fire('show_go_full_screen');
-                    self.events.fire('stop');
+                    goFsScreen = true;
+                    self.events.fire(Event.SHOW_GO_FULL_SCREEN);
+                    if (!rotateScreen)
+                        self.events.fire(Event.PAUSE);
                 }
             });
 
@@ -114,21 +131,33 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
             if (!locked && self.device.isMobile) {
 
-                var currentOrientation = self.orientation.getOrientation();
-
-                self.orientation.add(function (orientation) {
+                self.events.subscribe(Event.ORIENTATION, function (orientation) {
                     if (orientation === Orientation.PORTRAIT) {
-                        self.events.fire('remove_rotate_device');
-                        self.events.fire('resume');
+                        rotateScreen = false;
+                        self.events.fire(Event.REMOVE_ROTATE_DEVICE);
+                        if (!goFsScreen) {
+                            if (self.sceneStorage.settingsOn) {
+                                self.events.fire(Event.RESUME_SETTINGS);
+                            } else {
+                                self.events.fire(Event.RESUME);
+                            }
+                        }
                     } else {
-                        self.events.fire('show_rotate_device');
-                        self.events.fire('stop');
+                        rotateScreen = true;
+                        self.events.fire(Event.SHOW_ROTATE_DEVICE);
+                        if (!goFsScreen)
+                            self.events.fire(Event.PAUSE);
                     }
                 });
 
+                var currentOrientation = self.orientation.getOrientation();
                 if (currentOrientation === Orientation.LANDSCAPE) {
-                    self.events.fire('show_rotate_device');
-                    self.events.fire('stop');
+                    var nextScene = self.events.subscribe(Event.RESUME, function () {
+                        self.events.unsubscribe(nextScene);
+                        next();
+                    });
+                    self.events.fire(Event.SHOW_ROTATE_DEVICE);
+                    self.events.fire(Event.PAUSE);
                 }
             }
             if (!isFs && self.device.isMobile) {
@@ -139,14 +168,25 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 next();
         }
 
-        var resume = self.events.subscribe('resume', function () {
+        self.events.subscribe(Event.PAUSE, function () {
+            self.stage.pauseAll();
+            self.tap.disableAll();
+            self.pushRelease.disableAll();
+            self.timer.pause();
+            self.loop.disableMove();
+            self.loop.disableCollision();
+        });
 
-            self.events.unsubscribe(resume);
-            next();
-
+        self.events.subscribe(Event.RESUME, function () {
+            self.stage.playAll();
+            self.tap.enableAll();
+            self.pushRelease.enableAll();
+            self.timer.resume();
+            self.loop.enableMove();
+            self.loop.enableCollision();
         });
     };
 
     return SplashScreen;
 })(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, OrientationLock, installOneTimeTap,
-    window, Orientation);
+    window, Orientation, Event);

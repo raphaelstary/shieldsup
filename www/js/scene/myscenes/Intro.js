@@ -4,7 +4,6 @@ var Intro = (function ($) {
     function Intro(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.loop = services.loop;
         this.events = services.events;
     }
 
@@ -20,7 +19,6 @@ var Intro = (function ($) {
     var WHITE = '#fff';
     var LIGHT_GRAY = '#D3D3D3';
     var DARK_GRAY = '#A9A9A9';
-    var Z_PARALLAX = 'z_parallax';
 
     Intro.prototype.show = function (nextScene) {
 
@@ -41,18 +39,7 @@ var Intro = (function ($) {
         this.hasNotStarted = true;
         this.yVelocity = $.calcScreenConst(this.stage.height, 48); // todo resize
         this.nextScene = nextScene;
-
-        this.loop.add(Z_PARALLAX, this._parallaxUpdate.bind(this));
-        var self = this;
-        this.stop = this.events.subscribe('stop', function () {
-            self.loop.disable(Z_PARALLAX);
-            self.stage.pauseAll();
-        });
-
-        this.resume = this.events.subscribe('resume', function () {
-            self.loop.enable(Z_PARALLAX);
-            self.stage.playAll();
-        });
+        this.parallaxId = this.events.subscribe($.Event.TICK_MOVE, this._parallaxUpdate.bind(this));
     };
 
     function font_97of480(width, height) {
@@ -180,11 +167,7 @@ var Intro = (function ($) {
         delete this.yVelocity;
         delete this.nextScene;
         delete this.firstBg;
-
-        this.loop.remove(Z_PARALLAX);
-
-        this.events.unsubscribe(this.resume);
-        this.events.unsubscribe(this.stop);
+        this.events.unsubscribe(this.parallaxId);
 
         this.sceneStorage.logo = logoDrawable;
         this.sceneStorage.logoHighlight = logoHighlightDrawable;
@@ -206,5 +189,6 @@ var Intro = (function ($) {
     drawBackGround: drawBackGround,
     Font: Font,
     Height: Height,
-    Width: Width
+    Width: Width,
+    Event: Event
 });
