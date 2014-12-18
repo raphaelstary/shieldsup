@@ -119,10 +119,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         }
                     }
                 } else {
+                    if (!rotateScreen) {
+                        self.events.syncFire(Event.PAUSE);
+                    }
                     goFsScreen = true;
                     self.events.fire(Event.SHOW_GO_FULL_SCREEN);
-                    if (!rotateScreen)
-                        self.events.fire(Event.PAUSE);
                 }
             });
 
@@ -143,10 +144,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                             }
                         }
                     } else {
+                        if (!goFsScreen) {
+                            self.events.syncFire(Event.PAUSE);
+                        }
                         rotateScreen = true;
                         self.events.fire(Event.SHOW_ROTATE_DEVICE);
-                        if (!goFsScreen)
-                            self.events.fire(Event.PAUSE);
                     }
                 });
 

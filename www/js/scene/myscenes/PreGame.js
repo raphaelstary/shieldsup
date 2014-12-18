@@ -11,6 +11,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.buttons = services.buttons;
         this.resize = services.resize;
         this.events = services.events;
+        this.device = services.device;
     }
 
     var SHIP = 'ship';
@@ -79,7 +80,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             function showSettingsScreen() {
                 self.events.fire(Event.PAUSE);
-                showSettings(self.stage, self.buttons, self.messages, self.resize, self.events, self.sceneStorage,
+                showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                     hideSettings)
             }
 

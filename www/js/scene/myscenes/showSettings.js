@@ -1,14 +1,14 @@
 var showSettings = (function (Settings) {
     "use strict";
 
-    return function (stage, buttons, messages, resize, events, sceneStorage, nextCallback) {
+    return function (stage, buttons, messages, events, sceneStorage, device, nextCallback) {
         var settings = new Settings({
             stage: stage,
             buttons: buttons,
             messages: messages,
-            resize: resize,
             events: events,
-            sceneStorage: sceneStorage
+            sceneStorage: sceneStorage,
+            device: device
         });
         settings.show(nextCallback);
     };

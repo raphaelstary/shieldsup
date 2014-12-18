@@ -34,7 +34,7 @@ var PlayGame = (function ($) {
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
             self.events.fire($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.resize, self.events, self.sceneStorage,
+            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
         pauseButton.text.rotation = $.Math.PI / 2;
@@ -84,7 +84,7 @@ var PlayGame = (function ($) {
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.device.getWidth(), self.device.getHeight());
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.device.width, self.device.height);
         var gameTouchableId;
 
         function setupGameController(touchable, energyStates) {

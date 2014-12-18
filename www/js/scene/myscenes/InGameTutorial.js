@@ -52,7 +52,7 @@ var InGameTutorial = (function ($) {
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
             self.events.fire($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.resize, self.events, self.sceneStorage,
+            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
         pauseButton.text.rotation = $.Math.PI / 2;
@@ -95,8 +95,7 @@ var InGameTutorial = (function ($) {
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.device.getWidth(),
-            self.device.getHeight());
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.device.width, self.device.height);
         var gameTouchable = self.events.subscribe($.Event.RESIZE, function (width, height) {
             $.changeTouchable(touchable, 0, 0, width, height);
         });
@@ -193,10 +192,10 @@ var InGameTutorial = (function ($) {
             return value > 0 ? value : 1;
         }
 
-        var __4 = get__4(self.device.getHeight());
-        var __2 = get__2(self.device.getHeight());
-        var __1 = get__1(self.device.getHeight());
-        var heightQuarter = $.Height.QUARTER(self.device.getHeight());
+        var __4 = get__4(self.device.height);
+        var __2 = get__2(self.device.height);
+        var __1 = get__1(self.device.height);
+        var heightQuarter = $.Height.QUARTER(self.device.height);
 
         var moveStuff = self.events.subscribe($.Event.RESIZE, function (width, height) {
             __4 = get__4(height);
