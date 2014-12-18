@@ -9,7 +9,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.sounds = services.sounds;
         this.timer = services.timer;
         this.buttons = services.buttons;
-        this.resize = services.resize;
         this.events = services.events;
         this.device = services.device;
     }

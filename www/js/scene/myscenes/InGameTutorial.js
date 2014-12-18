@@ -12,7 +12,6 @@ var InGameTutorial = (function ($) {
         this.timer = services.timer;
         this.buttons = services.buttons;
         this.events = services.events;
-        this.resize = services.resize;
         this.device = services.device;
     }
 

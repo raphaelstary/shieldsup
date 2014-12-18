@@ -196,14 +196,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
         function changeLanguage(languageCode) {
             self.messages.setLanguage(languageCode);
-            self.events.fire(Event.RESIZE, {
-                width: self.device.width,
-                height: self.device.height,
-                cssWidth: self.device.cssWidth,
-                cssHeight: self.device.cssHeight,
-                devicePixelRatio: self.device.pixelRatio
-            });
-            self.resize.forceResize();
+            self.device.forceResize();
         }
     };
 

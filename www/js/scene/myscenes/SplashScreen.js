@@ -1,4 +1,4 @@
-var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, ScreenOrientation,
+var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen,
     installOneTimeTap, window, Orientation, Event) {
     "use strict";
 
@@ -6,9 +6,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.stage = services.stage;
         this.messages = services.messages;
         this.buttons = services.buttons;
-        this.fullScreen = services.fullScreen;
         this.device = services.device;
-        this.orientation = services.orientation;
         this.events = services.events;
         this.loop = services.loop;
         this.tap = services.tap;
@@ -127,8 +125,8 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 }
             });
 
-            var isFs = self.fullScreen.request();
-            var locked = ScreenOrientation.lock('portrait-primary');
+            var isFs = self.device.requestFullScreen();
+            var locked = self.device.lockOrientation('portrait-primary');
 
             if (!locked && self.device.isMobile) {
 
@@ -152,7 +150,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     }
                 });
 
-                var currentOrientation = self.orientation.getOrientation();
+                var currentOrientation = self.device.orientation;
                 if (currentOrientation === Orientation.LANDSCAPE) {
                     var nextScene = self.events.subscribe(Event.RESUME, function () {
                         self.events.unsubscribe(nextScene);
@@ -190,5 +188,5 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     };
 
     return SplashScreen;
-})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, OrientationLock, installOneTimeTap,
+})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, installOneTimeTap,
     window, Orientation, Event);

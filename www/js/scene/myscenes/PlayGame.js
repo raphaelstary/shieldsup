@@ -10,7 +10,6 @@ var PlayGame = (function ($) {
         this.timer = services.timer;
         this.buttons = services.buttons;
         this.messages = services.messages;
-        this.resize = services.resize;
         this.device = services.device;
         this.events = services.events;
     }
