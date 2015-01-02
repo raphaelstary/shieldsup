@@ -70,6 +70,8 @@ var Intro = (function ($) {
         var delta = this.lastY - this.logoDrawable.y;
         this.lastY = this.logoDrawable.y;
         var self = this;
+        if (!this.speedos)
+            return;
         this.speedos.forEach(function (speeeeeeed) {
             speeeeeeed.y += self.yVelocity;
 

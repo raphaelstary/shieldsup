@@ -124,9 +124,6 @@ var PlayGame = (function ($) {
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);
-
-                self.events.unsubscribe(stopId);
-                self.events.unsubscribe(resumeId);
             }
 
             removeEverything();

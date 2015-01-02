@@ -385,17 +385,17 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(moveStuff);
             self.events.unsubscribe(gameTouchable);
             self.buttons.remove(pauseButton);
-            self.events.unsubscribe(stopId);
-            self.events.unsubscribe(resumeId);
+            //self.events.unsubscribe(stopId);
+            //self.events.unsubscribe(resumeId);
         }
 
         function endGame() {
             self.next(nextScene);
         }
 
-        var stopId = self.events.subscribe('stop', pause);
-
-        var resumeId = self.events.subscribe('resume', resume);
+        //var stopId = self.events.subscribe('stop', pause);
+        //
+        //var resumeId = self.events.subscribe('resume', resume);
 
         function pause() {
             self.stage.hide(pauseButton.text);
