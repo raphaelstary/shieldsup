@@ -78,7 +78,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             }
 
             function showSettingsScreen() {
-                self.events.fire(Event.PAUSE);
+                self.events.syncFire(Event.PAUSE);
                 showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                     hideSettings)
             }

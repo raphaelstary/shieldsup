@@ -44,6 +44,10 @@
             "on": "on",
             "off": "off"
         },
+        "go_full_screen": {
+            "go_full_screen": "go full screen",
+            "cancel": "cancel"
+        },
         "game": {
             "get_ready": "get ready"
         },

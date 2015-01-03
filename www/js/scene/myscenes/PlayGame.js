@@ -32,7 +32,7 @@ var PlayGame = (function ($) {
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
-            self.events.fire($.Event.PAUSE);
+            self.events.syncFire($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
