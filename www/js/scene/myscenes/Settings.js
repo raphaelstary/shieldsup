@@ -25,30 +25,14 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
     Settings.prototype.show = function (next) {
         this.sceneStorage.settingsOn = true;
         var self = this;
-        var backBlur, menuBack, resumeButton, fsText, fsOnButton, fsOffButton, soundText, soundOnButton;
-        var soundOffButton, musicText, musicOnButton, musicOffButton, languageText, germanButton, englishButton;
-        var spanishButton, frenchButton, italianButton, portugueseButton;
-
+        var backBlur, menuBack, fsText, soundText;
+        var musicText, languageText;
+        var sceneButtons = [];
         var resume = self.events.subscribe(Event.RESUME_SETTINGS, function () {
             sceneButtons.forEach(self.buttons.enable.bind(self.buttons));
         });
 
         showSettings();
-        var sceneButtons = [
-            resumeButton,
-            fsOnButton,
-            fsOffButton,
-            soundOnButton,
-            soundOffButton,
-            musicOnButton,
-            musicOffButton,
-            germanButton,
-            englishButton,
-            spanishButton,
-            frenchButton,
-            italianButton,
-            portugueseButton
-        ];
 
         function showSettings() {
 
@@ -59,22 +43,32 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
             self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
 
                 fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
-                fsOnButton = getOnButton(Height.get(20, 5), undefined, false);
-                fsOffButton = getOffButton(Height.get(20, 5), undefined, true);
+                sceneButtons.push(getOnButton(Height.get(20, 5), undefined, false));
+                sceneButtons.push(getOffButton(Height.get(20, 5), undefined, true));
                 soundText = getMenuText(Height.get(20, 7), SOUND);
-                soundOnButton = getOnButton(Height.get(20, 8), undefined, true);
-                soundOffButton = getOffButton(Height.get(20, 8), undefined, false);
+                sceneButtons.push(getOnButton(Height.get(20, 8), undefined, true));
+                sceneButtons.push(getOffButton(Height.get(20, 8), undefined, false));
                 musicText = getMenuText(Height.get(20, 10), MUSIC);
-                musicOnButton = getOnButton(Height.get(20, 11), undefined, true);
-                musicOffButton = getOffButton(Height.get(20, 11), undefined, false);
+                sceneButtons.push(getOnButton(Height.get(20, 11), undefined, true));
+                sceneButtons.push(getOffButton(Height.get(20, 11), undefined, false));
                 languageText = getMenuText(Height.get(20, 13), LANGUAGE);
-                englishButton = getLanguageButton(Width.get(10, 3), Height.get(20, 14), 'english', setEnglish, false);
-                germanButton = getLanguageButton(Width.get(10, 7), Height.get(20, 14), 'deutsch', setGerman, false);
-                frenchButton = getLanguageButton(Width.get(10, 3), Height.get(40, 31), 'Francais', undefined, false);
-                spanishButton = getLanguageButton(Width.get(10, 7), Height.get(40, 31), 'Espanol', undefined, false);
-                portugueseButton = getLanguageButton(Width.get(10, 3), Height.get(40, 34), 'Portugues', undefined,
+                var englishButton = getLanguageButton(Width.get(10, 3), Height.get(20, 14), 'english', setEnglish,
                     false);
-                italianButton = getLanguageButton(Width.get(10, 7), Height.get(40, 34), 'Italiano', undefined, false);
+                sceneButtons.push(englishButton);
+                var germanButton = getLanguageButton(Width.get(10, 7), Height.get(20, 14), 'deutsch', setGerman, false);
+                sceneButtons.push(germanButton);
+                var frenchButton = getLanguageButton(Width.get(10, 3), Height.get(40, 31), 'Francais', undefined,
+                    false);
+                sceneButtons.push(frenchButton);
+                var spanishButton = getLanguageButton(Width.get(10, 7), Height.get(40, 31), 'Espanol', undefined,
+                    false);
+                sceneButtons.push(spanishButton);
+                var portugueseButton = getLanguageButton(Width.get(10, 3), Height.get(40, 34), 'Portugues', undefined,
+                    false);
+                sceneButtons.push(portugueseButton);
+                var italianButton = getLanguageButton(Width.get(10, 7), Height.get(40, 34), 'Italiano', undefined,
+                    false);
+                sceneButtons.push(italianButton);
 
                 var usedLanguageButton;
                 var currentLanguage = self.messages.language;
@@ -146,9 +140,10 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                     return button;
                 }
 
-                resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
+                var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
                     self.messages.get(SETTINGS_KEY, OK), hideSettings);
                 self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
+                sceneButtons.push(resumeButton);
 
             });
         }
@@ -157,22 +152,11 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
             self.events.unsubscribe(resume);
 
             removeTxt(fsText);
-            removeBtn(fsOnButton);
-            removeBtn(fsOffButton);
             removeTxt(soundText);
-            removeBtn(soundOnButton);
-            removeBtn(soundOffButton);
             removeTxt(musicText);
-            removeBtn(musicOnButton);
-            removeBtn(musicOffButton);
             removeTxt(languageText);
-            removeBtn(englishButton);
-            removeBtn(germanButton);
-            removeBtn(frenchButton);
-            removeBtn(spanishButton);
-            removeBtn(portugueseButton);
-            removeBtn(italianButton);
-            removeBtn(resumeButton);
+
+            sceneButtons.forEach(removeBtn);
 
             function removeBtn(button) {
                 self.messages.remove(button.text);
