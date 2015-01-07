@@ -3,7 +3,9 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Crappy Space Miner</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
@@ -14,7 +16,8 @@
 <script src="js/utils/concatenateProperties.js"></script>
 <script src="js/utils/getFunctionName.js"></script>
 <script src="js/utils/Vectors.js"></script>
-<script src="js/platform/getDevicePixelRatio.js"></script>
+<script src="js/screen/getDevicePixelRatio.js"></script>
+<script src="js/app/Event.js"></script>
 
 <script src="js/net/resolveAtlasPaths.js"></script>
 
@@ -73,8 +76,9 @@
 <script src="js/platform/UniversalTranslator.js"></script>
 <script src="js/platform/addFontToDOM.js"></script>
 <script src="js/platform/requestAnimFrame.js"></script>
-<script src="js/platform/BrowserOracle.js"></script>
-<script src="js/platform/FullScreenController.js"></script>
+<script src="js/platform/DeviceInfo.js"></script>
+<script src="js/screen/FullScreenController.js"></script>
+<script src="js/screen/OrientationLock.js"></script>
 
 <script src="js/input/entity/Touchable.js"></script>
 <script src="js/input/entity/Touchables.js"></script>
@@ -134,7 +138,13 @@
 <script src="js/render/ImageCache.js"></script>
 <script src="js/render/AtlasCache.js"></script>
 
+<script src="js/input/bootstrap/installOneTimeTap.js"></script>
+<script src="js/screen/Orientation.js"></script>
 <script src="js/scene/myscenes/Settings.js"></script>
+<script src="js/scene/myscenes/showSettings.js"></script>
+<script src="js/scene/myscenes/SplashScreen.js"></script>
+<script src="js/scene/myscenes/RotateDevice.js"></script>
+<script src="js/scene/myscenes/GoFullScreen.js"></script>
 <script src="js/scene/myscenes/Credits.js"></script>
 <script src="js/utils/range.js"></script>
 <script src="js/scene/component/ObstaclesView.js"></script>
@@ -158,17 +168,21 @@
 <script src="js/render/bootstrap/ImageResourceHelper.js"></script>
 <script src="js/MyGameResources.js"></script>
 <script src="js/screen/ResizeHandler.js"></script>
-<script src="js/screen/ResizeBus.js"></script>
 <script src="js/screen/SimpleLoadingScreen.js"></script>
+<script src="js/screen/OrientationHandler.js"></script>
+<script src="js/screen/FullScreenHandler.js"></script>
 <script src="js/net/ResourceLoader.js"></script>
 <script src="js/platform/bootstrap/installCanvas.js"></script>
 <script src="js/input/bootstrap/installPushRelease.js"></script>
 <script src="js/screen/bootstrap/installResize.js"></script>
+<script src="js/screen/bootstrap/installOrientation.js"></script>
+<script src="js/screen/bootstrap/installFullScreen.js"></script>
 <script src="js/input/bootstrap/installTap.js"></script>
 <script src="js/input/bootstrap/installKeyBoard.js"></script>
 <script src="js/input/bootstrap/installGamePad.js"></script>
 <script src="js/input/bootstrap/installKeyPushRelease.js"></script>
 <script src="js/input/bootstrap/installDragNDrop.js"></script>
+<script src="js/app/EventBus.js"></script>
 <script src="js/app/App.js"></script>
 <script src="js/app/bootstrap/Bootstrapper.js"></script>
 <script src="js/main.js"></script>

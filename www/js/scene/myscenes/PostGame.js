@@ -4,8 +4,6 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     function PostGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.tap = services.tap;
-        this.resize = services.resize;
         this.sounds = services.sounds;
         this.messages = services.messages;
         this.buttons = services.buttons;
@@ -59,8 +57,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
                             function moveOut(drawable, yFn, delay, callback) {
                                 self.stage.moveLater(drawable, Width.HALF, add(yFn, Height.FULL), 30,
-                                    Transition.EASE_IN_EXPO,
-                                    false, function () {
+                                    Transition.EASE_IN_EXPO, false, function () {
                                         self.stage.remove(drawable);
                                     }, undefined, delay, callback);
                             }

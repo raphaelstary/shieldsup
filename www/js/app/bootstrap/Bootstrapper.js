@@ -10,15 +10,21 @@ var Bootstrapper = (function ($) {
         gamePad: addGamePad,
         keyPushRelease: addKeyPushRelease,
         dragNDrop: addDragNDrop,
-        atlas: useAtlasesRendering
+        atlas: useAtlasesRendering,
+        orientation: addScreenOrientation,
+        fullScreen: addFullScreen
     };
 
     var screen = $.installCanvas();
+    var events = new $.EventBus();
+    var device = new $.DeviceInfo($.userAgent, $.width, $.height, $.getDevicePixelRatio());
     var isResponsive = false;
     var useAtlases = false;
 
     var globalServices = {
-        screen: screen
+        screen: screen,
+        events: events,
+        device: device
     };
 
     function buildApp(myResources) {
@@ -41,8 +47,24 @@ var Bootstrapper = (function ($) {
         return Bootstrapper;
     }
 
+    function addScreenOrientation() {
+        $.installOrientation(events, device);
+        device.lockOrientation = $.OrientationLock.lock;
+        device.unlockOrientation = $.OrientationLock.unlock;
+        return Bootstrapper;
+    }
+
+    function addFullScreen() {
+        var fs = $.installFullScreen(screen, events);
+        device.requestFullScreen = fs.request.bind(fs);
+        device.isFullScreen = fs.isFullScreen.bind(fs);
+        device.isFullScreenSupported = fs.__isSupported.bind(fs);
+        device.exitFullScreen = fs.exit.bind(device);
+        return Bootstrapper;
+    }
+
     function addResize() {
-        globalServices.resize = $.installResize();
+        $.installResize(events, device);
         isResponsive = true;
         return Bootstrapper;
     }
@@ -88,5 +110,14 @@ var Bootstrapper = (function ($) {
     installGamePad: installGamePad,
     installKeyPushRelease: installKeyPushRelease,
     installDragNDrop: installDragNDrop,
-    App: App
+    installOrientation: installOrientation,
+    installFullScreen: installFullScreen,
+    App: App,
+    EventBus: EventBus,
+    DeviceInfo: DeviceInfo,
+    width: window.innerWidth,
+    height: window.innerHeight,
+    getDevicePixelRatio: getDevicePixelRatio,
+    OrientationLock: OrientationLock,
+    userAgent: window.navigator.userAgent
 });

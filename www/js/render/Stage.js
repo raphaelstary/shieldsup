@@ -271,15 +271,18 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
     };
 
     Stage.prototype.update = function () {
-        this.renderer.draw();
+        // move stuff
         this.timer.update();
         this.motions.update();
         this.spriteAnimations.update();
         this.animations.update();
+
+        // draw stuff
+        this.renderer.draw();
     };
 
-    Stage.prototype.resize = function (width, height, cssWidth, cssHeight, pixelRatio) {
-        this.renderer.resize(width, height, cssWidth, cssHeight, pixelRatio);
+    Stage.prototype.resize = function (event) {
+        this.renderer.resize(event);
     };
 
     Stage.prototype.pause = function (drawable) {
@@ -298,6 +301,18 @@ var Stage = (function (Sprites, Drawables, Paths, Animations) {
             this.animations.play(drawable);
         if (this.spriteAnimations.has(drawable))
             this.spriteAnimations.play(drawable);
+    };
+
+    Stage.prototype.pauseAll = function () {
+        this.motions.pauseAll();
+        this.animations.pauseAll();
+        this.spriteAnimations.pauseAll();
+    };
+
+    Stage.prototype.playAll = function () {
+        this.motions.playAll();
+        this.animations.playAll();
+        this.spriteAnimations.playAll();
     };
 
     return Stage;

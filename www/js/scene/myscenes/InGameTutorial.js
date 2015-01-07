@@ -4,15 +4,15 @@ var InGameTutorial = (function ($) {
     function InGameTutorial(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.loop = services.loop;
         this.pushRelease = services.pushRelease;
         this.messages = services.messages;
         this.tap = services.tap;
         this.sounds = services.sounds;
-        this.resize = services.resize;
         this.shaker = services.shaker;
         this.timer = services.timer;
         this.buttons = services.buttons;
+        this.events = services.events;
+        this.device = services.device;
     }
 
     var ASTEROID = 'asteroid_1';
@@ -20,16 +20,12 @@ var InGameTutorial = (function ($) {
     var FONT = 'GameFont';
     var WHITE = '#fff';
 
-    var COLLISION_TUTORIAL = 'collisions_tutorial';
-
     var KEY = 'tutorial';
     var SKIP_MSG = 'skip';
     var COLLECT_STUFF_MSG = 'collect_stuff';
     var TO_RAISE_SHIELDS_MSG = 'to_raise_shields';
     var TOUCH_AND_HOLD_MSG = 'touch_and_hold';
 
-    var STAR_MOVEMENT = 'star_movement';
-    var ASTEROID_MOVEMENT = 'asteroid_movement';
     var DRAIN_ENERGY_MSG = 'drain_energy';
     var STAR = 'star';
     var STAR_WHITE = 'star_white';
@@ -37,7 +33,6 @@ var InGameTutorial = (function ($) {
     var NO_ENERGY_MSG = 'no_energy';
 
     var PUSH_RELEASE_TOUCHABLE = 'push_release_tutorial_touchable';
-    var MOVE_STUFF = 'move_stuff_in_tutorial';
 
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
@@ -52,8 +47,20 @@ var InGameTutorial = (function ($) {
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
+        // simple pause button
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+            pause();
+            self.events.syncFire($.Event.PAUSE);
+            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                resume);
+        });
+        pauseButton.text.rotation = $.Math.PI / 2;
+        pauseButton.text.scale = 2;
+        self.stage.hide(pauseButton.background);
+
         function setupShaker() {
             [
+                pauseButton.text,
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
@@ -80,17 +87,16 @@ var InGameTutorial = (function ($) {
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame);
 
-        this.loop.add(COLLISION_TUTORIAL, world.checkCollisions.bind(world));
+        var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.resize.getWidth(),
-            self.resize.getHeight());
-        self.resize.add(PUSH_RELEASE_TOUCHABLE, function (width, height) {
-            $.changeTouchable(touchable, 0, 0, width, height);
+        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.device.width, self.device.height);
+        var gameTouchable = self.events.subscribe($.Event.RESIZE, function (event) {
+            $.changeTouchable(touchable, 0, 0, event.width, event.height);
         });
 
         registerPushRelease();
@@ -185,16 +191,16 @@ var InGameTutorial = (function ($) {
             return value > 0 ? value : 1;
         }
 
-        var __4 = get__4(self.resize.getHeight());
-        var __2 = get__2(self.resize.getHeight());
-        var __1 = get__1(self.resize.getHeight());
-        var heightQuarter = $.Height.QUARTER(self.resize.getHeight());
+        var __4 = get__4(self.device.height);
+        var __2 = get__2(self.device.height);
+        var __1 = get__1(self.device.height);
+        var heightQuarter = $.Height.QUARTER(self.device.height);
 
-        self.resize.add(MOVE_STUFF, function (width, height) {
-            __4 = get__4(height);
-            __2 = get__2(height);
-            __1 = get__1(height);
-            heightQuarter = $.Height.QUARTER(height);
+        var moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+            __4 = get__4(event.height);
+            __2 = get__2(event.height);
+            __1 = get__1(event.height);
+            heightQuarter = $.Height.QUARTER(event.height);
         });
 
         function moveMyFirstAsteroids() {
@@ -213,13 +219,12 @@ var InGameTutorial = (function ($) {
 
         var touchTxts = createTouchNHoldTxt();
         var asteroid = createFirstAsteroid();
-
-        self.loop.add(ASTEROID_MOVEMENT, moveMyFirstAsteroids);
+        var asteroidMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstAsteroids);
 
         function removeTouchNHoldStuff() {
             if (touchTxts)
                 touchTxts.forEach(self.stage.remove.bind(self.stage));
-            self.loop.remove(ASTEROID_MOVEMENT);
+            self.events.unsubscribe(asteroidMovement);
             if (asteroid)
                 self.stage.remove(asteroid); //double remove just in case
         }
@@ -262,7 +267,7 @@ var InGameTutorial = (function ($) {
                 self.buttons.remove(okButton);
         }
 
-        var starTxts, star, highlight;
+        var starTxts, star, highlight, starMovement;
 
         function collectStarsSubScene() {
             function createFirstStar() {
@@ -351,14 +356,13 @@ var InGameTutorial = (function ($) {
             var wrapper = createFirstStar();
             star = wrapper.star;
             highlight = wrapper.highlight;
-
-            self.loop.add(STAR_MOVEMENT, moveMyFirstStar);
+            starMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstStar);
         }
 
         function removeStarStuff() {
             if (starTxts)
                 starTxts.forEach(self.stage.remove.bind(self.stage));
-            self.loop.remove(STAR_MOVEMENT);
+            self.events.unsubscribe(starMovement);
             if (star)
                 self.stage.remove(star);
             if (highlight)
@@ -377,13 +381,29 @@ var InGameTutorial = (function ($) {
 
         function removeCommonGameStuff() {
             self.shaker.reset();
-            self.loop.remove(COLLISION_TUTORIAL);
-            self.resize.remove(PUSH_RELEASE_TOUCHABLE);
-            self.resize.remove(MOVE_STUFF);
+            self.events.unsubscribe(collisionTutorial);
+            self.events.unsubscribe(moveStuff);
+            self.events.unsubscribe(gameTouchable);
+            self.buttons.remove(pauseButton);
+            //self.events.unsubscribe(stopId);
+            //self.events.unsubscribe(resumeId);
         }
 
         function endGame() {
             self.next(nextScene);
+        }
+
+        //var stopId = self.events.subscribe('stop', pause);
+        //
+        //var resumeId = self.events.subscribe('resume', resume);
+
+        function pause() {
+            self.stage.hide(pauseButton.text);
+        }
+
+        function resume() {
+            self.stage.show(pauseButton.text);
+            pauseButton.used = false;
         }
     };
 
@@ -402,5 +422,7 @@ var InGameTutorial = (function ($) {
     add: add,
     subtract: subtract,
     drawShields: drawShields,
-    PlayFactory: PlayFactory
+    PlayFactory: PlayFactory,
+    Event: Event,
+    showSettings: showSettings
 });

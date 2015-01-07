@@ -4,7 +4,7 @@ var Intro = (function ($) {
     function Intro(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.loop = services.loop;
+        this.events = services.events;
     }
 
     var SPEED = 'speed';
@@ -39,7 +39,7 @@ var Intro = (function ($) {
         this.hasNotStarted = true;
         this.yVelocity = $.calcScreenConst(this.stage.height, 48); // todo resize
         this.nextScene = nextScene;
-        this.loop.add('z_parallax', this._parallaxUpdate.bind(this));
+        this.parallaxId = this.events.subscribe($.Event.TICK_MOVE, this._parallaxUpdate.bind(this));
     };
 
     function font_97of480(width, height) {
@@ -70,6 +70,8 @@ var Intro = (function ($) {
         var delta = this.lastY - this.logoDrawable.y;
         this.lastY = this.logoDrawable.y;
         var self = this;
+        if (!this.speedos)
+            return;
         this.speedos.forEach(function (speeeeeeed) {
             speeeeeeed.y += self.yVelocity;
 
@@ -167,8 +169,7 @@ var Intro = (function ($) {
         delete this.yVelocity;
         delete this.nextScene;
         delete this.firstBg;
-
-        this.loop.remove('z_parallax');
+        this.events.unsubscribe(this.parallaxId);
 
         this.sceneStorage.logo = logoDrawable;
         this.sceneStorage.logoHighlight = logoHighlightDrawable;
@@ -190,5 +191,6 @@ var Intro = (function ($) {
     drawBackGround: drawBackGround,
     Font: Font,
     Height: Height,
-    Width: Width
+    Width: Width,
+    Event: Event
 });

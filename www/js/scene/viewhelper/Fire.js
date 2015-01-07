@@ -1,4 +1,4 @@
-var Fire = (function (calcScreenConst, Height) {
+var Fire = (function (calcScreenConst) {
     "use strict";
 
     var FIRE = 'fire/fire';
@@ -11,8 +11,8 @@ var Fire = (function (calcScreenConst, Height) {
         return shipDrawable.x + calcScreenConst(shipDrawable.getWidth(), 5);
     }
 
-    function getFireY(shipDrawable, height) {
-        return Height._400(height) + getOffSet(shipDrawable);
+    function getFireY(shipDrawable) {
+        return shipDrawable.y + getOffSet(shipDrawable);
     }
 
     function getOffSet(shipDrawable) {
@@ -35,4 +35,4 @@ var Fire = (function (calcScreenConst, Height) {
         getY: getFireY,
         getShipOffSet: getOffSet
     };
-})(calcScreenConst, Height);
+})(calcScreenConst);

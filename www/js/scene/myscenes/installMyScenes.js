@@ -1,5 +1,5 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
-    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font) {
+    PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event) {
     "use strict";
 
     var CLICK = 'click';
@@ -11,8 +11,8 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         // custom game services START
         var shaker = new ScreenShaker();
-        sceneServices.resize.add('screen_shaker', shaker.resize.bind(shaker));
-        sceneServices.loop.add('screen_shaker', shaker.update.bind(shaker));
+        sceneServices.events.subscribe(Event.RESIZE, shaker.resize.bind(shaker));
+        sceneServices.events.subscribe(Event.TICK_MOVE, shaker.update.bind(shaker));
         sceneServices.shaker = shaker;
 
         sceneServices.buttons = new ButtonFactory(sceneServices.stage, sceneServices.tap, sceneServices.timer, FONT,
@@ -22,6 +22,9 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         // custom game services END
 
+        var goFullScreen = new GoFullScreen(sceneServices);
+        var rotateDevice = new RotateDevice(sceneServices);
+        var splashScreen = new SplashScreen(sceneServices);
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
         var startingPosition = new StartingPosition(sceneServices);
@@ -32,7 +35,9 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var postGame = new PostGame(sceneServices);
 
         var sceneManager = new SceneManager();
-
+        sceneManager.add(goFullScreen.show.bind(goFullScreen), true);
+        sceneManager.add(rotateDevice.show.bind(rotateDevice), true);
+        sceneManager.add(splashScreen.show.bind(splashScreen), true);
         sceneManager.add(intro.show.bind(intro), true);
         sceneManager.add(preGame.show.bind(preGame), true);
         sceneManager.add(startingPosition.show.bind(startingPosition));
@@ -47,4 +52,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
-    ScreenShaker, ButtonFactory, Font);
+    ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event);

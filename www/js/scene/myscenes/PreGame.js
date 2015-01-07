@@ -1,16 +1,16 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, Settings) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event) {
     "use strict";
 
     function PreGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
         this.tap = services.tap;
-        this.fullScreen = services.fullScreen;
         this.messages = services.messages;
         this.sounds = services.sounds;
         this.timer = services.timer;
         this.buttons = services.buttons;
-        this.resize = services.resize;
+        this.events = services.events;
+        this.device = services.device;
     }
 
     var SHIP = 'ship';
@@ -73,40 +73,18 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                     self.messages.get(KEY, CREDITS), goToCreditsScreen);
                 self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
                 settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), showSettings);
+                    self.messages.get(KEY, SETTINGS), showSettingsScreen);
                 self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
             }
 
-            function showSettings() {
-                hideButton(playButton);
-                hideButton(settingsButton);
-                hideButton(creditsButton);
-                function hideButton(button) {
-                    self.stage.hide(button.text);
-                    self.stage.hide(button.background);
-                    self.tap.disable(button.input);
-                }
-
-                var settings = new Settings({
-                    stage: self.stage,
-                    buttons: self.buttons,
-                    messages: self.messages,
-                    resize: self.resize
-                });
-                settings.show(hideSettings);
+            function showSettingsScreen() {
+                self.events.syncFire(Event.PAUSE);
+                showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                    hideSettings)
             }
 
             function hideSettings() {
-                showButton(playButton);
-                showButton(settingsButton);
                 settingsButton.used = false;
-                showButton(creditsButton);
-
-                function showButton(button) {
-                    self.stage.show(button.text);
-                    self.stage.show(button.background);
-                    self.tap.enable(button.input);
-                }
             }
 
             createButtons();
@@ -141,7 +119,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
 
         function startPlaying() {
-            self.fullScreen.request();
             self.timer.doLater(endOfScreen.bind(self), 31);
         }
 
@@ -231,4 +208,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, Settings);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event);
