@@ -1,4 +1,4 @@
-var GoFullScreen = (function (Event, Width, Height, installOneTimeTap) {
+var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
     "use strict";
 
     function GoFullScreen(services) {
@@ -37,8 +37,11 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap) {
             parent.replaceChild(wrapper, screenElement);
             wrapper.appendChild(screenElement);
 
-            installOneTimeTap(wrapper, function () {
+            installOneTimeTap(wrapper, function (event) {
                 wrapper.parentNode.replaceChild(screenElement, wrapper);
+                if (isHit(event, cancelBtn.input)) {
+                    return;
+                }
                 self.device.requestFullScreen();
             });
         });
@@ -54,4 +57,4 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap) {
     };
 
     return GoFullScreen;
-})(Event, Width, Height, installOneTimeTap);
+})(Event, Width, Height, installOneTimeTap, isHit);

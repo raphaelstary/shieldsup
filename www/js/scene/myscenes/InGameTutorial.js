@@ -95,8 +95,8 @@ var InGameTutorial = (function ($) {
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
         var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.device.width, self.device.height);
-        var gameTouchable = self.events.subscribe($.Event.RESIZE, function (width, height) {
-            $.changeTouchable(touchable, 0, 0, width, height);
+        var gameTouchable = self.events.subscribe($.Event.RESIZE, function (event) {
+            $.changeTouchable(touchable, 0, 0, event.width, event.height);
         });
 
         registerPushRelease();
@@ -196,11 +196,11 @@ var InGameTutorial = (function ($) {
         var __1 = get__1(self.device.height);
         var heightQuarter = $.Height.QUARTER(self.device.height);
 
-        var moveStuff = self.events.subscribe($.Event.RESIZE, function (width, height) {
-            __4 = get__4(height);
-            __2 = get__2(height);
-            __1 = get__1(height);
-            heightQuarter = $.Height.QUARTER(height);
+        var moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+            __4 = get__4(event.height);
+            __2 = get__2(event.height);
+            __1 = get__1(event.height);
+            heightQuarter = $.Height.QUARTER(event.height);
         });
 
         function moveMyFirstAsteroids() {

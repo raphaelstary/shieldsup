@@ -87,8 +87,8 @@ var PlayGame = (function ($) {
         var gameTouchableId;
 
         function setupGameController(touchable, energyStates) {
-            gameTouchableId = self.events.subscribe($.Event.RESIZE, function (width, height) {
-                $.changeTouchable(touchable, 0, 0, width, height);
+            gameTouchableId = self.events.subscribe($.Event.RESIZE, function (event) {
+                $.changeTouchable(touchable, 0, 0, event.width, event.height);
             });
             self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
                 energyStates.loadEnergy.bind(energyStates));
