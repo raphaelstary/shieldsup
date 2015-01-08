@@ -29,6 +29,24 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     var SHIELDS = 'shields';
 
     SplashScreen.prototype.show = function (next) {
+        //// test start
+        //var bufferedControls = [];
+        //this.events.subscribe(Event.KEY_BOARD, function (keyBoard) {
+        //    while (bufferedControls.length > 0)
+        //        bufferedControls.pop();
+        //
+        //    if (keyBoard[Key.UP])
+        //        bufferedControls.push(function () {
+        //            console.log('key up :)');
+        //        });
+        //});
+        //this.events.subscribe(Event.TICK_MOVE, function () {
+        //    bufferedControls.forEach(function (fn) {
+        //        fn();
+        //    });
+        //});
+        //// test end
+
         var asteroidOne = this.stage.drawFresh(Width.get(10, 8), Height.get(10, 2), ASTEROID_1);
         var asteroidTwo = this.stage.drawFresh(Width.get(10, 6), Height.get(10, 3), ASTEROID_2);
         var asteroidThree = this.stage.drawFresh(Width.get(10, 4), Height.get(10, 4), ASTEROID_3);
@@ -118,7 +136,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     }
                 } else {
                     if (!rotateScreen) {
-                        self.events.syncFire(Event.PAUSE);
+                        self.events.fireSync(Event.PAUSE);
                     }
                     goFsScreen = true;
                     self.events.fire(Event.SHOW_GO_FULL_SCREEN);
@@ -130,7 +148,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
             if (!locked && self.device.isMobile) {
 
-                self.events.subscribe(Event.ORIENTATION, function (orientation) {
+                self.events.subscribe(Event.SCREEN_ORIENTATION, function (orientation) {
                     if (orientation === Orientation.PORTRAIT) {
                         rotateScreen = false;
                         self.events.fire(Event.REMOVE_ROTATE_DEVICE);
@@ -143,7 +161,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         }
                     } else {
                         if (!goFsScreen) {
-                            self.events.syncFire(Event.PAUSE);
+                            self.events.fireSync(Event.PAUSE);
                         }
                         rotateScreen = true;
                         self.events.fire(Event.SHOW_ROTATE_DEVICE);

@@ -6,7 +6,6 @@ var InGameTutorial = (function ($) {
         this.sceneStorage = services.sceneStorage;
         this.pushRelease = services.pushRelease;
         this.messages = services.messages;
-        this.tap = services.tap;
         this.sounds = services.sounds;
         this.shaker = services.shaker;
         this.timer = services.timer;
@@ -50,7 +49,7 @@ var InGameTutorial = (function ($) {
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
-            self.events.syncFire($.Event.PAUSE);
+            self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
