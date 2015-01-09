@@ -39,7 +39,10 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
 
             installOneTimeTap(wrapper, function (event) {
                 wrapper.parentNode.replaceChild(screenElement, wrapper);
-                if (isHit(event, cancelBtn.input)) {
+                if (isHit({
+                        x: event.clientX,
+                        y: event.clientY
+                    }, cancelBtn.input)) {
                     return;
                 }
                 self.device.requestFullScreen();

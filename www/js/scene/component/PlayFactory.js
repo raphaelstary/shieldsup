@@ -1,14 +1,10 @@
-var PlayFactory = (function (ObstaclesView, LevelGenerator, Touchable, EnergyBarView, EnergyStateMachine, Odometer,
+var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer,
     OdometerView, CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld) {
     "use strict";
 
     function createLevel(stage, trackedAsteroids, trackedStars) {
         var obstaclesView = new ObstaclesView(stage, trackedAsteroids, trackedStars);
         return new LevelGenerator(obstaclesView);
-    }
-
-    function createTouchable(id, width, height) {
-        return new Touchable(id, 0, 0, width, height);
     }
 
     function createEnergyStateMachine(stage, sounds, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
@@ -33,9 +29,8 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, Touchable, EnergyBar
 
     return {
         createLevel: createLevel,
-        createTouchable: createTouchable,
         createEnergyStateMachine: createEnergyStateMachine,
         createWorld: createWorld
     };
-})(ObstaclesView, LevelGenerator, Touchable, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView,
+})(ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView,
     ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld);

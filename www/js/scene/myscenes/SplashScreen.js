@@ -9,8 +9,6 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.device = services.device;
         this.events = services.events;
         this.loop = services.loop;
-        this.tap = services.tap;
-        this.pushRelease = services.pushRelease;
         this.timer = services.timer;
         this.sceneStorage = services.sceneStorage;
     }
@@ -29,24 +27,6 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     var SHIELDS = 'shields';
 
     SplashScreen.prototype.show = function (next) {
-        //// test start
-        //var bufferedControls = [];
-        //this.events.subscribe(Event.KEY_BOARD, function (keyBoard) {
-        //    while (bufferedControls.length > 0)
-        //        bufferedControls.pop();
-        //
-        //    if (keyBoard[Key.UP])
-        //        bufferedControls.push(function () {
-        //            console.log('key up :)');
-        //        });
-        //});
-        //this.events.subscribe(Event.TICK_MOVE, function () {
-        //    bufferedControls.forEach(function (fn) {
-        //        fn();
-        //    });
-        //});
-        //// test end
-
         var asteroidOne = this.stage.drawFresh(Width.get(10, 8), Height.get(10, 2), ASTEROID_1);
         var asteroidTwo = this.stage.drawFresh(Width.get(10, 6), Height.get(10, 3), ASTEROID_2);
         var asteroidThree = this.stage.drawFresh(Width.get(10, 4), Height.get(10, 4), ASTEROID_3);
@@ -188,8 +168,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         self.events.subscribe(Event.PAUSE, function () {
             self.stage.pauseAll();
-            self.tap.disableAll();
-            self.pushRelease.disableAll();
+            self.buttons.disableAll();
             self.timer.pause();
             self.loop.disableMove();
             self.loop.disableCollision();
@@ -197,8 +176,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         self.events.subscribe(Event.RESUME, function () {
             self.stage.playAll();
-            self.tap.enableAll();
-            self.pushRelease.enableAll();
+            self.buttons.enableAll();
             self.timer.resume();
             self.loop.enableMove();
             self.loop.enableCollision();

@@ -4,7 +4,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     function PreGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.tap = services.tap;
         this.messages = services.messages;
         this.sounds = services.sounds;
         this.timer = services.timer;
