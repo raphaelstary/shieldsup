@@ -26,8 +26,6 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
             cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_QUARTER,
                 self.messages.get('go_full_screen', 'cancel'), function () {
                     self.events.fire(Event.FULL_SCREEN, true);
-                    //self.events.fire(Event.REMOVE_GO_FULL_SCREEN);
-                    //self.events.fire(Event.RESUME);
                 });
 
             // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
