@@ -30,7 +30,6 @@ var LivesView = (function (calcScreenConst, Transition) {
     };
 
     LivesView.prototype.add = function () {
-        console.log('add life');
     };
 
     return LivesView;

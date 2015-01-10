@@ -360,13 +360,15 @@ var InGameTutorial = (function ($) {
         }
 
         var pushRelease;
+        var padId;
+        var keyId;
 
         function registerPushRelease() {
             var isPush = false;
             var pushingPointerId;
             pushRelease = self.events.subscribe($.Event.POINTER, function (pointers) {
                 // chose a random pointer as primary pointer
-                if (!isPush) {
+                if (!isPush && pushingPointerId == undefined) {
                     for (var key in pointers) {
                         pushingPointerId = key;
                         isPush = true;
@@ -374,10 +376,30 @@ var InGameTutorial = (function ($) {
                     if (isPush)
                         energyStates.drainEnergy();
 
-                } else if (pushingPointerId && pointers[pushingPointerId] == undefined) {
+                } else if (isPush && pushingPointerId != undefined && pointers[pushingPointerId] == undefined) {
                     pushingPointerId = undefined;
                     isPush = false;
 
+                    energyStates.loadEnergy();
+                }
+            });
+            var padIsPushed = false;
+            padId = self.events.subscribe($.Event.GAME_PAD, function (gamePad) {
+                if (!padIsPushed && gamePad.isAPressed()) {
+                    padIsPushed = true;
+                    energyStates.drainEnergy();
+                } else if (padIsPushed && !gamePad.isAPressed()) {
+                    padIsPushed = false;
+                    energyStates.loadEnergy();
+                }
+            });
+            var keyPressed = false;
+            keyId = self.events.subscribe($.Event.KEY_BOARD, function (keyBoard) {
+                if (!keyPressed && keyBoard[$.Key.ENTER]) {
+                    keyPressed = true;
+                    energyStates.drainEnergy();
+                } else if (keyPressed && keyBoard[$.Key.ENTER] == undefined) {
+                    keyPressed = false;
                     energyStates.loadEnergy();
                 }
             });
@@ -385,6 +407,8 @@ var InGameTutorial = (function ($) {
 
         function unregisterPushRelease() {
             self.events.unsubscribe(pushRelease);
+            self.events.unsubscribe(padId);
+            self.events.unsubscribe(keyId);
         }
 
         var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
@@ -429,5 +453,6 @@ var InGameTutorial = (function ($) {
     drawShields: drawShields,
     PlayFactory: PlayFactory,
     Event: Event,
-    showSettings: showSettings
+    showSettings: showSettings,
+    Key: Key
 });
