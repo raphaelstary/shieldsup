@@ -22,18 +22,20 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
 
     function processFiles() {
 
-        addFontToDOM([
-            {
-                name: SPECIAL_FONT,
-                url: URL.createObjectURL(specialGameFont.blob)
-            }, {
-                name: FONT,
-                url: URL.createObjectURL(gameFont.blob)
-            }, {
-                name: LOGO_FONT,
-                url: URL.createObjectURL(logoFont.blob)
-            }
-        ]);
+        if (URL) {
+            addFontToDOM([
+                {
+                    name: SPECIAL_FONT,
+                    url: URL.createObjectURL(specialGameFont.blob)
+                }, {
+                    name: FONT,
+                    url: URL.createObjectURL(gameFont.blob)
+                }, {
+                    name: LOGO_FONT,
+                    url: URL.createObjectURL(logoFont.blob)
+                }
+            ]);
+        }
 
         function workAroundForMeasureFontsWithChromeFirefoxOpera() {
             var ctx = document.createElement('canvas').getContext('2d');

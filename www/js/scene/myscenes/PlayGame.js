@@ -4,7 +4,6 @@ var PlayGame = (function ($) {
     function PlayGame(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.pushRelease = services.pushRelease;
         this.sounds = services.sounds;
         this.shaker = services.shaker;
         this.timer = services.timer;
@@ -13,8 +12,6 @@ var PlayGame = (function ($) {
         this.device = services.device;
         this.events = services.events;
     }
-
-    var PUSH_RELEASE = 'game_controller';
 
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
@@ -32,7 +29,7 @@ var PlayGame = (function ($) {
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
-            self.events.syncFire($.Event.PAUSE);
+            self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
@@ -83,18 +80,60 @@ var PlayGame = (function ($) {
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
 
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE, self.device.width, self.device.height);
-        var gameTouchableId;
+        var pushRelease;
+        var padId;
+        var keyId;
 
-        function setupGameController(touchable, energyStates) {
-            gameTouchableId = self.events.subscribe($.Event.RESIZE, function (event) {
-                $.changeTouchable(touchable, 0, 0, event.width, event.height);
+        function registerPushRelease() {
+            var isPush = false;
+            var pushingPointerId;
+            pushRelease = self.events.subscribe($.Event.POINTER, function (pointers) {
+                // chose a random pointer as primary pointer
+                if (!isPush && pushingPointerId == undefined) {
+                    for (var key in pointers) {
+                        pushingPointerId = key;
+                        isPush = true;
+                    }
+                    if (isPush)
+                        energyStates.drainEnergy();
+
+                } else if (isPush && pushingPointerId != undefined && pointers[pushingPointerId] == undefined) {
+                    pushingPointerId = undefined;
+                    isPush = false;
+
+                    energyStates.loadEnergy();
+                }
             });
-            self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
-                energyStates.loadEnergy.bind(energyStates));
+            var padIsPushed = false;
+            padId = self.events.subscribe($.Event.GAME_PAD, function (gamePad) {
+                if (!padIsPushed && gamePad.isAPressed()) {
+                    padIsPushed = true;
+                    energyStates.drainEnergy();
+                } else if (padIsPushed && !gamePad.isAPressed()) {
+                    padIsPushed = false;
+                    energyStates.loadEnergy();
+                }
+            });
+            var keyPressed = false;
+            keyId = self.events.subscribe($.Event.KEY_BOARD, function (keyBoard) {
+                if (!keyPressed && keyBoard[$.Key.ENTER]) {
+                    keyPressed = true;
+                    energyStates.drainEnergy();
+                } else if (keyPressed && keyBoard[$.Key.ENTER] == undefined) {
+                    keyPressed = false;
+                    energyStates.loadEnergy();
+                }
+            });
         }
 
-        setupGameController(touchable, energyStates);
+        registerPushRelease();
+
+        var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
+        var pauseId = self.events.subscribe($.Event.PAUSE, function () {
+            self.events.unsubscribe(pushRelease);
+            self.events.unsubscribe(padId);
+            self.events.unsubscribe(keyId);
+        });
 
         function pause() {
             self.stage.hide(pauseButton.text);
@@ -118,8 +157,11 @@ var PlayGame = (function ($) {
                 $.iterateEntries(lifeDrawablesDict, remove);
                 self.events.unsubscribe(collisionId);
                 self.events.unsubscribe(levelId);
-                self.pushRelease.remove(touchable);
-                self.events.unsubscribe(gameTouchableId);
+                self.events.unsubscribe(pushRelease);
+                self.events.unsubscribe(padId);
+                self.events.unsubscribe(keyId);
+                self.events.unsubscribe(resumeId);
+                self.events.unsubscribe(pauseId);
                 self.shaker.reset();
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
@@ -150,7 +192,6 @@ var PlayGame = (function ($) {
     return PlayGame;
 })({
     Transition: Transition,
-    changeTouchable: changeTouchable,
     iterateEntries: iterateEntries,
     drawShields: drawShields,
     EnergyBar: EnergyBar,
@@ -161,5 +202,6 @@ var PlayGame = (function ($) {
     Width: Width,
     Math: Math,
     showSettings: showSettings,
-    Event: Event
+    Event: Event,
+    Key: Key
 });

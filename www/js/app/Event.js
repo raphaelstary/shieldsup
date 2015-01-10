@@ -1,8 +1,12 @@
 var Event = {
     // system events
     RESIZE: 'resize',
-    ORIENTATION: 'orientation',
+    SCREEN_ORIENTATION: 'orientation',
     FULL_SCREEN: 'full_screen',
+    KEY_BOARD: 'key_board',
+    GAME_PAD: 'game_pad',
+    POINTER: 'pointer',
+    DEVICE_ORIENTATION: 'device_orientation',
 
     TICK_START: 'tick_start',
     TICK_INPUT: 'tick_input',

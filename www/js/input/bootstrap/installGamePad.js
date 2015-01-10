@@ -1,14 +1,22 @@
-var installGamePad = (function (window, GamePadHandler) {
+var installGamePad = (function (window, GamePadHandler, Event, WiiUGamePadHandler, WiiUGamePad, WiiURemote) {
     "use strict";
 
-    function installGamePad() {
-        var gamePadHandler = new GamePadHandler();
+    function installGamePad(events) {
+        if ('wiiu' in window) {
+            var gamePad = window.wiiu.gamepad;
+            var remote = window.wiiu.remote;
+            var wiiuHandler = new WiiUGamePadHandler(events, new WiiUGamePad(gamePad, gamePad.update()));
+            events.subscribe(Event.TICK_INPUT, wiiuHandler.update.bind(wiiuHandler));
 
-        window.addEventListener('gamepadconnected', gamePadHandler.connect.bind(gamePadHandler));
-        window.addEventListener('gamepaddisconnected', gamePadHandler.disconnect.bind(gamePadHandler));
+        } else {
+            var gamePadHandler = new GamePadHandler(events);
 
-        return gamePadHandler;
+            window.addEventListener('gamepadconnected', gamePadHandler.connect.bind(gamePadHandler));
+            window.addEventListener('gamepaddisconnected', gamePadHandler.disconnect.bind(gamePadHandler));
+
+            events.subscribe(Event.TICK_INPUT, gamePadHandler.update.bind(gamePadHandler));
+        }
     }
 
     return installGamePad;
-})(window, GamePadHandler);
+})(window, GamePadHandler, Event, WiiUGamePadHandler, WiiUGamePad, WiiURemote);

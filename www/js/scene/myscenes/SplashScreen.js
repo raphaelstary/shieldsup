@@ -9,8 +9,6 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.device = services.device;
         this.events = services.events;
         this.loop = services.loop;
-        this.tap = services.tap;
-        this.pushRelease = services.pushRelease;
         this.timer = services.timer;
         this.sceneStorage = services.sceneStorage;
     }
@@ -118,7 +116,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     }
                 } else {
                     if (!rotateScreen) {
-                        self.events.syncFire(Event.PAUSE);
+                        self.events.fireSync(Event.PAUSE);
                     }
                     goFsScreen = true;
                     self.events.fire(Event.SHOW_GO_FULL_SCREEN);
@@ -130,7 +128,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
             if (!locked && self.device.isMobile) {
 
-                self.events.subscribe(Event.ORIENTATION, function (orientation) {
+                self.events.subscribe(Event.SCREEN_ORIENTATION, function (orientation) {
                     if (orientation === Orientation.PORTRAIT) {
                         rotateScreen = false;
                         self.events.fire(Event.REMOVE_ROTATE_DEVICE);
@@ -143,7 +141,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         }
                     } else {
                         if (!goFsScreen) {
-                            self.events.syncFire(Event.PAUSE);
+                            self.events.fireSync(Event.PAUSE);
                         }
                         rotateScreen = true;
                         self.events.fire(Event.SHOW_ROTATE_DEVICE);
@@ -170,8 +168,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         self.events.subscribe(Event.PAUSE, function () {
             self.stage.pauseAll();
-            self.tap.disableAll();
-            self.pushRelease.disableAll();
+            self.buttons.disableAll();
             self.timer.pause();
             self.loop.disableMove();
             self.loop.disableCollision();
@@ -179,8 +176,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         self.events.subscribe(Event.RESUME, function () {
             self.stage.playAll();
-            self.tap.enableAll();
-            self.pushRelease.enableAll();
+            self.buttons.enableAll();
             self.timer.resume();
             self.loop.enableMove();
             self.loop.enableCollision();

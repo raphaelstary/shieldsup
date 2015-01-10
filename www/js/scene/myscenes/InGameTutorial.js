@@ -4,9 +4,7 @@ var InGameTutorial = (function ($) {
     function InGameTutorial(services) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
-        this.pushRelease = services.pushRelease;
         this.messages = services.messages;
-        this.tap = services.tap;
         this.sounds = services.sounds;
         this.shaker = services.shaker;
         this.timer = services.timer;
@@ -32,8 +30,6 @@ var InGameTutorial = (function ($) {
     var OK_MSG = 'ok';
     var NO_ENERGY_MSG = 'no_energy';
 
-    var PUSH_RELEASE_TOUCHABLE = 'push_release_tutorial_touchable';
-
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
 
@@ -50,7 +46,7 @@ var InGameTutorial = (function ($) {
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
             pause();
-            self.events.syncFire($.Event.PAUSE);
+            self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
         });
@@ -93,11 +89,6 @@ var InGameTutorial = (function ($) {
         shieldsDrawable.y = shipDrawable.y;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
-
-        var touchable = $.PlayFactory.createTouchable(PUSH_RELEASE_TOUCHABLE, self.device.width, self.device.height);
-        var gameTouchable = self.events.subscribe($.Event.RESIZE, function (event) {
-            $.changeTouchable(touchable, 0, 0, event.width, event.height);
-        });
 
         registerPushRelease();
 
@@ -171,7 +162,6 @@ var InGameTutorial = (function ($) {
 
             var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
                 $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
-
 
             return [touch_txt, raise_txt];
         }
@@ -369,33 +359,73 @@ var InGameTutorial = (function ($) {
                 self.stage.remove(highlight);
         }
 
+        var pushRelease;
+        var padId;
+        var keyId;
+
         function registerPushRelease() {
-            self.pushRelease.add(touchable, energyStates.drainEnergy.bind(energyStates),
-                energyStates.loadEnergy.bind(energyStates));
+            var isPush = false;
+            var pushingPointerId;
+            pushRelease = self.events.subscribe($.Event.POINTER, function (pointers) {
+                // chose a random pointer as primary pointer
+                if (!isPush && pushingPointerId == undefined) {
+                    for (var key in pointers) {
+                        pushingPointerId = key;
+                        isPush = true;
+                    }
+                    if (isPush)
+                        energyStates.drainEnergy();
+
+                } else if (isPush && pushingPointerId != undefined && pointers[pushingPointerId] == undefined) {
+                    pushingPointerId = undefined;
+                    isPush = false;
+
+                    energyStates.loadEnergy();
+                }
+            });
+            var padIsPushed = false;
+            padId = self.events.subscribe($.Event.GAME_PAD, function (gamePad) {
+                if (!padIsPushed && gamePad.isAPressed()) {
+                    padIsPushed = true;
+                    energyStates.drainEnergy();
+                } else if (padIsPushed && !gamePad.isAPressed()) {
+                    padIsPushed = false;
+                    energyStates.loadEnergy();
+                }
+            });
+            var keyPressed = false;
+            keyId = self.events.subscribe($.Event.KEY_BOARD, function (keyBoard) {
+                if (!keyPressed && keyBoard[$.Key.ENTER]) {
+                    keyPressed = true;
+                    energyStates.drainEnergy();
+                } else if (keyPressed && keyBoard[$.Key.ENTER] == undefined) {
+                    keyPressed = false;
+                    energyStates.loadEnergy();
+                }
+            });
         }
 
         function unregisterPushRelease() {
-            if (touchable)
-                self.pushRelease.remove(touchable);
+            self.events.unsubscribe(pushRelease);
+            self.events.unsubscribe(padId);
+            self.events.unsubscribe(keyId);
         }
+
+        var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
+        var pauseId = self.events.subscribe($.Event.PAUSE, unregisterPushRelease);
 
         function removeCommonGameStuff() {
             self.shaker.reset();
             self.events.unsubscribe(collisionTutorial);
             self.events.unsubscribe(moveStuff);
-            self.events.unsubscribe(gameTouchable);
             self.buttons.remove(pauseButton);
-            //self.events.unsubscribe(stopId);
-            //self.events.unsubscribe(resumeId);
+            self.events.unsubscribe(resumeId);
+            self.events.unsubscribe(pauseId);
         }
 
         function endGame() {
             self.next(nextScene);
         }
-
-        //var stopId = self.events.subscribe('stop', pause);
-        //
-        //var resumeId = self.events.subscribe('resume', resume);
 
         function pause() {
             self.stage.hide(pauseButton.text);
@@ -415,7 +445,6 @@ var InGameTutorial = (function ($) {
 })({
     Math: Math,
     calcScreenConst: calcScreenConst,
-    changeTouchable: changeTouchable,
     Width: Width,
     Height: Height,
     Font: Font,
@@ -424,5 +453,6 @@ var InGameTutorial = (function ($) {
     drawShields: drawShields,
     PlayFactory: PlayFactory,
     Event: Event,
-    showSettings: showSettings
+    showSettings: showSettings,
+    Key: Key
 });
