@@ -19,16 +19,13 @@ var InGameTutorial = (function ($) {
     var WHITE = '#fff';
 
     var KEY = 'tutorial';
-    var SKIP_MSG = 'skip';
+    var SKIP_MSG = 'skip_tutorial';
     var COLLECT_STUFF_MSG = 'collect_stuff';
     var TO_RAISE_SHIELDS_MSG = 'to_raise_shields';
     var TOUCH_AND_HOLD_MSG = 'touch_and_hold';
 
-    var DRAIN_ENERGY_MSG = 'drain_energy';
     var STAR = 'star';
     var STAR_WHITE = 'star_white';
-    var OK_MSG = 'ok';
-    var NO_ENERGY_MSG = 'no_energy';
 
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
@@ -95,7 +92,6 @@ var InGameTutorial = (function ($) {
         function removeEveryThing() {
             removeSkipStuff();
             removeTouchNHoldStuff();
-            removeEnergyStuff();
             removeStarStuff();
             removeCommonGameStuff();
             unregisterPushRelease();
@@ -203,7 +199,10 @@ var InGameTutorial = (function ($) {
             }
             if (!self.stage.has(asteroid)) {
                 removeTouchNHoldStuff();
-                showEnergyTxtSubScene();
+
+                // next sub scene
+                registerPushRelease();
+                collectStarsSubScene();
             }
         }
 
@@ -217,44 +216,6 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(asteroidMovement);
             if (asteroid)
                 self.stage.remove(asteroid); //double remove just in case
-        }
-
-        var drainTxt, energyTxt, okButton;
-
-        function showEnergyTxtSubScene() {
-            function createEnergyTxt() {
-
-                drainTxt = self.stage.drawText($.Width.HALF, $.Height.THIRD, self.messages.get(KEY, DRAIN_ENERGY_MSG),
-                    $.Font._30, FONT, WHITE);
-
-                energyTxt = self.stage.drawText($.Width.HALF, $.Height.TWO_THIRD, self.messages.get(KEY, NO_ENERGY_MSG),
-                    $.Font._30, FONT, WHITE);
-
-                function getY(height) {
-                    return $.calcScreenConst(height, 16, 13);
-                }
-
-                okButton = self.buttons.createPrimaryButton($.Width.HALF, getY, self.messages.get(KEY, OK_MSG),
-                    function () {
-                        self.timer.doLater(function () {
-                            removeEnergyStuff();
-                            registerPushRelease();
-                            collectStarsSubScene();
-                        }, 60);
-                    });
-            }
-
-            unregisterPushRelease();
-            createEnergyTxt();
-        }
-
-        function removeEnergyStuff() {
-            if (drainTxt)
-                self.stage.remove(drainTxt);
-            if (energyTxt)
-                self.stage.remove(energyTxt);
-            if (okButton)
-                self.buttons.remove(okButton);
         }
 
         var starTxts, star, highlight, starMovement;
