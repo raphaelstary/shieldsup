@@ -52,42 +52,46 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 sceneButtons.push(getOnButton(Height.get(20, 11), undefined, true));
                 sceneButtons.push(getOffButton(Height.get(20, 11), undefined, false));
                 languageText = getMenuText(Height.get(20, 13), LANGUAGE);
-                var englishButton = getLanguageButton(Width.get(10, 3), Height.get(20, 14), 'english', setEnglish,
-                    false);
-                sceneButtons.push(englishButton);
-                var germanButton = getLanguageButton(Width.get(10, 7), Height.get(20, 14), 'deutsch', setGerman, false);
-                sceneButtons.push(germanButton);
-                var frenchButton = getLanguageButton(Width.get(10, 3), Height.get(40, 31), 'Francais', undefined,
-                    false);
-                sceneButtons.push(frenchButton);
-                var spanishButton = getLanguageButton(Width.get(10, 7), Height.get(40, 31), 'Espanol', undefined,
-                    false);
-                sceneButtons.push(spanishButton);
-                var portugueseButton = getLanguageButton(Width.get(10, 3), Height.get(40, 34), 'Portugues', undefined,
-                    false);
-                sceneButtons.push(portugueseButton);
-                var italianButton = getLanguageButton(Width.get(10, 7), Height.get(40, 34), 'Italiano', undefined,
-                    false);
-                sceneButtons.push(italianButton);
 
-                var usedLanguageButton;
-                var currentLanguage = self.messages.language;
-                if (currentLanguage == 'en') {
-                    usedLanguageButton = englishButton;
-                } else if (currentLanguage == 'de') {
-                    usedLanguageButton = germanButton;
-                }
+                var raster = [
+                    {
+                        x: Width.get(10, 3),
+                        y: Height.get(20, 14)
+                    }, {
+                        x: Width.get(10, 7),
+                        y: Height.get(20, 14)
+                    }, {
+                        x: Width.get(10, 3),
+                        y: Height.get(40, 31)
+                    }, {
+                        x: Width.get(10, 7),
+                        y: Height.get(40, 31)
+                    }, {
+                        x: Width.get(10, 3),
+                        y: Height.get(40, 34)
+                    }, {
+                        x: Width.get(10, 7),
+                        y: Height.get(40, 34)
+                    }
+                ];
+
+                var languageBtns = {};
+                self.messages.getLanguages().forEach(function (language) {
+                    var position = raster.shift();
+                    languageBtns[language.language] = getLanguageButton(position.x, position.y, language.name,
+                        getSetLanguageFn(language.language), false);
+                    sceneButtons.push(languageBtns[language.language]);
+                });
+
+                var usedLanguageButton = languageBtns[self.messages.language];
                 styleSelectButton(usedLanguageButton);
-                function setEnglish() {
-                    resetButton(usedLanguageButton);
-                    usedLanguageButton = englishButton;
-                    changeLanguage('en');
-                }
 
-                function setGerman() {
-                    resetButton(usedLanguageButton);
-                    usedLanguageButton = germanButton;
-                    changeLanguage('de');
+                function getSetLanguageFn(language) {
+                    return function () {
+                        resetButton(usedLanguageButton);
+                        usedLanguageButton = languageBtns[language];
+                        changeLanguage(language);
+                    };
                 }
 
                 function resetButton(button) {
