@@ -4,17 +4,25 @@ var RotateDevice = (function (Width, Height, Font, Event) {
     function RotateDevice(services) {
         this.stage = services.stage;
         this.events = services.events;
+        this.messages = services.messages;
     }
 
+    var KEY = 'rotate';
+    var ROTATE_DEVICE = 'rotate_device';
+    var FONT = 'GameFont';
+    var BLACK = '#000';
+    var WHITE = '#fff';
 
     RotateDevice.prototype.show = function (next) {
         var backBlur, rotateText, self = this;
 
         this.events.subscribe(Event.SHOW_ROTATE_DEVICE, function () {
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
+
+            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
                 undefined, 7, 0.8);
-            rotateText = self.stage.drawText(Width.HALF, Height.HALF, 'ROTATE DEVICE', Font._15, 'SpecialGameFont',
-                '#fff', 8);
+
+            rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, ROTATE_DEVICE), Font._15,
+                FONT, WHITE, 8);
         });
 
         this.events.subscribe(Event.REMOVE_ROTATE_DEVICE, function () {

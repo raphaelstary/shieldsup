@@ -15,7 +15,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
     var KEY = 'splash_screen';
     var GAME_LOGO_TXT = 'SHIELDS UP';
-    var TOUCH_TO_START = 'touch_to_start';
+    var TOUCH_TO_START = 'start';
     var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
 
@@ -152,7 +152,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 if (currentOrientation === Orientation.LANDSCAPE) {
                     var nextScene = self.events.subscribe(Event.RESUME, function () {
                         self.events.unsubscribe(nextScene);
-                        next();
+                        self.timer.doLater(next, 6);
                     });
                     self.events.fire(Event.SHOW_ROTATE_DEVICE);
                     self.events.fire(Event.PAUSE);
@@ -163,7 +163,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 window.scrollTo(0, 1); //maybe scrolling with larger screen element on newer browsers
             }
             if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT)
-                next();
+                self.timer.doLater(next, 6);
         }
 
         self.events.subscribe(Event.PAUSE, function () {

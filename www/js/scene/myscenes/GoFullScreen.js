@@ -9,22 +9,34 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
         this.device = services.device;
     }
 
+    var KEY = 'go_full_screen';
+    var GO_FS = 'go_full_screen';
+    var CANCEL = 'cancel';
+    var FS_REQUEST = 'exit_full_screen';
+
+    var BLACK = '#000';
+    var WHITE = '#fff';
+    var FONT = 'GameFont';
+
     GoFullScreen.prototype.show = function (next) {
         var backBlur, rotateText, self = this, goFsBtn, cancelBtn;
 
         this.events.subscribe(Event.SHOW_GO_FULL_SCREEN, function () {
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
-                undefined, 7, 0.8);
-            rotateText = self.stage.drawText(Width.HALF, Height.HALF, 'GO FULL SCREEN, but how?', Font._15,
-                'SpecialGameFont', '#fff', 8);
 
-            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD,
-                self.messages.get('go_full_screen', 'go_full_screen'), function () {
+            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
+                undefined, 7, 0.8);
+
+
+            rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
+                FONT, WHITE, 8);
+
+            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD, self.messages.get(KEY, GO_FS),
+                function () {
                     // sadly not working on IE11
                 });
 
             cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_QUARTER,
-                self.messages.get('go_full_screen', 'cancel'), function () {
+                self.messages.get(KEY, CANCEL), function () {
                     self.events.fire(Event.FULL_SCREEN, true);
                 });
 
