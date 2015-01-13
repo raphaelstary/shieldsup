@@ -1,3 +1,20 @@
+var lclStorage;
+try {
+    lclStorage = window.localStorage;
+} catch (e) {
+    lclStorage = {
+        dict: {},
+        getItem: function (id) {
+            "use strict";
+            return this.dict[id];
+        },
+        setItem: function (id, value) {
+            "use strict";
+            this.dict[id] = value;
+        }
+    }
+}
+
 var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract) {
     "use strict";
 
@@ -80,4 +97,4 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     };
 
     return PostGame;
-})(window.localStorage, Transition, Height, Width, add, Font, subtract);
+})(lclStorage, Transition, Height, Width, add, Font, subtract);
