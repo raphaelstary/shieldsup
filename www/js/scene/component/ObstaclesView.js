@@ -19,7 +19,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         var self = this;
 
         function getStartY() {
-            return -calcScreenConst(self.stage.getGraphic(STAR).height, 2);
+            return -calcScreenConst(self.stage.getImageHeight(STAR), 2);
         }
 
         function getEndY(height) {
@@ -84,10 +84,8 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
     };
 
     ObstaclesView.prototype._getStarStartRange = function () {
-        // todo it's not safe if gfx get scaled with scaling factor through the rendering engine,
-        // or is it? because everything would get scaled the same way?
-        var singleStarWidth = this.stage.getGraphic(STAR).width;
-        var shipWidth = this.stage.getGraphic(SHIP).width;
+        var singleStarWidth = this.stage.getImageWidth(STAR);
+        var shipWidth = this.stage.getImageWidth(SHIP);
 
         return function (width) {
             return calcScreenConst(width + shipWidth, 2) - singleStarWidth;
@@ -118,7 +116,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         var self = this;
 
         function getStartY() {
-            return -calcScreenConst(self.stage.getGraphic(imgName).height, 2);
+            return -calcScreenConst(self.stage.getImageHeight(imgName), 2);
         }
 
         function getEndY(height) {
@@ -149,8 +147,8 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
     };
 
     ObstaclesView.prototype._getAsteroidStartRange = function (asteroidPath) {
-        var asteroidWidth = this.stage.getGraphic(asteroidPath).width;
-        var shipWidth = this.stage.getGraphic('ship').width;
+        var asteroidWidth = this.stage.getImageWidth(asteroidPath);
+        var shipWidth = this.stage.getImageWidth('ship');
 
         return function (width) {
             return calcScreenConst(width + shipWidth, 2) - asteroidWidth;

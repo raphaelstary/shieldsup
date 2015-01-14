@@ -29,7 +29,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var self = this;
 
         function getShipStartY(height) {
-            return calcScreenConst(self.stage.getGraphic(SHIP).height, 2) + height;
+            return calcScreenConst(self.stage.getImageHeight(SHIP), 2) + height;
         }
 
         var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,

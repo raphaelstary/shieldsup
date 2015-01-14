@@ -16,7 +16,7 @@ var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
 
     function drawSpeed(stage, xFn, delay) {
         function topOffSet(stage) {
-            return calcScreenConst(stage.getGraphic(SPEED).width, 2);
+            return calcScreenConst(stage.getImageWidth(SPEED), 2);
         }
 
         function yStart() {

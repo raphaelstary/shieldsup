@@ -77,7 +77,7 @@ var Intro = (function ($) {
 
             speeeeeeed.y -= delta * 2;
 
-            if (speeeeeeed.y > self.stage.height + $.calcScreenConst(self.stage.getGraphic('speed').width, 2)) {
+            if (speeeeeeed.y > self.stage.height + speeeeeeed.getHeight()) {
                 self.stage.remove(speeeeeeed);
             }
         });

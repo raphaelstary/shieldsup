@@ -129,11 +129,11 @@ var InGameTutorial = (function ($) {
 
         function createFirstAsteroid() {
             function getAsteroidMinusHeightHalf() {
-                return -$.calcScreenConst(self.stage.getGraphic(ASTEROID).height, 2);
+                return -$.calcScreenConst(self.stage.getImageHeight(ASTEROID), 2);
             }
 
             function getAsteroidWidthHalf() {
-                return $.calcScreenConst(self.stage.getGraphic(ASTEROID).width, 2);
+                return $.calcScreenConst(self.stage.getImageWidth(ASTEROID), 2);
             }
 
             var asteroid = self.stage.drawFresh($.subtract($.Width.HALF, getAsteroidWidthHalf),
@@ -201,7 +201,6 @@ var InGameTutorial = (function ($) {
                 removeTouchNHoldStuff();
 
                 // next sub scene
-                registerPushRelease();
                 collectStarsSubScene();
             }
         }
@@ -224,11 +223,11 @@ var InGameTutorial = (function ($) {
             function createFirstStar() {
 
                 function getStarMinusHeightHalf() {
-                    return $.calcScreenConst(self.stage.getGraphic(STAR).height, 2);
+                    return $.calcScreenConst(self.stage.getImageHeight(STAR), 2);
                 }
 
                 function getStarWidthHalf() {
-                    return $.calcScreenConst(self.stage.getGraphic(STAR).height, 2);
+                    return $.calcScreenConst(self.stage.getImageWidth(STAR), 2);
                 }
 
                 var Z_INDEX = 7;

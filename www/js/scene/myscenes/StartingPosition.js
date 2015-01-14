@@ -27,11 +27,11 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         }
 
         function lifeTwoEndX(width) {
-            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width;
+            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE);
         }
 
         function lifeThreeEndX(width) {
-            return lifeX(width) + self.stage.getGraphic(PLAYER_LIFE).width * 2;
+            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE) * 2;
         }
 
         function moveLifeLater(xFn, delay) {
