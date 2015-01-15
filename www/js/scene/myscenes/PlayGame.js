@@ -87,20 +87,15 @@ var PlayGame = (function ($) {
         function registerPushRelease() {
             var isPush = false;
             var pushingPointerId;
-            pushRelease = self.events.subscribe($.Event.POINTER, function (pointers) {
-                // chose a random pointer as primary pointer
+            pushRelease = self.events.subscribe($.Event.POINTER, function (pointer) {
                 if (!isPush && pushingPointerId == undefined) {
-                    for (var key in pointers) {
-                        pushingPointerId = key;
-                        isPush = true;
-                    }
-                    if (isPush)
-                        energyStates.drainEnergy();
+                    pushingPointerId = pointer.id;
+                    isPush = true;
+                    energyStates.drainEnergy();
 
-                } else if (isPush && pushingPointerId != undefined && pointers[pushingPointerId] == undefined) {
+                } else if (isPush && pushingPointerId == pointer.id && pointer.type == 'up') {
                     pushingPointerId = undefined;
                     isPush = false;
-
                     energyStates.loadEnergy();
                 }
             });
