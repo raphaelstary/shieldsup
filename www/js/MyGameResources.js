@@ -1,5 +1,5 @@
 var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, URL,
-    document) {
+    document, width, height) {
     "use strict";
 
     var SPECIAL_FONT = 'SpecialGameFont';
@@ -55,7 +55,7 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         return {
             messages: new UniversalTranslator(locales),
             sounds: sounds,
-            gfxCache: AtlasResourceHelper.process(atlases)
+            gfxCache: AtlasResourceHelper.process(atlases, width, height)
         };
     }
 
@@ -64,4 +64,4 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         process: processFiles
     };
 })(addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, window.URL || window.webkitURL,
-    window.document);
+    window.document, window.innerWidth, window.innerHeight);

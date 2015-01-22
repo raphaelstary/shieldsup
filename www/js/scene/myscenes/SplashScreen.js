@@ -40,11 +40,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             SPECIAL_FONT, WHITE, 4);
         var fireDict = Fire.draw(this.stage, ship);
         var offSetX = ship.x - Fire.getLeftX(ship);
-        fireDict.left.anchorOffsetX = offSetX;
-        fireDict.right.anchorOffsetX = -offSetX;
+        fireDict.left.rotationAnchorOffsetX = offSetX;
+        fireDict.right.rotationAnchorOffsetX = -offSetX;
         var offSetY = -Fire.getShipOffSet(ship);
-        fireDict.left.anchorOffsetY = offSetY;
-        fireDict.right.anchorOffsetY = offSetY;
+        fireDict.left.rotationAnchorOffsetY = offSetY;
+        fireDict.right.rotationAnchorOffsetY = offSetY;
         fireDict.left.rotation = Math.PI / 4;
         fireDict.right.rotation = Math.PI / 4;
 
