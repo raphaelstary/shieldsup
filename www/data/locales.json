@@ -1,21 +1,29 @@
 {
     "en": {
-        "display_name": "English",
         "tutorial": {
             "touch_and_hold": "touch & hold anywhere",
             "to_raise_shields": "to raise shields",
+            "destroy_asteroids": "destroy asteroids with your shields",
+            "drain_energy": "shields consume energy",
+            "no_energy": "no energy, no shields",
             "collect_stuff": "collect stars to score points",
-            "skip_tutorial": "skip >"
+            "nice": "nice",
+            "good": "good job",
+            "well_done": "well done",
+            "awesome": "awesome",
+            "skip": "skip tutorial >",
+            "ok": "ok"
         },
         "credits": {
             "a": "a",
             "game": "game",
             "by": "by",
+            "from": "from",
             "graphics": "graphics",
-            "back": "back"
+            "back": "back",
+            "kenney": "Kenney"
         },
-        "post_game": {
-            "game_over": "game over",
+        "game_over": {
             "score": "score",
             "best": "best",
             "play_again": "play again"
@@ -25,80 +33,40 @@
             "play": "play",
             "credits": "credits",
             "more_games": "more games"
-        },
-        "settings": {
-            "ok": "ok",
-            "full_screen": "full screen",
-            "sound": "sound",
-            "music": "music",
-            "language": "language",
-            "on": "on",
-            "off": "off"
-        },
-        "go_full_screen": {
-            "exit_full_screen": "exit full screen?",
-            "go_full_screen": "go full screen",
-            "cancel": "exit"
-        },
-        "rotate": {
-            "rotate_device": "please, rotate device"
-        },
-        "game": {
-            "get_ready": "get ready"
-        },
-        "splash_screen": {
-            "start": "start"
         }
     },
     "de": {
-        "display_name": "Deutsch",
         "tutorial": {
-            "touch_and_hold": "touch & halten",
-            "to_raise_shields": "um deine Schilde hochzufahren",
-            "collect_stuff": "sammle Sterne um Punkte zu bekommen",
-            "skip_tutorial": "weiter >"
+            "touch_and_hold": "touch & gedrueckt lassen, irgendwo",
+            "to_raise_shields": "um die Schilde hochzufahren",
+            "destroy_asteroids": "zerstoere Asteroiden mit deinem Schild",
+            "drain_energy": "shields consume energy",
+            "no_energy": "no energy, no shields",
+            "collect_stuff": "collect stars to score points",
+            "nice": "nice",
+            "good": "good job",
+            "well_done": "well done",
+            "awesome": "awesome",
+            "skip": "skip tutorial >"
         },
         "credits": {
-            "a": "ein",
-            "game": "Spiel",
-            "by": "von",
-            "graphics": "Grafiken",
-            "back": "zur\u00DCck"
+            "a": "a",
+            "game": "game",
+            "by": "by",
+            "raphael_stary": "Raphael Stary",
+            "raphael_twitter": "@raphaelstary",
+            "from": "from",
+            "letsplayIO_twitter": "@letsplayIO",
+            "letsplayIO_fb": "/letsplayIO",
+            "graphics": "graphics"
         },
-        "post_game": {
-            "game_over": "spiel vorbei",
-            "score": "Punkte",
-            "best": "Rekord",
-            "play_again": "nochmal spielen!"
+        "game_over": {
+            "score": "score",
+            "best": "best"
         },
         "pre_game": {
-            "settings": "Einstellungen",
-            "play": "Spielen !",
-            "credits": "Credits",
-            "more_games": "mehr Spiele"
-        },
-        "settings": {
-            "ok": "ok",
-            "full_screen": "Fullscreen",
-            "sound": "Soundeffekte",
-            "music": "Musik",
-            "language": "Sprache",
-            "on": "An",
-            "off": "Aus"
-        },
-        "go_full_screen": {
-            "exit_full_screen": "Fullscreen beenden?",
-            "go_full_screen": "Weiter in Fullscreen",
-            "cancel": "beenden"
-        },
-        "rotate": {
-            "rotate_device": "Bitte, GER\u00C4T drehen"
-        },
-        "game": {
-            "get_ready": "los geht's"
-        },
-        "splash_screen": {
-            "start": "start"
+            "credits": "credits",
+            "more_games": "more games"
         }
     }
 }
