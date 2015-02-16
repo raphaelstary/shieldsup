@@ -27,6 +27,8 @@ var InGameTutorial = (function ($) {
     var STAR = 'star';
     var STAR_WHITE = 'star_white';
 
+    var BACK_GROUND_MUSIC = 'spacey_club';
+
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
 
@@ -39,6 +41,8 @@ var InGameTutorial = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
+
+        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.1);
 
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
@@ -379,6 +383,7 @@ var InGameTutorial = (function ($) {
         }
 
         function endGame() {
+            self.sounds.stop(backSound);
             self.next(nextScene);
         }
 

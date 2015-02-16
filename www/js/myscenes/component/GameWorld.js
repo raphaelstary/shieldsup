@@ -2,8 +2,10 @@ var GameWorld = (function (Object) {
     "use strict";
 
     var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
-    var ASTEROID_EXPLOSION = 'asteroid-explosion';
-    var STAR_EXPLOSION = 'star-explosion';
+    var ASTEROID_EXPLOSION = 'booming_rumble';
+    var SHIP_HIT = 'slamming_metal_lid';
+    var STAR_EXPLOSION = 'booming_reverse_01';
+    var COLLECT_STAR = 'kids_cheering';
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
         shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, endGame,
@@ -96,7 +98,7 @@ var GameWorld = (function (Object) {
             }
 
             if (needPreciseCollisionDetection(this.shipDrawable, star) && this.shipCollision.isHit(star)) {
-                this.sounds.play('coin');
+                this.sounds.play(COLLECT_STAR);
                 this.collectAnimator.collectStar(this.lives);
                 this.scoreAnimator.showScoredPoints(star.x, star.y);
                 var score = 10;
@@ -117,7 +119,7 @@ var GameWorld = (function (Object) {
         self.livesView.remove(currentLife);
 
         if (--this.lives > 0) {
-            self.sounds.play(ASTEROID_EXPLOSION);
+            self.sounds.play(SHIP_HIT);
             self.shipHitView.hit();
         }
     };

@@ -3,7 +3,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     TapManager) {
     "use strict";
 
-    var CLICK = 'click';
+    var CLICK = 'computer_data_03';
     var FONT = 'GameFont';
     var WHITE = '#fff';
     var VIOLET = '#3a2e3f';

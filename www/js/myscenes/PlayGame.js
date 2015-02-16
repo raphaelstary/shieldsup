@@ -181,6 +181,8 @@ var PlayGame = (function ($) {
 
         this.sceneStorage.points = points;
 
+        this.sounds.stop(this.sceneStorage.music);
+
         nextScene();
     };
 

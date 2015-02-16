@@ -20,6 +20,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var CREDITS = 'credits';
     var PLAY = 'play';
     var SETTINGS = 'settings';
+    var SHIELDS_UP_SOUND = 'hydraulics_engaged';
+    var SHIELDS_ON_SOUND = 'warp_engineering_05';
+    var SHIP_ARRIVES = 'star_drive_engaged';
+    var BACK_GROUND_MUSIC = 'space_log';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -34,6 +38,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
         var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
             Transition.EASE_IN_QUAD, false, shipIsAtEndPosition, undefined, 1).drawable;
+        var sounds = [];
+        sounds.push(this.sounds.play(SHIP_ARRIVES));
 
         function getFireStartY(height) {
             return getShipStartY(height) + Fire.getShipOffSet(shipDrawable);
@@ -59,6 +65,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var playButton, creditsButton, settingsButton;
 
         function shipIsAtEndPosition() {
+            sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
+
             function createButtons() {
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                     self.messages.get(KEY, PLAY), startPlaying);
@@ -135,7 +143,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 drawable: shieldsDrawable,
                 sprite: shieldsUpSprite,
                 callback: function () {
-
+                    var shieldsOn = self.sounds.play(SHIELDS_ON_SOUND, false, 0.1);
                     shieldsDrawable.data = self.stage.getGraphic(SHIELDS);
                     self.stage.animateLater({
                         drawable: shieldsDrawable,
@@ -147,9 +155,15 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                                 shieldsAnimation();
                             }
                         }
-                    }, 48, checkIfShouldStopThisMadness);
+                    }, 48, function () {
+                        self.sounds.stop(shieldsOn);
+                        checkIfShouldStopThisMadness();
+                    });
                 }
-            }, startTimer, checkIfShouldStopThisMadness);
+            }, startTimer, function () {
+                self.sounds.play(SHIELDS_UP_SOUND, false, 0.1);
+                checkIfShouldStopThisMadness();
+            });
 
             function checkIfShouldStopThisMadness() {
                 if (!doTheShields) {
@@ -181,7 +195,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.stage.move(shipDrawable, Width.HALF, Height._400, 30, Transition.EASE_IN_EXPO, false, function () {
                 // next scene
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
-                    shieldsUpSprite, shieldsDownSprite);
+                    shieldsUpSprite, shieldsDownSprite, sounds);
             });
             var getFireY = Fire.getY.bind(undefined, shipDrawable);
             self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
@@ -190,7 +204,11 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, shields, shieldsUpSprite,
-        shieldsDownSprite) {
+        shieldsDownSprite, sounds) {
+
+        sounds.forEach(function (sound) {
+            this.sounds.stop(sound);
+        }, this);
 
         this.sceneStorage.ship = ship;
         this.sceneStorage.fire = {

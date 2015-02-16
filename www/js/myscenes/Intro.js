@@ -5,6 +5,7 @@ var Intro = (function ($) {
         this.stage = services.stage;
         this.sceneStorage = services.sceneStorage;
         this.events = services.events;
+        this.sounds = services.sounds;
     }
 
     var SPEED = 'speed';
@@ -20,8 +21,10 @@ var Intro = (function ($) {
     var LIGHT_GRAY = '#D3D3D3';
     var DARK_GRAY = '#A9A9A9';
 
-    Intro.prototype.show = function (nextScene) {
+    var NAME_FLY_BY = 'electric_fly_by_01';
 
+    Intro.prototype.show = function (nextScene) {
+        this.sounds.play(NAME_FLY_BY);
         this.firstBg = $.drawBackGround(this.stage);
         this.speedos = [
             this.stage.drawFresh($.Width.QUARTER, $.zero, SPEED, 1),
