@@ -126,6 +126,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
 
         function startPlaying() {
+            self.sounds.play('door_air_lock_closing');
             self.timer.doLater(endOfScreen.bind(self), 31);
         }
 

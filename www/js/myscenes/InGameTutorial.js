@@ -42,7 +42,7 @@ var InGameTutorial = (function ($) {
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
-        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.1);
+        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {

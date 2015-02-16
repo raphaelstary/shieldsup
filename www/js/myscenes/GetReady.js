@@ -17,7 +17,7 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
 
     GetReady.prototype.show = function (nextScene) {
         var self = this;
-        this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.1);
+        this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.4);
         var readyDrawable = self.stage.moveFreshText(changeSign(Width.FULL), Height.THIRD,
             self.messages.get(KEY, GET_READY), Font._15, FONT, LIGHT_GRAY, multiply(Width.FULL, 2), Height.THIRD, 180,
             Transition.EASE_OUT_IN_SIN, false, function () {

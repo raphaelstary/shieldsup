@@ -42,7 +42,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
         delete this.sceneStorage.points;
 
         var self = this;
-
+        var thunder = self.sounds.play('thunder_roll');
         var gameOverWrapper = self.stage.moveFreshText(Width.HALF, subtract(Height.FIFTH, Height.FULL),
             self.messages.get(KEY, GAME_OVER), Font._15, FONT, DARK_GRAY, Width.HALF, Height.FIFTH, 60,
             Transition.EASE_OUT_ELASTIC, false, function () {
@@ -63,6 +63,8 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                 var allTimeHighScore = localStorage.getItem(ALL_TIME_HIGH_SCORE);
                 if (allTimeHighScore == null)
                     allTimeHighScore = '0';
+
+                //var coins = self.sounds.play('coin_drop_on_wood');
 
                 var scoreWrapper = moveIn(self.messages.get(KEY, SCORE), Height.THIRD, 1);
                 var scoreDigitsWrapper = moveIn(points.toString(), getNewScoreY, 5);
@@ -89,6 +91,9 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                                 if (points > parseInt(allTimeHighScore, 10))
                                     localStorage.setItem(ALL_TIME_HIGH_SCORE, points);
 
+                                self.sounds.stop(thunder);
+                                self.sounds.play('door_air_lock_closing');
+                                //self.sounds.stop(coins);
                                 nextScene();
                             });
                         });
