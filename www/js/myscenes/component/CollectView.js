@@ -26,7 +26,7 @@ var CollectView = (function (Math, Transition, calcScreenConst) {
             return self.shipDrawable.y + calcScreenConst(height, 48);
         }
 
-        var shine = this.stage.drawFresh(getX, getShineY, STAR_SHINE, 3, dep, 1, 0);
+        var shine = this.stage.drawFresh(getX, getShineY, STAR_SHINE, 2, dep, 1, 0);
         this.stage.animateRotation(shine, 2 * Math.PI, 180, Transition.LINEAR, true);
         this.shaker.add(shine);
         var white = this.stage.drawFresh(getX, getY, SHIP_WHITE, 5, dep, 0);

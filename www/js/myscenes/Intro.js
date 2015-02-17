@@ -22,8 +22,8 @@ var Intro = (function ($) {
     var DARK_GRAY = '#A9A9A9';
 
     var NAME_FLY_BY = 'electric_fly_by_01';
-    var Z_INDEX_SPEEDOS = 2;
-    var Z_INDEX_SCROLLING_BG = 1;
+    var Z_INDEX_SPEEDOS = 1;
+    var Z_INDEX_SCROLLING_BG = 0;
 
     Intro.prototype.show = function (nextScene) {
         this.sounds.play(NAME_FLY_BY);

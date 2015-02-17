@@ -28,7 +28,7 @@ var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
         }
 
         return stage.moveFreshLater(xFn, yStart, SPEED, xFn, yEnd, 30, Transition.LINEAR, delay, true, undefined,
-            undefined, undefined, 2);
+            undefined, undefined, 1);
     }
 
     return showSpeedStripes;
