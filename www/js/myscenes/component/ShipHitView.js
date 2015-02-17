@@ -3,7 +3,7 @@ var ShipHitView = (function (wrap, Transition) {
 
     var SHIP_WHITE = 'ship_white';
     var SHIP_BLACK = 'ship_black';
-    var Z_INDEX = 7;
+    var Z_INDEX = 4;
 
     function ShipHitView(stage, drawable, timer, shaker) {
         this.stage = stage;

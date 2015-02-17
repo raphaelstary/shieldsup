@@ -12,7 +12,7 @@ var ShieldsHitView = (function (wrap, Transition) {
 
     ShieldsHitView.prototype.hit = function () {
         var dep = [this.drawable];
-        var white = this.stage.drawFresh(wrap(this.drawable.x), wrap(this.drawable.y), SHIELDS_WHITE, 3, dep);
+        var white = this.stage.drawFresh(wrap(this.drawable.x), wrap(this.drawable.y), SHIELDS_WHITE, 5, dep);
         this.shaker.add(white);
         this.stage.animateAlphaPattern(white, [
             {

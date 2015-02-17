@@ -13,7 +13,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
     var ASTEROID = 'asteroid';
     var _ = '_';
     var SHIP = 'ship';
-    var Z_INDEX = 7;
+    var Z_INDEX = 4;
 
     ObstaclesView.prototype.drawStar = function (rotation, xFn, speed) {
         var self = this;
@@ -124,7 +124,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         }
 
         var asteroidWrapper = this.stage.moveFresh(xFn, getStartY, imgName, xFn, getEndY, speed, Transition.LINEAR,
-            undefined, undefined, undefined, Z_INDEX);
+            undefined, undefined, undefined, Z_INDEX + 1);
         this.trackedAsteroids[asteroidWrapper.drawable.id] = asteroidWrapper.drawable;
 
         return asteroidWrapper;

@@ -37,7 +37,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
 
         var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
-            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition, undefined, 4).drawable;
+            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
         var sounds = [];
         sounds.push(this.sounds.play(SHIP_ARRIVES));
 
