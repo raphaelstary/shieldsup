@@ -24,21 +24,21 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
         this.events.subscribe(Event.SHOW_GO_FULL_SCREEN, function () {
 
             backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
-                undefined, 7, 0.8);
+                undefined, 9, 0.8);
 
 
             rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
-                FONT, WHITE, 8);
+                FONT, WHITE, 11);
 
             goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD, self.messages.get(KEY, GO_FS),
                 function () {
                     // sadly not working on IE11
-                });
+                }, 10);
 
             cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_QUARTER,
                 self.messages.get(KEY, CANCEL), function () {
                     self.events.fire(Event.FULL_SCREEN, true);
-                });
+                }, 10);
 
             // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
             var screenElement = document.getElementsByTagName('canvas')[0];

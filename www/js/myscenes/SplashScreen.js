@@ -35,7 +35,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         var shields = this.stage.drawFresh(Width.get(10, 3), Height.get(10, 5), SHIELDS);
         shields.rotation = Math.PI / 4;
         var logo = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
-            DARK_GRAY, 3);
+            DARK_GRAY);
         var logoHighlight = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15,
             SPECIAL_FONT, WHITE, 4);
         var fireDict = Fire.draw(this.stage, ship);
@@ -62,7 +62,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         var startButton = this.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
             this.messages.get(KEY, TOUCH_TO_START), function () {
                 // sadly not working on IE11
-            });
+            }, 3);
 
         // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
         var screenElement = document.getElementsByTagName('canvas')[0];

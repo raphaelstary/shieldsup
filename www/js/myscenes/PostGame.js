@@ -96,7 +96,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                                 //self.sounds.stop(coins);
                                 nextScene();
                             });
-                        });
+                        }, 3);
                 });
             });
     };

@@ -17,7 +17,7 @@ var drawShields = (function () {
             return ship.y;
         }
 
-        var shieldsDrawable = stage.drawFresh(getX, getY, SHIELDS, 2, [ship]);
+        var shieldsDrawable = stage.drawFresh(getX, getY, SHIELDS, 4, [ship]);
         stage.hide(shieldsDrawable);
 
         return {

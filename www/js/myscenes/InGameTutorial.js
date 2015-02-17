@@ -50,7 +50,7 @@ var InGameTutorial = (function ($) {
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 resume);
-        });
+        }, 3);
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -122,7 +122,7 @@ var InGameTutorial = (function ($) {
                     removeEveryThing();
                     endGame();
                 }, 60);
-            });
+            }, 3);
         }
 
         var skipButton = createSkipStuff();
@@ -141,7 +141,7 @@ var InGameTutorial = (function ($) {
             }
 
             var asteroid = self.stage.drawFresh($.subtract($.Width.HALF, getAsteroidWidthHalf),
-                getAsteroidMinusHeightHalf, ASTEROID);
+                getAsteroidMinusHeightHalf, ASTEROID, 5);
             trackedAsteroids[asteroid.id] = asteroid;
 
             return asteroid;
@@ -234,7 +234,7 @@ var InGameTutorial = (function ($) {
                     return $.calcScreenConst(self.stage.getImageWidth(STAR), 2);
                 }
 
-                var Z_INDEX = 7;
+                var Z_INDEX = 4;
                 var star = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,
                     STAR, Z_INDEX, undefined, 1, 0, 0.75);
                 var highlight = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,

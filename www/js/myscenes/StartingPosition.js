@@ -36,8 +36,7 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
 
         function moveLifeLater(xFn, delay) {
             return self.stage.moveFreshLater(lifeStartX, Height.TOP_RASTER, PLAYER_LIFE, xFn, Height.TOP_RASTER, speed,
-                spacing,
-                delay, false, goodToGo);
+                spacing, delay, false, goodToGo);
         }
 
         var lifeOneWrapper = moveLifeLater(lifeX, 20);
@@ -87,7 +86,9 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
             };
             var countDrawables = [
                 fourthDigitWrapper.drawable,
-                secondDigitWrapper.drawable, thirdDigitWrapper.drawable, firstDigitWrapper.drawable
+                secondDigitWrapper.drawable,
+                thirdDigitWrapper.drawable,
+                firstDigitWrapper.drawable
             ];
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);

@@ -22,7 +22,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         sceneServices.buttons = new ButtonFactory(sceneServices.stage, tap, sceneServices.timer, FONT,
             function () {
                 sceneServices.sounds.play(CLICK);
-            }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2, 8);
+            }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2);
 
         // custom game services END
 

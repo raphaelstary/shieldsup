@@ -24,7 +24,7 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
 
                 self.stage.remove(readyDrawable);
                 nextScene();
-            }).drawable;
+            }, undefined, 5).drawable;
     };
 
     return GetReady;

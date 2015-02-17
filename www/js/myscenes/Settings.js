@@ -25,7 +25,8 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
     Settings.prototype.show = function (next) {
         this.sceneStorage.settingsOn = true;
         var self = this;
-        var backBlur, menuBack, fsText, soundText;
+        var backBlur, fsText, soundText;
+        // var menuBack;
         var musicText, languageText;
         var sceneButtons = [];
         var resume = self.events.subscribe(Event.RESUME_SETTINGS, function () {
@@ -36,11 +37,11 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
         function showSettings() {
 
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
-                undefined, 7, 0.8);
-            menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.get(10, 9),
-                Height.get(10, 9), '#fff', true, undefined, 8, 0.5);
-            self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
+            backBlur = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.FULL, Height.FULL, '#000',
+                true, undefined, 6, 0.8);
+            //menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.get(10, 9),
+            //    Height.get(10, 9), '#fff', true, undefined, 6, 0.5);
+            self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
 
                 fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
                 sceneButtons.push(getOnButton(Height.get(20, 5), undefined, false));
@@ -108,7 +109,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                 function getMenuText(yFn, msgKey) {
                     var drawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(SETTINGS_KEY, msgKey),
-                        Font._30, FONT, WHITE, 9);
+                        Font._30, FONT, WHITE, 8);
                     self.messages.add(drawable, drawable.data, SETTINGS_KEY, msgKey);
 
                     return drawable;
@@ -123,7 +124,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 function getLanguageButton(xFn, yFn, msg, callback, selected) {
-                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback);
+                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback, 7);
                     button.reset = false;
                     if (selected) {
                         styleSelectButton(button);
@@ -134,7 +135,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                 function getOnOffButton(xFn, yFn, msgKey, callback, selected) {
                     var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get(SETTINGS_KEY, msgKey),
-                        callback);
+                        callback, 7);
                     self.messages.add(button.text, button.text.data, SETTINGS_KEY, msgKey);
                     if (selected) {
                         button.text.alpha = 1;
@@ -145,7 +146,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
-                    self.messages.get(SETTINGS_KEY, OK), hideSettings);
+                    self.messages.get(SETTINGS_KEY, OK), hideSettings, 7);
                 self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
                 sceneButtons.push(resumeButton);
 
@@ -172,9 +173,9 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 self.stage.remove(drawable);
             }
 
-            self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
+            self.stage.move(backBlur, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
                 function () {
-                    self.stage.remove(menuBack);
+                    //self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
                     self.events.fire(Event.RESUME);
                     self.sceneStorage.settingsOn = false;

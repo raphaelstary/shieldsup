@@ -37,7 +37,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
 
         var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
-            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition, undefined, 1).drawable;
+            Transition.EASE_IN_QUAD, false, shipIsAtEndPosition, undefined, 4).drawable;
         var sounds = [];
         sounds.push(this.sounds.play(SHIP_ARRIVES));
 
@@ -52,9 +52,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var getLeftFireX = Fire.getLeftX.bind(undefined, shipDrawable);
         var getRightFireX = Fire.getRightX.bind(undefined, shipDrawable);
 
-        var leftFireWrapper = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true, [shipDrawable], 1);
+        var leftFireWrapper = self.stage.animateFresh(getLeftFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
         var leftFireDrawable = leftFireWrapper.drawable;
-        var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable], 1);
+        var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
         var rightFireDrawable = rightFireWrapper.drawable;
 
         self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
@@ -69,7 +69,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             function createButtons() {
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-                    self.messages.get(KEY, PLAY), startPlaying);
+                    self.messages.get(KEY, PLAY), startPlaying, 3);
                 self.messages.add(playButton.text, playButton.text.data, KEY, PLAY);
 
                 shieldsDrawable.x = shipDrawable.x;
@@ -77,10 +77,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 shieldsAnimation();
 
                 creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, CREDITS), goToCreditsScreen);
+                    self.messages.get(KEY, CREDITS), goToCreditsScreen, 3);
                 self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
                 settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), showSettingsScreen);
+                    self.messages.get(KEY, SETTINGS), showSettingsScreen, 3);
                 self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
             }
 

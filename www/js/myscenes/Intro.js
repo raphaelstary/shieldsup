@@ -22,17 +22,19 @@ var Intro = (function ($) {
     var DARK_GRAY = '#A9A9A9';
 
     var NAME_FLY_BY = 'electric_fly_by_01';
+    var Z_INDEX_SPEEDOS = 2;
+    var Z_INDEX_SCROLLING_BG = 1;
 
     Intro.prototype.show = function (nextScene) {
         this.sounds.play(NAME_FLY_BY);
         this.firstBg = $.drawBackGround(this.stage);
         this.speedos = [
-            this.stage.drawFresh($.Width.QUARTER, $.zero, SPEED, 1),
-            this.stage.drawFresh($.Width.get(8, 7), $.changeSign($.Height.TWO_FIFTH), SPEED, 1),
-            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.TWO_FIFTH), SPEED, 1),
-            this.stage.drawFresh($.Width.get(16, 7), $.changeSign($.Height.THREE_FIFTH), SPEED, 1),
-            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.FOUR_FIFTH), SPEED, 1),
-            this.stage.drawFresh($.Width.TWO_THIRD, $.changeSign($.Height.get(16, 5)), SPEED, 1)
+            this.stage.drawFresh($.Width.QUARTER, $.zero, SPEED, Z_INDEX_SPEEDOS),
+            this.stage.drawFresh($.Width.get(8, 7), $.changeSign($.Height.TWO_FIFTH), SPEED, Z_INDEX_SPEEDOS),
+            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.TWO_FIFTH), SPEED, Z_INDEX_SPEEDOS),
+            this.stage.drawFresh($.Width.get(16, 7), $.changeSign($.Height.THREE_FIFTH), SPEED, Z_INDEX_SPEEDOS),
+            this.stage.drawFresh($.Width.get(16), $.changeSign($.Height.FOUR_FIFTH), SPEED, Z_INDEX_SPEEDOS),
+            this.stage.drawFresh($.Width.TWO_THIRD, $.changeSign($.Height.get(16, 5)), SPEED, Z_INDEX_SPEEDOS)
         ];
         if (!this.logoDrawable)
             this.logoDrawable = {};
@@ -104,25 +106,26 @@ var Intro = (function ($) {
 
             var scrollingBackGround = [
                 this.stage.moveFresh($.Width.HALF, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR, $.Width.HALF,
-                    $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1, 0, 0.5),
+                    $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, Z_INDEX_SCROLLING_BG, 1, 0,
+                    0.5),
                 this.stage.moveFresh($.Width.THIRD, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.THIRD, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0,
-                    0.75),
+                    $.Width.THIRD, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 0.75, 0, 0.75),
                 this.stage.moveFresh($.Width.QUARTER, $.add($.Height.TWO_THIRD, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.QUARTER, $.Height.TWO_THIRD, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5,
-                    0, 1),
+                    $.Width.QUARTER, $.Height.TWO_THIRD, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 0.5, 0, 1),
                 this.stage.moveFresh($.Width.THREE_QUARTER, $.add($.Height.THIRD, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.THREE_QUARTER, $.Height.THIRD, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 1,
-                    0, 0.5),
+                    $.Width.THREE_QUARTER, $.Height.THIRD, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 1, 0, 0.5),
                 this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.TWO_THIRD, $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.5, 0,
-                    0.75),
+                    $.Width.TWO_THIRD, $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 0.5, 0, 0.75),
                 this.stage.moveFresh($.Width.HALF, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.HALF, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0, 0.75, 0,
-                    1),
+                    $.Width.HALF, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 0.75, 0, 1),
                 this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.THREE_QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.TWO_THIRD, $.Height.THREE_QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined, 0,
-                    1, 0, 0.5)
+                    $.Width.TWO_THIRD, $.Height.THREE_QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    Z_INDEX_SCROLLING_BG, 1, 0, 0.5)
             ];
 
             this.logoDrawable = self.stage.moveFreshText($.Width.HALF, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
@@ -145,7 +148,7 @@ var Intro = (function ($) {
                 }, function () {
                     var delay = 30;
                     speedStripes = $.drawSpeedStripes(self.stage, delay);
-                }, undefined, 2);
+                });
 
             var wrapperLogoHighlight = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15,
                 SPECIAL_FONT, WHITE, $.Width.HALF, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
@@ -161,7 +164,7 @@ var Intro = (function ($) {
                             easing: $.Transition.LINEAR
                         }
                     ], true);
-                });
+                }, undefined, 4);
         }
     };
 

@@ -36,8 +36,7 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
         var buttons = [];
         var texts = [];
         var backButton = self.buttons.createSecondaryButton(Width.get(10), Height.get(25, 2),
-            self.messages.get(KEY, BACK_MSG),
-            endScene);
+            self.messages.get(KEY, BACK_MSG), endScene, 3);
         buttons.push(backButton);
         var game_txt = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GAME_MSG), Font._15,
             SPECIAL_FONT, LIGHT_GREY);
@@ -53,15 +52,15 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
         texts.push(raphaelStary);
         var fb = self.buttons.createSecondaryButton(Width.HALF, Height.get(48, 28), FACEBOOK, function () {
             window.open(FACEBOOK_URL, _BLANK);
-        }, true);
+        }, 3, true);
         buttons.push(fb);
         var twitter = self.buttons.createSecondaryButton(Width.HALF, Height.get(48, 31), TWITTER, function () {
             window.open(TWITTER_URL, _BLANK);
-        }, true);
+        }, 3, true);
         buttons.push(twitter);
         var www = self.buttons.createSecondaryButton(Width.HALF, Height.get(48, 34), WWW, function () {
             window.open(SITE_URL, _BLANK);
-        }, true);
+        }, 3, true);
         buttons.push(www);
         var graphics_txt = self.stage.drawText(Width.HALF, Height.FOUR_FIFTH, self.messages.get(KEY, GRAPHICS_MSG),
             Font._35, SPECIAL_FONT, LIGHT_GREY);
