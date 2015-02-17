@@ -24,6 +24,9 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
                 sceneServices.sounds.play(CLICK);
             }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2);
 
+        sceneServices.sceneStorage.sfxOn = true;
+        sceneServices.sceneStorage.musicOn = true;
+
         // custom game services END
 
         var goFullScreen = new GoFullScreen(sceneServices);

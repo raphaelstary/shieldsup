@@ -87,6 +87,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             function showSettingsScreen() {
                 self.events.fireSync(Event.PAUSE);
                 showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                    self.sounds,
                     hideSettings)
             }
 

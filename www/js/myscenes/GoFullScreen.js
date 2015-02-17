@@ -7,6 +7,7 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
         this.buttons = services.buttons;
         this.messages = services.messages;
         this.device = services.device;
+        this.sceneStorage = services.sceneStorage;
     }
 
     var KEY = 'go_full_screen';
@@ -26,9 +27,14 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
             backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
                 undefined, 9, 0.8);
 
-
-            rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
-                FONT, WHITE, 11);
+            if (self.sceneStorage.fsUserRequest) {
+                self.sceneStorage.fsUserRequest = false;
+                rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS), Font._15, FONT,
+                    WHITE, 11);
+            } else {
+                rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
+                    FONT, WHITE, 11);
+            }
 
             goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD, self.messages.get(KEY, GO_FS),
                 function () {

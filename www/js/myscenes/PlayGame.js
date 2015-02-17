@@ -31,6 +31,7 @@ var PlayGame = (function ($) {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                self.sounds,
                 resume);
         }, 3);
         pauseButton.text.rotation = $.Math.PI / 2;

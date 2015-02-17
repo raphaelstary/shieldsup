@@ -1,4 +1,4 @@
-var SoundSpriteManager = (function (Howl) {
+var SoundSpriteManager = (function (Howl, Howler) {
     "use strict";
 
     function SoundSpriteManager(timer) {
@@ -11,7 +11,7 @@ var SoundSpriteManager = (function (Howl) {
     };
 
     SoundSpriteManager.prototype.play = function (name, loop, volume) {
-        var shouldLoop = loop === undefined ? false : loop;
+        //var shouldLoop = loop === undefined ? false : loop;
         var soundWrapperObject = {};
         var self = this;
         this.sounds.play(name, function (id) {
@@ -33,6 +33,14 @@ var SoundSpriteManager = (function (Howl) {
         this.sounds.pause(sound.id);
     };
 
+    SoundSpriteManager.prototype.muteAll = function () {
+        Howler.mute();
+    };
+
+    SoundSpriteManager.prototype.unmuteAll = function () {
+        Howler.unmute();
+    };
+
     SoundSpriteManager.prototype.unpause = function (sound) {
 
     };
@@ -41,5 +49,9 @@ var SoundSpriteManager = (function (Howl) {
         this.sounds.stop(sound.id);
     };
 
+    SoundSpriteManager.prototype.isSupported = function () {
+        return !Howler.noAudio;
+    };
+
     return SoundSpriteManager;
-})(Howl);
+})(Howl, Howler);
