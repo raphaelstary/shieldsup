@@ -12,9 +12,9 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
     var A_MSG = 'a';
     var BACK_MSG = 'back';
     var BY_MSG = 'by';
-    var FACEBOOK = 'facebook';
-    var TWITTER = 'twitter';
-    var WWW = 'www';
+    var FACEBOOK = 'facebook/RaphaelStary';
+    var TWITTER = 'twitter/RaphaelStary';
+    var WWW = 'raphaelstary.com';
     var GRAPHICS_MSG = 'graphics';
     var KENNEY_MSG = 'Kenney.nl Assets';
 
