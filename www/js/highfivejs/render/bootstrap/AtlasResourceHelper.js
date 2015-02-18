@@ -4,8 +4,8 @@ var AtlasResourceHelper = (function (AtlasCache, resolveAtlasPaths, screenWidth,
     var defaultSize;
     var pixelRatio = getDevicePixelRatio();
 
-    function registerAtlases(resourceLoader, atlases) {
-        var info = resolveAtlasPaths(screenWidth * pixelRatio, screenHeight * pixelRatio);
+    function registerAtlases(resourceLoader, atlases, isMobile) {
+        var info = resolveAtlasPaths(screenWidth * pixelRatio, screenHeight * pixelRatio, isMobile);
         defaultSize = info.defaultSize;
         info.paths.forEach(function (groupedAtlasInfo) {
             atlases.push({

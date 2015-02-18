@@ -98,8 +98,13 @@ var resolveAtlasPaths = (function () {
         return names;
     }
 
-    function resolveAtlasPaths(width, height) {
-        var size = width > height ? width : height;
+    function resolveAtlasPaths(width, height, isMobile) {
+        var size;
+        if (isMobile) {
+            size = width > height ? width : height;
+        } else {
+            size = height;
+        }
         for (var i = 0; i < atlases.length; i++) {
             var atlas = atlases[i];
             if (size <= atlas.size) {
