@@ -49,8 +49,7 @@ var InGameTutorial = (function ($) {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds,
-                resume);
+                self.sounds, resume);
         }, 3);
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
@@ -332,6 +331,8 @@ var InGameTutorial = (function ($) {
             var isPush = false;
             var pushingPointerId;
             pushRelease = self.events.subscribe($.Event.POINTER, function (pointer) {
+                if (isPaused)
+                    return;
                 if (!isPush && pushingPointerId == undefined) {
                     pushingPointerId = pointer.id;
                     isPush = true;
@@ -388,13 +389,16 @@ var InGameTutorial = (function ($) {
             self.next(nextScene);
         }
 
+        var isPaused = false;
         function pause() {
             self.stage.hide(pauseButton.text);
+            isPaused = true;
         }
 
         function resume() {
             self.stage.show(pauseButton.text);
             pauseButton.used = false;
+            isPaused = false;
         }
     };
 
