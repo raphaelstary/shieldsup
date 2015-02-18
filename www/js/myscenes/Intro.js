@@ -169,6 +169,10 @@ var Intro = (function ($) {
     };
 
     Intro.prototype.next = function (nextScene, logoDrawable, logoHighlightDrawable, speedStripes, backGround) {
+        this.speedos.forEach(function (speeeeeeed) {
+            this.stage.remove(speeeeeeed);
+        }, this);
+
         delete this.speedos;
         delete this.lastY;
         delete this.hasNotStarted;
