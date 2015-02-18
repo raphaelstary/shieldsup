@@ -194,6 +194,8 @@ var InGameTutorial = (function ($) {
         });
 
         function moveMyFirstAsteroids() {
+            if (asteroidShutDown)
+                return;
             if (asteroid.y < heightQuarter) {
                 asteroid.y += __4;
             } else if (world.shieldsOn) {
@@ -212,8 +214,9 @@ var InGameTutorial = (function ($) {
         var touchTxts = createTouchNHoldTxt();
         var asteroid = createFirstAsteroid();
         var asteroidMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstAsteroids);
-
+        var asteroidShutDown = false;
         function removeTouchNHoldStuff() {
+            asteroidShutDown = true;
             if (touchTxts)
                 touchTxts.forEach(self.stage.remove.bind(self.stage));
             self.events.unsubscribe(asteroidMovement);
@@ -285,6 +288,8 @@ var InGameTutorial = (function ($) {
             }
 
             function moveMyFirstStar() {
+                if (starShutDown)
+                    return;
                 if (star.y < heightQuarter) {
                     star.y += __4;
                     highlight.y += __4;
@@ -313,7 +318,9 @@ var InGameTutorial = (function ($) {
             starMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstStar);
         }
 
+        var starShutDown = false;
         function removeStarStuff() {
+            starShutDown = true;
             if (starTxts)
                 starTxts.forEach(self.stage.remove.bind(self.stage));
             self.events.unsubscribe(starMovement);
