@@ -53,14 +53,17 @@ var EnergyBarView = (function (Transition) {
     EnergyBarView.prototype.__animateMaskWidth = function (animation, callback) {
         var self = this;
         var position = 0;
-        if (this.stage.stage.animations.has(this.drawable))
-            position = LAST_TICK - this.stage.stage.animations.dict[this.drawable.id].time;
+        if (this.stage.stage.animations.has(this.drawable)) {
+            position = LAST_TICK - this.stage.stage.animations.dict[this.drawable.id][0].time;
+        }
 
+        this.stage.stage.animations.remove(this.drawable);
         this.stage.basicAnimation(this.drawable, function (value) {
             self.drawable.mask.width = value;
         }, animation, callback);
 
-        this.stage.stage.animations.dict[this.drawable.id].time = position;
+        this.stage.stage.animations.dict[this.drawable.id][0].time = position;
+
         this.drawable.mask.width = Transition.LINEAR(position, animation.start, animation.length, animation.duration);
     };
 
