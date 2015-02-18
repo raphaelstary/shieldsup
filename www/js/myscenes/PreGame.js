@@ -199,7 +199,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite, sounds);
             });
-            var getFireY = Fire.getY.bind(undefined, shipDrawable);
+            var getFireY = function (height) {
+                return Height._400(height) + Fire.getShipOffSet(shipDrawable);
+            };
             self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
             self.stage.move(rightFireDrawable, getRightFireX, getFireY, 30, Transition.EASE_IN_EXPO);
         }
