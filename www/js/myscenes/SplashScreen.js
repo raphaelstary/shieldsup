@@ -1,5 +1,5 @@
-var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen,
-    installOneTimeTap, window, Orientation, Event) {
+var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, installOneTimeTap, window,
+    Orientation, Event, Stats) {
     "use strict";
 
     function SplashScreen(services) {
@@ -43,6 +43,15 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     };
 
     SplashScreen.prototype.later = function (next) {
+        var ms = this.stage.drawText(Width.get(100, 90), Height.get(8), '0', Font._60, 'GameFont', 'white', 11);
+        var fps = this.stage.drawText(Width.get(100, 90), Height.get(7), '0', Font._60, 'GameFont', 'white', 11);
+        var statsStart = this.events.subscribe(Event.TICK_START, Stats.start);
+        var statsRender = this.events.subscribe(Event.TICK_DRAW, function () {
+            ms.data.msg = Stats.getMs().toString() + " ms";
+            fps.data.msg = Stats.getFps().toString() + " fps";
+        });
+        var statsEnd = this.events.subscribe(Event.TICK_END, Stats.end);
+
         var asteroidOne = this.stage.drawFresh(Width.get(10, 8), Height.get(10, 2), ASTEROID_1);
         var asteroidTwo = this.stage.drawFresh(Width.get(10, 6), Height.get(10, 3), ASTEROID_2);
         var asteroidThree = this.stage.drawFresh(Width.get(10, 4), Height.get(10, 4), ASTEROID_3);
@@ -200,5 +209,5 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     };
 
     return SplashScreen;
-})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, installOneTimeTap,
-    window, Orientation, Event);
+})(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, installOneTimeTap, window, Orientation,
+    Event, Stats);
