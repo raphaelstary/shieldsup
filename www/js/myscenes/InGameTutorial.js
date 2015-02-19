@@ -154,14 +154,15 @@ var InGameTutorial = (function ($) {
 
             var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                 self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                $.Width.TWO_THIRD, $.add(Font._30, get5));
+                $.Width.TWO_THIRD, $.add($.Height.get(30), get5));
 
             function getX(width) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
             var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
-                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
+                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD,
+                $.add($.Height.get(35), get5));
 
             return [touch_txt, raise_txt];
         }
@@ -282,7 +283,7 @@ var InGameTutorial = (function ($) {
             function createCollectTxt() {
                 var collectTxt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                     self.messages.get(KEY, COLLECT_STUFF_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                    $.Width.HALF, $.Font._30);
+                    $.Width.HALF, $.Height.get(30));
 
                 return [collectTxt];
             }
