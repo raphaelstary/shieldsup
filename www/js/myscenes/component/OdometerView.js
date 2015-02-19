@@ -5,9 +5,21 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
         this.stage = stage;
         this.countDrawables = countDrawables;
         this.shaker = shaker;
+        this.stack = [];
+        this.moving = false
     }
 
     OdometerView.prototype.animateTransition = function (digitPosition, oldValue, newValue) {
+        if (this.moving) {
+            this.stack.push(this.__animateTransition.bind(this, digitPosition, oldValue, newValue));
+            return;
+        }
+
+        this.__animateTransition(digitPosition, oldValue, newValue);
+    };
+
+    OdometerView.prototype.__animateTransition = function (digitPosition, oldValue, newValue) {
+        this.moving = true;
         var currentDrawable = this.countDrawables[digitPosition];
 
         var getX;
@@ -39,6 +51,9 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
         var newDrawable = this.stage.moveFreshText(getX, getLowerY, newValue.toString(), ScoreBoard.getSize,
             ScoreBoard.font, ScoreBoard.color, getX, ScoreBoard.getY, speed, spacing, false, function () {
                 self.stage.unmask(newDrawable);
+                self.moving = false;
+                if (self.stack.length > 0)
+                    self.stack.shift()();
             }).drawable;
         this.countDrawables.splice(digitPosition, 1, newDrawable);
         this.shaker.add(newDrawable);
