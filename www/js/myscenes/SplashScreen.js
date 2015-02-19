@@ -27,6 +27,22 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     var SHIELDS = 'shields';
 
     SplashScreen.prototype.show = function (next) {
+        // workaround for measure text
+        var t1 = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
+            '#3a2e3f');
+        var t2 = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._35, 'LogoFont', '#3a2e3f');
+        var t3 = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._40, 'GameFont', '#3a2e3f');
+        var self = this;
+        this.timer.doLater(function () {
+            self.stage.remove(t1);
+            self.stage.remove(t2);
+            self.stage.remove(t3);
+
+            self.later(next);
+        }, 3);
+    };
+
+    SplashScreen.prototype.later = function (next) {
         var asteroidOne = this.stage.drawFresh(Width.get(10, 8), Height.get(10, 2), ASTEROID_1);
         var asteroidTwo = this.stage.drawFresh(Width.get(10, 6), Height.get(10, 3), ASTEROID_2);
         var asteroidThree = this.stage.drawFresh(Width.get(10, 4), Height.get(10, 4), ASTEROID_3);
