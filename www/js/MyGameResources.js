@@ -39,18 +39,6 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
             ]);
         }
 
-        function workAroundForMeasureFontsWithChromeFirefoxOpera() {
-            var ctx = document.createElement('canvas').getContext('2d');
-            ctx.font = 10 + 'px ' + SPECIAL_FONT;
-            ctx.fillText('THIS IS A FONT TEST', 0, 0);
-            ctx.font = 10 + 'px ' + FONT;
-            ctx.fillText('THIS IS A FONT TEST', 0, 0);
-            ctx.font = 10 + 'px ' + LOGO_FONT;
-            ctx.fillText('THIS IS A FONT TEST', 0, 0);
-        }
-
-        workAroundForMeasureFontsWithChromeFirefoxOpera();
-
         var sounds = new SoundSpriteManager();
         sounds.load(audioInfo);
 
