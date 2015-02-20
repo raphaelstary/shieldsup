@@ -153,7 +153,7 @@ var Intro = (function ($) {
                         scrollingBackGround);
                 }, function () {
                     var delay = 30;
-                    speedStripes = $.drawSpeedStripes(self.stage, delay);
+                    speedStripes = $.drawSpeedStripes(self.stage, delay, self.sceneStorage.do30fps);
                 });
 
             var wrapperLogoHighlight = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15,

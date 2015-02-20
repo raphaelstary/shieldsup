@@ -11,7 +11,7 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
     var ENERGY_FULL = 'energy_full';
 
     StartingPosition.prototype.show = function (nextScene) {
-        drawSharedGameStuff(this.stage, this.sceneStorage);
+        drawSharedGameStuff(this.stage, this.sceneStorage, this.sceneStorage.do30fps);
 
         var self = this;
         var spacing = Transition.EASE_IN_OUT_ELASTIC;
