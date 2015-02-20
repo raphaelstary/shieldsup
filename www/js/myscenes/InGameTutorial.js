@@ -31,6 +31,7 @@ var InGameTutorial = (function ($) {
 
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
+        var do30fps = this.sceneStorage.do30fps !== undefined ? this.sceneStorage.do30fps : false;
 
         var shipDrawable = this.sceneStorage.ship;
         var shieldsDrawable = this.sceneStorage.shields.drawable;
@@ -182,18 +183,36 @@ var InGameTutorial = (function ($) {
             return value > 0 ? value : 1;
         }
 
-        var __4 = get__4(self.device.height);
-        var __2 = get__2(self.device.height);
-        var __1 = get__1(self.device.height);
-        var heightQuarter = $.Height.QUARTER(self.device.height);
+        var __4;
+        var __2;
+        var __1;
+        var heightQuarter;
+        var moveStuff;
+        if (do30fps) {
+            __4 = get__4(self.device.height) * 2;
+            __2 = get__2(self.device.height) * 2;
+            __1 = get__1(self.device.height) * 2;
+            heightQuarter = $.Height.QUARTER(self.device.height);
 
-        var moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
-            __4 = get__4(event.height);
-            __2 = get__2(event.height);
-            __1 = get__1(event.height);
-            heightQuarter = $.Height.QUARTER(event.height);
-        });
+            moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+                __4 = get__4(event.height) * 2;
+                __2 = get__2(event.height) * 2;
+                __1 = get__1(event.height) * 2;
+                heightQuarter = $.Height.QUARTER(event.height);
+            });
+        } else {
+            __4 = get__4(self.device.height);
+            __2 = get__2(self.device.height);
+            __1 = get__1(self.device.height);
+            heightQuarter = $.Height.QUARTER(self.device.height);
 
+            moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+                __4 = get__4(event.height);
+                __2 = get__2(event.height);
+                __1 = get__1(event.height);
+                heightQuarter = $.Height.QUARTER(event.height);
+            });
+        }
         function moveMyFirstAsteroids() {
             if (asteroidShutDown)
                 return;
