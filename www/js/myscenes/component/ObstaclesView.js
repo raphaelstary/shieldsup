@@ -1,11 +1,13 @@
 var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords, changePath, Math) {
     "use strict";
 
-    function ObstaclesView(stage, trackedAsteroids, trackedStars) {
+    function ObstaclesView(stage, trackedAsteroids, trackedStars, is30fps) {
         this.stage = stage;
 
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
+
+        this.is30fps = is30fps;
     }
 
     var STAR = 'star';
@@ -34,7 +36,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         var starWrapper = moveStar(STAR, Z_INDEX, 1, 0.75);
         var highlightWrapper = moveStar(STAR_WHITE, Z_INDEX + 1, 0, 1);
 
-        var DURATION = 15;
+        var DURATION = this.is30fps ? 7 : 15;
         this.stage.animateAlphaPattern(highlightWrapper.drawable, [
             {
                 value: 1,

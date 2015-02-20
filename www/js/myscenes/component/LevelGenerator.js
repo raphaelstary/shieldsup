@@ -1,7 +1,7 @@
 var LevelGenerator = (function (range) {
     "use strict";
 
-    function LevelGenerator(drawHelper) {
+    function LevelGenerator(drawHelper, is30fps) {
         this.drawHelper = drawHelper;
 
         // level difficulty
@@ -17,6 +17,11 @@ var LevelGenerator = (function (range) {
             pauseAfterStar: 20,
             maxTimeToNextAfterStar: 100
         };
+        if (is30fps) {
+            Object.keys(this.level).forEach(function (key) {
+                this.level[key] /= 2;
+            }, this);
+        }
 
         this.counter = 0;
         // elements fly with interval 0 - 100

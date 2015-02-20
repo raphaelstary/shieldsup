@@ -1,12 +1,13 @@
 var OdometerView = (function (ScoreBoard, Transition, Math) {
     "use strict";
 
-    function OdometerView(stage, countDrawables, shaker) {
+    function OdometerView(stage, countDrawables, shaker, is30fps) {
         this.stage = stage;
         this.countDrawables = countDrawables;
         this.shaker = shaker;
         this.stack = [];
-        this.moving = false
+        this.moving = false;
+        this.is30fps = is30fps;
     }
 
     OdometerView.prototype.animateTransition = function (digitPosition, oldValue, newValue) {
@@ -43,6 +44,8 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
 
         var self = this;
         var speed = 60;
+        if (this.is30fps)
+            speed /= 2;
         var spacing = Transition.LINEAR;
         this.stage.move(currentDrawable, getX, getUpperY, speed, spacing, false, function () {
             self.stage.remove(currentDrawable);

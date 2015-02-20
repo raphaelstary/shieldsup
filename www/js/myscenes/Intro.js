@@ -159,14 +159,17 @@ var Intro = (function ($) {
             var wrapperLogoHighlight = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15,
                 SPECIAL_FONT, WHITE, $.Width.HALF, logoYEnd, speed, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
                 function () {
+                    var duration = 30;
+                    if (self.sceneStorage.do30fps)
+                        duration /= 2;
                     self.stage.animateAlphaPattern(wrapperLogoHighlight.drawable, [
                         {
                             value: 1,
-                            duration: 30,
+                            duration: duration,
                             easing: $.Transition.LINEAR
                         }, {
                             value: 0,
-                            duration: 30,
+                            duration: duration,
                             easing: $.Transition.LINEAR
                         }
                     ], true);

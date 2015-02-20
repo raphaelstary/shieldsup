@@ -90,7 +90,7 @@ var InGameTutorial = (function ($) {
         shieldsDrawable.x = shipDrawable.x;
         shieldsDrawable.y = shipDrawable.y;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, do30fps);
 
         registerPushRelease();
 
@@ -264,6 +264,8 @@ var InGameTutorial = (function ($) {
                     STAR_WHITE, Z_INDEX + 1, [star], 0, 0, 1);
 
                 var DURATION = 15;
+                if (do30fps)
+                    DURATION = 8;
                 self.stage.animateAlphaPattern(highlight, [
                     {
                         value: 1,
