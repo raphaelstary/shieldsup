@@ -163,7 +163,7 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(keyId);
                 self.events.unsubscribe(resumeId);
                 self.events.unsubscribe(pauseId);
-                self.shaker.reset();
+                self.shaker.reset(self.sceneStorage.do30fps);
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);

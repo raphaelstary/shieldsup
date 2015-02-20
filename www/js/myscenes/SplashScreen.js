@@ -100,8 +100,10 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         wrapper.appendChild(screenElement);
 
         installOneTimeTap(wrapper, function () {
-            if (Stats.getFps() < 45)
+            if (Stats.getFps() < 45) {
                 self.sceneStorage.do30fps = true;
+                self.shaker.__init(true);
+            }
             wrapper.parentNode.replaceChild(screenElement, wrapper);
             goFullScreen();
         });
