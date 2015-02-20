@@ -11,7 +11,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     function installMyScenes(sceneServices) {
 
         // custom game services START
-        var shaker = new ScreenShaker();
+        var shaker = new ScreenShaker(sceneServices.device);
         sceneServices.events.subscribe(Event.RESIZE, shaker.resize.bind(shaker));
         sceneServices.events.subscribe(Event.TICK_MOVE, shaker.update.bind(shaker));
         sceneServices.shaker = shaker;
