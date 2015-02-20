@@ -43,13 +43,17 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
         var self = this;
         var thunder = self.sounds.play('thunder_roll');
+        var speed = 60;
+        if (this.sceneStorage.do30fps)
+            speed /= 2;
         var gameOverWrapper = self.stage.moveFreshText(Width.HALF, subtract(Height.FIFTH, Height.FULL),
-            self.messages.get(KEY, GAME_OVER), Font._15, FONT, DARK_GRAY, Width.HALF, Height.FIFTH, 60,
+            self.messages.get(KEY, GAME_OVER), Font._15, FONT, DARK_GRAY, Width.HALF, Height.FIFTH, speed,
             Transition.EASE_OUT_ELASTIC, false, function () {
 
                 function moveIn(text, yFn, delay, callback) {
                     return self.stage.moveFreshTextLater(Width.HALF, subtract(yFn, Height.FULL), text, Font._30,
-                        SPECIAL_FONT, WHITE, Width.HALF, yFn, 60, Transition.EASE_OUT_BOUNCE, delay, false, callback);
+                        SPECIAL_FONT, WHITE, Width.HALF, yFn, speed, Transition.EASE_OUT_BOUNCE, delay, false,
+                        callback);
                 }
 
                 function getNewScoreY(height) {
@@ -73,9 +77,11 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
                     var playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
                         self.messages.get(KEY, PLAY_AGAIN), function () {
-
+                            var outSpeed = 30;
+                            if (self.sceneStorage.do30fps)
+                                outSpeed /= 2;
                             function moveOut(drawable, yFn, delay, callback) {
-                                self.stage.moveLater(drawable, Width.HALF, add(yFn, Height.FULL), 30,
+                                self.stage.moveLater(drawable, Width.HALF, add(yFn, Height.FULL), outSpeed,
                                     Transition.EASE_IN_EXPO, false, function () {
                                         self.stage.remove(drawable);
                                     }, undefined, delay, callback);
