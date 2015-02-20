@@ -97,6 +97,8 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         wrapper.appendChild(screenElement);
 
         installOneTimeTap(wrapper, function () {
+            if (Stats.getFps() < 45)
+                self.sceneStorage.do30fps = true;
             wrapper.parentNode.replaceChild(screenElement, wrapper);
             goFullScreen();
         });
@@ -187,8 +189,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 // do black magic
                 window.scrollTo(0, 1); //maybe scrolling with larger screen element on newer browsers
             }
-            if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT)
+            if (!self.device.isMobile || locked || currentOrientation === Orientation.PORTRAIT) {
                 self.timer.doLater(next, 6);
+            }
         }
 
         self.events.subscribe(Event.PAUSE, function () {
