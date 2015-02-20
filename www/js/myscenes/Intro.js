@@ -43,6 +43,8 @@ var Intro = (function ($) {
         this.lastY = this.logoDrawable.y;
         this.hasNotStarted = true;
         this.yVelocity = $.calcScreenConst(this.stage.height, 48); // todo resize
+        if (this.sceneStorage.do30fps)
+            this.yVelocity *= 2;
         this.nextScene = nextScene;
         this.parallaxId = this.events.subscribe($.Event.TICK_MOVE, this._parallaxUpdate.bind(this));
     };
@@ -90,6 +92,10 @@ var Intro = (function ($) {
         if (this.speedos[0].y >= this.stage.height && this.hasNotStarted) {
             this.hasNotStarted = false;
 
+            var speed = 120;
+            if (self.sceneStorage.do30fps)
+                speed /= 2;
+
             this.firstBg.forEach(function (firstBg) {
                 function xBg() {
                     return firstBg.x;
@@ -99,50 +105,50 @@ var Intro = (function ($) {
                     return firstBg.y - height;
                 }
 
-                self.stage.move(firstBg, xBg, yBg, 120, $.Transition.LINEAR, false, function () {
+                self.stage.move(firstBg, xBg, yBg, speed, $.Transition.LINEAR, false, function () {
                     self.stage.remove(firstBg);
                 }, [firstBg]);
             });
 
             var scrollingBackGround = [
                 this.stage.moveFresh($.Width.HALF, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR, $.Width.HALF,
-                    $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined, Z_INDEX_SCROLLING_BG, 1, 0,
+                    $.Height.HALF, speed, $.Transition.LINEAR, false, undefined, undefined, Z_INDEX_SCROLLING_BG, 1, 0,
                     0.5),
                 this.stage.moveFresh($.Width.THIRD, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.THIRD, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.THIRD, $.Height.QUARTER, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 0.75, 0, 0.75),
                 this.stage.moveFresh($.Width.QUARTER, $.add($.Height.TWO_THIRD, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.QUARTER, $.Height.TWO_THIRD, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.QUARTER, $.Height.TWO_THIRD, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 0.5, 0, 1),
                 this.stage.moveFresh($.Width.THREE_QUARTER, $.add($.Height.THIRD, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.THREE_QUARTER, $.Height.THIRD, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.THREE_QUARTER, $.Height.THIRD, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 1, 0, 0.5),
                 this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.HALF, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.TWO_THIRD, $.Height.HALF, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.TWO_THIRD, $.Height.HALF, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 0.5, 0, 0.75),
                 this.stage.moveFresh($.Width.HALF, $.add($.Height.QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.HALF, $.Height.QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.HALF, $.Height.QUARTER, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 0.75, 0, 1),
                 this.stage.moveFresh($.Width.TWO_THIRD, $.add($.Height.THREE_QUARTER, $.Height.FULL), BACKGROUND_STAR,
-                    $.Width.TWO_THIRD, $.Height.THREE_QUARTER, 120, $.Transition.LINEAR, false, undefined, undefined,
+                    $.Width.TWO_THIRD, $.Height.THREE_QUARTER, speed, $.Transition.LINEAR, false, undefined, undefined,
                     Z_INDEX_SCROLLING_BG, 1, 0, 0.5)
             ];
 
             this.logoDrawable = self.stage.moveFreshText($.Width.HALF, $.add(y, irgendwasLogo), LOGO_TXT, font_97of480,
-                LOGO_FONT, WHITE, $.Width.HALF, $.subtract(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN,
+                LOGO_FONT, WHITE, $.Width.HALF, $.subtract(yEnd, irgendwasLogo), speed, $.Transition.EASE_OUT_IN_SIN,
                 false, function () {
                     self.stage.remove(self.logoDrawable);
                 }).drawable;
 
             var presentsDrawable = self.stage.moveFreshText($.Width.HALF, presentYStart, PRESENTS_TXT, $.Font._30, FONT,
-                LIGHT_GRAY, $.Width.HALF, $.add(yEnd, irgendwasLogo), 120, $.Transition.EASE_OUT_IN_SIN, false,
+                LIGHT_GRAY, $.Width.HALF, $.add(yEnd, irgendwasLogo), speed, $.Transition.EASE_OUT_IN_SIN, false,
                 function () {
                     self.stage.remove(presentsDrawable);
                 }).drawable;
 
             var speedStripes;
             var wrapperLogo = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15, SPECIAL_FONT,
-                DARK_GRAY, $.Width.HALF, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, function () {
+                DARK_GRAY, $.Width.HALF, logoYEnd, speed, $.Transition.EASE_OUT_QUAD, 90, false, function () {
                     self.next(self.nextScene, wrapperLogo.drawable, wrapperLogoHighlight.drawable, speedStripes,
                         scrollingBackGround);
                 }, function () {
@@ -151,7 +157,7 @@ var Intro = (function ($) {
                 });
 
             var wrapperLogoHighlight = self.stage.moveFreshTextLater($.Width.HALF, y, GAME_LOGO_TXT, $.Font._15,
-                SPECIAL_FONT, WHITE, $.Width.HALF, logoYEnd, 120, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
+                SPECIAL_FONT, WHITE, $.Width.HALF, logoYEnd, speed, $.Transition.EASE_OUT_QUAD, 90, false, undefined,
                 function () {
                     self.stage.animateAlphaPattern(wrapperLogoHighlight.drawable, [
                         {
