@@ -27,6 +27,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     var SHIELDS = 'shields';
 
     SplashScreen.prototype.show = function (next) {
+        // samsung workaround
+        this.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#3a2e3f', true, undefined, 0);
+
         // workaround for measure text
         var t1 = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
             '#3a2e3f');
