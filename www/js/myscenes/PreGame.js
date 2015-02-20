@@ -32,11 +32,18 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         delete this.sceneStorage.logo;
         var self = this;
 
+        var speed60 = 60;
+        var speed30 = 30;
+        if (this.sceneStorage.do30fps) {
+            speed60 /= 2;
+            speed30 /= 2;
+        }
+
         function getShipStartY(height) {
             return calcScreenConst(self.stage.getImageHeight(SHIP), 2) + height;
         }
 
-        var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, 60,
+        var shipDrawable = self.stage.moveFresh(Width.HALF, getShipStartY, SHIP, Width.HALF, Height.HALF, speed60,
             Transition.EASE_IN_QUAD, false, shipIsAtEndPosition).drawable;
         var sounds = [];
         sounds.push(this.sounds.play(SHIP_ARRIVES));
@@ -57,9 +64,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var rightFireWrapper = self.stage.animateFresh(getRightFireX, getFireStartY, FIRE, 10, true, [shipDrawable]);
         var rightFireDrawable = rightFireWrapper.drawable;
 
-        self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
+        self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, speed60, Transition.EASE_IN_QUAD, false, undefined,
             [shipDrawable]);
-        self.stage.move(rightFireDrawable, getRightFireX, getFireEndY, 60, Transition.EASE_IN_QUAD, false, undefined,
+        self.stage.move(rightFireDrawable, getRightFireX, getFireEndY, speed60, Transition.EASE_IN_QUAD, false,
+            undefined,
             [shipDrawable]);
 
         var playButton, creditsButton, settingsButton;
@@ -183,10 +191,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 return calcScreenConst(height, 32, 7) + height;
             }
 
-            self.stage.move(logoDrawable, Width.HALF, getLogoY, 30, Transition.EASE_IN_EXPO, false, function () {
+            self.stage.move(logoDrawable, Width.HALF, getLogoY, speed30, Transition.EASE_IN_EXPO, false, function () {
                 self.stage.remove(logoDrawable);
             });
-            self.stage.move(logoHighlightDrawable, Width.HALF, getLogoY, 30, Transition.EASE_IN_EXPO, false,
+            self.stage.move(logoHighlightDrawable, Width.HALF, getLogoY, speed30, Transition.EASE_IN_EXPO, false,
                 function () {
                     self.stage.remove(logoHighlightDrawable);
                 });
@@ -194,7 +202,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             doTheShields = false;
             self.stage.remove(shieldsDrawable);
 
-            self.stage.move(shipDrawable, Width.HALF, Height._400, 30, Transition.EASE_IN_EXPO, false, function () {
+            self.stage.move(shipDrawable, Width.HALF, Height._400, speed30, Transition.EASE_IN_EXPO, false,
+                function () {
                 // next scene
                 self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
                     shieldsUpSprite, shieldsDownSprite, sounds);
@@ -202,8 +211,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             var getFireY = function (height) {
                 return Height._400(height) + Fire.getShipOffSet(shipDrawable);
             };
-            self.stage.move(leftFireDrawable, getLeftFireX, getFireY, 30, Transition.EASE_IN_EXPO);
-            self.stage.move(rightFireDrawable, getRightFireX, getFireY, 30, Transition.EASE_IN_EXPO);
+            self.stage.move(leftFireDrawable, getLeftFireX, getFireY, speed30, Transition.EASE_IN_EXPO);
+            self.stage.move(rightFireDrawable, getRightFireX, getFireY, speed30, Transition.EASE_IN_EXPO);
         }
     };
 
