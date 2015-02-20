@@ -16,6 +16,8 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         var self = this;
         var spacing = Transition.EASE_IN_OUT_ELASTIC;
         var speed = 60;
+        if (this.sceneStorage.do30fps)
+            speed /= 2;
 
         function lifeX(width) {
             return calcScreenConst(width, 10);
