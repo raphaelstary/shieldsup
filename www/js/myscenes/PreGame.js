@@ -205,8 +205,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             self.stage.move(shipDrawable, Width.HALF, Height._400, speed30, Transition.EASE_IN_EXPO, false,
                 function () {
                 // next scene
-                self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, shieldsDrawable,
-                    shieldsUpSprite, shieldsDownSprite, sounds);
+                    self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, sounds);
             });
             var getFireY = function (height) {
                 return Height._400(height) + Fire.getShipOffSet(shipDrawable);
@@ -216,8 +215,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         }
     };
 
-    PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, shields, shieldsUpSprite,
-        shieldsDownSprite, sounds) {
+    PreGame.prototype.next = function (nextScene, ship, leftFire, rightFire, sounds) {
 
         sounds.forEach(function (sound) {
             this.sounds.stop(sound);
@@ -227,11 +225,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.sceneStorage.fire = {
             left: leftFire,
             right: rightFire
-        };
-        this.sceneStorage.shields = {
-            drawable: shields,
-            upSprite: shieldsUpSprite,
-            downSprite: shieldsDownSprite
         };
 
         nextScene();
