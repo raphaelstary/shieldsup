@@ -74,9 +74,6 @@ var PlayGame = (function ($) {
             shieldsCollision, endGame, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
-        shieldsDrawable.x = shipDrawable.x;
-        shieldsDrawable.y = shipDrawable.y;
-
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
             shieldsDrawable, shieldsUpSprite, shieldsDownSprite, self.sceneStorage.do30fps);
 
@@ -167,6 +164,7 @@ var PlayGame = (function ($) {
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);
+                self.stage.remove(shieldsDrawable);
             }
 
             removeEverything();
