@@ -11,6 +11,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.loop = services.loop;
         this.timer = services.timer;
         this.sceneStorage = services.sceneStorage;
+        this.shaker = services.shaker;
     }
 
     var KEY = 'splash_screen';
@@ -87,10 +88,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 easing: Transition.LINEAR
             }
         ], true);
-        var startButton = this.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-            this.messages.get(KEY, TOUCH_TO_START), function () {
-                // sadly not working on IE11
-            }, 3);
+        var startButton;
 
         // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
         var screenElement = document.getElementsByTagName('canvas')[0];
@@ -98,17 +96,43 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         var wrapper = document.createElement('div');
         parent.replaceChild(wrapper, screenElement);
         wrapper.appendChild(screenElement);
+        var self = this;
 
-        installOneTimeTap(wrapper, function () {
+        var loading = this.stage.drawText(Width.HALF, Height.THREE_QUARTER, 'loading', Font._35, SPECIAL_FONT,
+            DARK_GRAY);
+        var loadingHighlight = this.stage.drawText(Width.HALF, Height.THREE_QUARTER, 'loading', Font._35, SPECIAL_FONT,
+            WHITE, 4);
+        this.stage.animateAlphaPattern(loadingHighlight, [
+            {
+                value: 1,
+                duration: 30,
+                easing: Transition.LINEAR
+            }, {
+                value: 0,
+                duration: 30,
+                easing: Transition.LINEAR
+            }
+        ], true);
+
+        this.timer.doLater(function () {
             if (Stats.getFps() < 45) {
                 self.sceneStorage.do30fps = true;
                 self.shaker.__init(true);
             }
-            wrapper.parentNode.replaceChild(screenElement, wrapper);
-            goFullScreen();
-        });
+            self.stage.remove(loading);
+            self.stage.remove(loadingHighlight);
 
-        var self = this;
+            startButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
+                self.messages.get(KEY, TOUCH_TO_START), function () {
+                    // sadly not working on IE11
+                }, 3);
+
+            installOneTimeTap(wrapper, function () {
+
+                wrapper.parentNode.replaceChild(screenElement, wrapper);
+                goFullScreen();
+            });
+        }, 120);
 
         function removeSceneStuff() {
             self.buttons.remove(startButton);
