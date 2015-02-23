@@ -116,7 +116,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
         this.timer.doLater(function () {
             if (Stats.getFps() < 45) {
+                if (Stats.getMs() > 15) {
+                    // no speed stripes, no shaker, no shine, maybe no highlight
+                }
                 self.sceneStorage.do30fps = true;
+                self.stage.stage.spriteAnimations.set30fps();
                 self.shaker.__init(true);
             }
             self.stage.remove(loading);
