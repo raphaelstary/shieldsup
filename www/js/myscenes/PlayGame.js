@@ -50,7 +50,7 @@ var PlayGame = (function ($) {
                 fireDict.left,
                 fireDict.right
             ].forEach(add);
-            countDrawables.forEach(add);
+            //countDrawables.forEach(add);
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });

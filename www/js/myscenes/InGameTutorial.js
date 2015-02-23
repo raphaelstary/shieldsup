@@ -68,7 +68,7 @@ var InGameTutorial = (function ($) {
                 fireDict.left,
                 fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
-            countDrawables.forEach(self.shaker.add.bind(self.shaker));
+            //countDrawables.forEach(self.shaker.add.bind(self.shaker));
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
