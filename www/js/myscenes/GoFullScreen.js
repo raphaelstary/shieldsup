@@ -30,12 +30,10 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
             if (self.sceneStorage.fsUserRequest) {
                 self.sceneStorage.fsUserRequest = false;
                 rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GO_FS), Font._15,
-                    FONT,
-                    WHITE, 11);
+                    FONT, WHITE, 11);
             } else {
                 rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, FS_REQUEST),
-                    Font._15,
-                    FONT, WHITE, 11);
+                    Font._15, FONT, WHITE, 11);
             }
 
             goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS),
@@ -57,11 +55,24 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
 
             installOneTimeTap(wrapper, function (event) {
                 wrapper.parentNode.replaceChild(screenElement, wrapper);
-                if (isHit({
+                if (event.clientX != undefined && event.clientY != undefined && isHit({
                         x: event.clientX,
                         y: event.clientY
                     }, cancelBtn.input)) {
                     return;
+                } else {
+                    var touches = event.changedTouches;
+                    if (touches) {
+                        for (var i = 0; i < touches.length; i++) {
+                            var touch = touches[i];
+                            if (isHit({
+                                    x: touch.clientX,
+                                    y: touch.clientY
+                                }, cancelBtn.input)) {
+                                return;
+                            }
+                        }
+                    }
                 }
                 self.device.requestFullScreen();
             });
