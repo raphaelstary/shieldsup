@@ -113,11 +113,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 easing: Transition.LINEAR
             }
         ], true);
-
+        var coolDownTime = 60 * 6;
         this.timer.doLater(function () {
             if (Stats.getFps() < 45) {
                 if (Stats.getMs() > 15) {
-                    // no speed stripes, no shaker, no shine, maybe no highlight
+                    // no speed stripes, no shaker, no shine, maybe no highlight, maybe no background stars,
                 }
                 self.sceneStorage.do30fps = true;
                 self.stage.stage.spriteAnimations.set30fps();
@@ -136,7 +136,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 wrapper.parentNode.replaceChild(screenElement, wrapper);
                 goFullScreen();
             });
-        }, 120);
+        }, coolDownTime);
 
         function removeSceneStuff() {
             self.buttons.remove(startButton);
