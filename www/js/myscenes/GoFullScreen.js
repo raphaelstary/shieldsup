@@ -29,19 +29,21 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
 
             if (self.sceneStorage.fsUserRequest) {
                 self.sceneStorage.fsUserRequest = false;
-                rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS), Font._15, FONT,
+                rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GO_FS), Font._15,
+                    FONT,
                     WHITE, 11);
             } else {
-                rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
+                rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, FS_REQUEST),
+                    Font._15,
                     FONT, WHITE, 11);
             }
 
-            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD, self.messages.get(KEY, GO_FS),
+            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS),
                 function () {
                     // sadly not working on IE11
                 }, 10);
 
-            cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_QUARTER,
+            cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_FIFTH,
                 self.messages.get(KEY, CANCEL), function () {
                     self.events.fire(Event.FULL_SCREEN, true);
                 }, 10);
