@@ -423,7 +423,8 @@ var InGameTutorial = (function ($) {
 
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
-                self.sceneStorage.shouldShowSettings = true;
+                if (!isPaused)
+                    self.sceneStorage.shouldShowSettings = true;
             } else {
                 self.timer.doLater(function () {
                     if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {

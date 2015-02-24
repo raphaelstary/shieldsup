@@ -27,12 +27,14 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+
+        function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
-        }, 3);
+        }
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -122,6 +124,37 @@ var PlayGame = (function ($) {
 
         registerPushRelease();
 
+        var goFs = false;
+        var showGoFs = self.events.subscribe($.Event.SHOW_GO_FULL_SCREEN, function () {
+            goFs = true;
+        });
+
+        var hideGoFs = self.events.subscribe($.Event.REMOVE_GO_FULL_SCREEN, function () {
+            goFs = false;
+        });
+        var rotation = false;
+        var showRotation = self.events.subscribe($.Event.SHOW_ROTATE_DEVICE, function () {
+            rotation = true;
+        });
+
+        var hideRotation = self.events.subscribe($.Event.REMOVE_ROTATE_DEVICE, function () {
+            rotation = false;
+        });
+
+        var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
+            if (hidden) {
+                if (!isPaused)
+                    self.sceneStorage.shouldShowSettings = true;
+            } else {
+                self.timer.doLater(function () {
+                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowSettings = false;
+                        doThePause();
+                    }
+                }, 2);
+            }
+        });
+
         var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
         var pauseId = self.events.subscribe($.Event.PAUSE, function () {
             self.events.unsubscribe(pushRelease);
@@ -165,6 +198,12 @@ var PlayGame = (function ($) {
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);
                 self.stage.remove(shieldsDrawable);
+
+                self.events.unsubscribe(visible);
+                self.events.unsubscribe(showGoFs);
+                self.events.unsubscribe(hideGoFs);
+                self.events.unsubscribe(showRotation);
+                self.events.unsubscribe(hideRotation);
             }
 
             removeEverything();
