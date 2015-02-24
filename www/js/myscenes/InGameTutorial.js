@@ -46,12 +46,15 @@ var InGameTutorial = (function ($) {
         var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+
+        function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
-        }, 3);
+        }
+
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -233,6 +236,7 @@ var InGameTutorial = (function ($) {
         var asteroid = createFirstAsteroid();
         var asteroidMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstAsteroids);
         var asteroidShutDown = false;
+
         function removeTouchNHoldStuff() {
             asteroidShutDown = true;
             if (touchTxts)
@@ -339,6 +343,7 @@ var InGameTutorial = (function ($) {
         }
 
         var starShutDown = false;
+
         function removeStarStuff() {
             starShutDown = true;
             if (starTxts)
@@ -399,7 +404,18 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(keyId);
         }
 
-        var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
+        var alreadyPaused = false;
+        var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
+            if (hidden && !alreadyPaused) {
+                alreadyPaused = true;
+                doThePause();
+            }
+        });
+
+        var resumeId = self.events.subscribe($.Event.RESUME, function () {
+            alreadyPaused = false;
+            registerPushRelease();
+        });
         var pauseId = self.events.subscribe($.Event.PAUSE, unregisterPushRelease);
 
         function removeCommonGameStuff() {
@@ -409,6 +425,7 @@ var InGameTutorial = (function ($) {
             self.buttons.remove(pauseButton);
             self.events.unsubscribe(resumeId);
             self.events.unsubscribe(pauseId);
+            self.events.unsubscribe(visible);
         }
 
         function endGame() {
@@ -417,6 +434,7 @@ var InGameTutorial = (function ($) {
         }
 
         var isPaused = false;
+
         function pause() {
             self.stage.hide(pauseButton.text);
             isPaused = true;
