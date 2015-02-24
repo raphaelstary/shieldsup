@@ -24,5 +24,7 @@ var Event = {
     SHOW_GO_FULL_SCREEN: 'show_go_full_screen',
     REMOVE_ROTATE_DEVICE: 'remove_rotate_device',
     SHOW_ROTATE_DEVICE: 'show_rotate_device',
-    RESUME_SETTINGS: 'resume_settings'
+    RESUME_SETTINGS: 'resume_settings',
+    SHOW_SETTINGS: 'show_settings',
+    RESUME_AFTER_SETTINGS: 'resume_after_settings'
 };

@@ -404,16 +404,13 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(keyId);
         }
 
-        var alreadyPaused = false;
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
-            if (hidden && !alreadyPaused) {
-                alreadyPaused = true;
-                doThePause();
+            if (hidden) {
+                self.sceneStorage.shouldShowSettings = true;
             }
         });
 
         var resumeId = self.events.subscribe($.Event.RESUME, function () {
-            alreadyPaused = false;
             registerPushRelease();
         });
         var pauseId = self.events.subscribe($.Event.PAUSE, unregisterPushRelease);
