@@ -6,6 +6,8 @@ var Intro = (function ($) {
         this.sceneStorage = services.sceneStorage;
         this.events = services.events;
         this.sounds = services.sounds;
+        this.device = services.device;
+        this.timer = services.timer;
     }
 
     var SPEED = 'speed';
@@ -25,7 +27,21 @@ var Intro = (function ($) {
     var Z_INDEX_SPEEDOS = 1;
     var Z_INDEX_SCROLLING_BG = 0;
 
-    Intro.prototype.show = function (nextScene) {
+    Intro.prototype.show = function (next) {
+        var devicePixelRatio = $.getDevicePixelRatio();
+        this.device.width = $.Math.floor($.window.innerWidth * devicePixelRatio);
+        this.device.height = $.Math.floor($.window.innerHeight * devicePixelRatio);
+        this.device.cssHeight = $.window.innerHeight;
+        this.device.cssWidth = $.window.innerWidth;
+        this.device.devicePixelRatio = devicePixelRatio;
+        this.device.forceResize();
+        var self = this;
+        this.timer.doLater(function () {
+            self.__show(next);
+        }, 6);
+    };
+
+    Intro.prototype.__show = function (nextScene) {
         this.sounds.play(NAME_FLY_BY);
         this.firstBg = $.drawBackGround(this.stage);
         this.speedos = [
@@ -211,5 +227,8 @@ var Intro = (function ($) {
     Font: Font,
     Height: Height,
     Width: Width,
-    Event: Event
+    Event: Event,
+    window: window,
+    getDevicePixelRatio: getDevicePixelRatio,
+    Math: Math
 });

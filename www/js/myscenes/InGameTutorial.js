@@ -453,8 +453,11 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(showRotation);
             self.events.unsubscribe(hideRotation);
         }
-
+        var itsOver = false;
         function endGame() {
+            if (itsOver)
+                return;
+            itsOver = true;
             self.sounds.stop(backSound);
             self.next(nextScene);
         }
