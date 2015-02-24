@@ -89,22 +89,6 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                     soundText = getMenuText(Height.get(20, 7), NO_SOUND);
                 }
 
-                //musicText = getMenuText(Height.get(20, 10), MUSIC);
-                //var musicOn = getOnButton(Height.get(20, 11), function () {
-                //    resetButton(musicOff);
-                //    styleSelectButton(musicOn);
-                //
-                //    // unmute music
-                //}, self.sceneStorage.musicOn);
-                //sceneButtons.push(musicOn);
-                //var musicOff = getOffButton(Height.get(20, 11), function () {
-                //    resetButton(musicOn);
-                //    styleSelectButton(musicOff);
-                //
-                //    // mute music
-                //}, !self.sceneStorage.musicOn);
-                //sceneButtons.push(musicOff);
-
                 languageText = getMenuText(Height.get(20, 13), LANGUAGE);
 
                 var raster = [

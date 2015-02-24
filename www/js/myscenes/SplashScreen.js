@@ -12,6 +12,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         this.timer = services.timer;
         this.sceneStorage = services.sceneStorage;
         this.shaker = services.shaker;
+        this.sounds = services.sounds;
     }
 
     var KEY = 'splash_screen';
@@ -226,6 +227,14 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 self.timer.doLater(next, 6);
             }
         }
+
+        self.events.subscribe(Event.PAGE_VISIBILITY, function (hidden) {
+            if (hidden && self.sceneStorage.sfxOn) {
+                self.sounds.muteAll();
+            } else if (!hidden && self.sceneStorage.sfxOn) {
+                self.sounds.unmuteAll();
+            }
+        });
 
         self.events.subscribe(Event.PAUSE, function () {
             self.stage.pauseAll();

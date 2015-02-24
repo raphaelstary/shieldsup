@@ -25,7 +25,6 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
             }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2);
 
         sceneServices.sceneStorage.sfxOn = true;
-        sceneServices.sceneStorage.musicOn = true;
 
         // custom game services END
 
