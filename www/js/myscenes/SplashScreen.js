@@ -199,6 +199,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         if (!goFsScreen) {
                             if (self.sceneStorage.settingsOn) {
                                 self.events.fire(Event.RESUME_SETTINGS);
+                            } else if (self.sceneStorage.shouldShowSettings) {
+                                self.sceneStorage.shouldShowSettings = false;
+                                self.events.fire(Event.SHOW_SETTINGS);
                             } else {
                                 self.events.fire(Event.RESUME);
                             }

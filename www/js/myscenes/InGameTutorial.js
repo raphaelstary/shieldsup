@@ -404,9 +404,33 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(keyId);
         }
 
+        var goFs = false;
+        var showGoFs = self.events.subscribe($.Event.SHOW_GO_FULL_SCREEN, function () {
+            goFs = true;
+        });
+
+        var hideGoFs = self.events.subscribe($.Event.REMOVE_GO_FULL_SCREEN, function () {
+            goFs = false;
+        });
+        var rotation = false;
+        var showRotation = self.events.subscribe($.Event.SHOW_ROTATE_DEVICE, function () {
+            rotation = true;
+        });
+
+        var hideRotation = self.events.subscribe($.Event.REMOVE_ROTATE_DEVICE, function () {
+            rotation = false;
+        });
+
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
                 self.sceneStorage.shouldShowSettings = true;
+            } else {
+                self.timer.doLater(function () {
+                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowSettings = false;
+                        doThePause();
+                    }
+                }, 2);
             }
         });
 
@@ -423,6 +447,10 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(resumeId);
             self.events.unsubscribe(pauseId);
             self.events.unsubscribe(visible);
+            self.events.unsubscribe(showGoFs);
+            self.events.unsubscribe(hideGoFs);
+            self.events.unsubscribe(showRotation);
+            self.events.unsubscribe(hideRotation);
         }
 
         function endGame() {
