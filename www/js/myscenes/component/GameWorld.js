@@ -42,6 +42,10 @@ var GameWorld = (function (Object) {
         this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
     }
 
+    GameWorld.prototype.reset = function () {
+        this.scoreDisplay.reset();
+    };
+
     GameWorld.prototype.checkCollisions = function () {
         var self = this;
         Object.keys(this.trackedAsteroids).forEach(function (key) {

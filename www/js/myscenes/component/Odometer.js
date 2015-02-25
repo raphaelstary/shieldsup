@@ -7,6 +7,10 @@ var Odometer = (function (Math) {
         this.totalScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
 
+    Odometer.prototype.reset = function () {
+        this.view.reset();
+    };
+
     Odometer.prototype.addScore = function (score) {
         var self = this;
         var scoreString = score.toString();

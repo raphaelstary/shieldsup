@@ -193,6 +193,7 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(keyId);
                 self.events.unsubscribe(resumeId);
                 self.events.unsubscribe(pauseId);
+                world.reset();
                 self.shaker.reset(self.sceneStorage.do30fps);
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);

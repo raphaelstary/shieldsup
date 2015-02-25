@@ -446,6 +446,7 @@ var InGameTutorial = (function ($) {
         var pauseId = self.events.subscribe($.Event.PAUSE, unregisterPushRelease);
 
         function removeCommonGameStuff() {
+            world.reset();
             self.shaker.reset(do30fps);
             self.events.unsubscribe(collisionTutorial);
             self.events.unsubscribe(moveStuff);
