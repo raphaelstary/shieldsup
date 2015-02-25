@@ -39,27 +39,15 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         var DURATION = this.is30fps ? 7 : 15;
         this.stage.animateAlphaPattern(highlightWrapper.drawable, [
             {
-                value: 1,
+                value: 0.8,
                 duration: DURATION,
-                easing: Transition.LINEAR
+                easing: Transition.EASE_IN_QUAD
             }, {
                 value: 0,
                 duration: DURATION,
-                easing: Transition.LINEAR
+                easing: Transition.EASE_OUT_QUAD
             }
         ], true);
-
-        //this.stage.animateScalePattern(highlightWrapper.drawable, [
-        //    {
-        //        value: 1,
-        //        duration: DURATION,
-        //        easing: Transition.LINEAR
-        //    }, {
-        //        value: 0.75,
-        //        duration: DURATION,
-        //        easing: Transition.LINEAR
-        //    }
-        //], true);
 
         this.stage.animateScalePattern(starWrapper.drawable, [
             {
