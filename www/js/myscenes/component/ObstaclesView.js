@@ -133,7 +133,7 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
     };
 
     ObstaclesView.prototype.drawRandomAsteroid = function (speed) {
-        var asteroidPath = ASTEROID + _ + range(1, 4);
+        var asteroidPath = ASTEROID + _ + range(1, 3);
 
         var startRangeFn = this._getAsteroidStartRange(asteroidPath);
         var endRangeFn = this._getAsteroidEndRange(startRangeFn);

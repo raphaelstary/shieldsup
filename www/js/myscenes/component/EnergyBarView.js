@@ -1,7 +1,7 @@
 var EnergyBarView = (function (Transition) {
     "use strict";
 
-    var TIME = 120;
+    var TIME = 15;
 
     function EnergyBarView(stage, drawable, is30fps) {
         this.stage = stage;

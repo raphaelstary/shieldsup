@@ -28,7 +28,7 @@ var KillScreen = (function () {
             self.stage.remove(speedStripeWrapper.drawable);
         });
 
-        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 22, false);
+        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 10, false);
         self.stage.remove(fire.left);
         self.stage.remove(fire.right);
         self.sounds.play(SHIP_HIT);
