@@ -128,9 +128,10 @@ var InGameTutorial = (function ($) {
         }
 
         var skipButton = createSkipStuff();
-
+        self.messages.add(skipButton.text, skipButton.text.data, KEY, SKIP_MSG);
         function removeSkipStuff() {
             self.buttons.remove(skipButton);
+            self.messages.remove(skipButton.text);
         }
 
         function createFirstAsteroid() {
@@ -157,7 +158,7 @@ var InGameTutorial = (function ($) {
             var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                 self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
                 $.Width.TWO_THIRD, $.add($.Height.get(30), get5));
-
+            self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
             function getX(width) {
                 return $.calcScreenConst(width, 16, 3);
             }
@@ -165,7 +166,7 @@ var InGameTutorial = (function ($) {
             var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
                 $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD,
                 $.add($.Height.get(35), get5));
-
+            self.messages.add(raise_txt, raise_txt.data, KEY, TO_RAISE_SHIELDS_MSG);
             return [touch_txt, raise_txt];
         }
 
@@ -239,8 +240,10 @@ var InGameTutorial = (function ($) {
 
         function removeTouchNHoldStuff() {
             asteroidShutDown = true;
-            if (touchTxts)
+            if (touchTxts) {
                 touchTxts.forEach(self.stage.remove.bind(self.stage));
+                touchTxts.forEach(self.messages.remove.bind(self.messages));
+            }
             self.events.unsubscribe(asteroidMovement);
             if (asteroid)
                 self.stage.remove(asteroid); //double remove just in case
@@ -307,7 +310,7 @@ var InGameTutorial = (function ($) {
                 var collectTxt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                     self.messages.get(KEY, COLLECT_STUFF_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
                     $.Width.HALF, $.Height.get(30));
-
+                self.messages.add(collectTxt, collectTxt.data, KEY, COLLECT_STUFF_MSG);
                 return [collectTxt];
             }
 
@@ -346,8 +349,10 @@ var InGameTutorial = (function ($) {
 
         function removeStarStuff() {
             starShutDown = true;
-            if (starTxts)
+            if (starTxts) {
                 starTxts.forEach(self.stage.remove.bind(self.stage));
+                starTxts.forEach(self.messages.remove.bind(self.messages));
+            }
             self.events.unsubscribe(starMovement);
             if (star)
                 self.stage.remove(star);
