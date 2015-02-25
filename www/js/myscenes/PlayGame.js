@@ -89,7 +89,7 @@ var PlayGame = (function ($) {
             pushRelease = self.events.subscribe($.Event.POINTER, function (pointer) {
                 if (isPaused)
                     return;
-                if (!isPush && pushingPointerId == undefined) {
+                if (!isPush && pushingPointerId == undefined && pointer.type == 'down') {
                     pushingPointerId = pointer.id;
                     isPush = true;
                     energyStates.drainEnergy();
