@@ -3,47 +3,103 @@ var LevelGenerator = (function (range) {
 
     function LevelGenerator(drawHelper, is30fps) {
         this.drawHelper = drawHelper;
+        this.is30fps = is30fps;
 
-        // level difficulty
-        this.level = {
-            maxTimeToFirst: 100,
-            percentageForAsteroid: 66,
+        this.levels = [
+            {
+                id: 0,
+                maxObstacles: 1,
 
-            asteroidSpeed: 90,
-            pauseAfterAsteroid: 30,
-            maxTimeToNextAfterAsteroid: 100,
+                timeToFirst: 30,
+                percentageForAsteroid: 100,
 
-            starSpeed: 90,
-            pauseAfterStar: 20,
-            maxTimeToNextAfterStar: 100
-        };
-        if (is30fps) {
+                asteroidSpeed: 240,
+                pauseAfterAsteroid: 0,
+                maxTimeToNextAfterAsteroid: 0,
+
+                starSpeed: 0,
+                pauseAfterStar: 0,
+                maxTimeToNextAfterStar: 0
+            }, {
+                id: 1,
+                maxObstacles: 1,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 0,
+
+                asteroidSpeed: 0,
+                pauseAfterAsteroid: 0,
+                maxTimeToNextAfterAsteroid: 0,
+
+                starSpeed: 180,
+                pauseAfterStar: 0,
+                maxTimeToNextAfterStar: 0
+            }, {
+                id: 2,
+                maxObstacles: 10,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 90,
+
+                asteroidSpeed: 120,
+                pauseAfterAsteroid: 30,
+                maxTimeToNextAfterAsteroid: 50,
+
+                starSpeed: 120,
+                pauseAfterStar: 20,
+                maxTimeToNextAfterStar: 50
+            }, {
+                id: 'last',
+                maxObstacles: 10,
+
+                timeToFirst: 480,
+                percentageForAsteroid: 90,
+
+                asteroidSpeed: 60,
+                pauseAfterAsteroid: 10,
+                maxTimeToNextAfterAsteroid: 40,
+
+                starSpeed: 40,
+                pauseAfterStar: 50,
+                maxTimeToNextAfterStar: 100
+            }
+        ];
+
+        this.initLevel(this.levels.shift());
+    }
+
+    LevelGenerator.prototype.initLevel = function (level) {
+        this.level = level;
+
+        if (this.is30fps) {
             Object.keys(this.level).forEach(function (key) {
                 this.level[key] /= 2;
             }, this);
         }
 
+        this.obstaclesCount = 0;
         this.counter = 0;
-        // elements fly with interval 0 - 100
-        this.nextCount = range(0, this.level.maxTimeToFirst);
-    }
+        this.nextCount = this.level.timeToFirst;
+    };
 
     LevelGenerator.prototype.update = function () {
-        this.counter += 1;
-        if (this.counter <= this.nextCount) {
+        if (++this.counter <= this.nextCount)
             return;
-        }
 
         this.counter = 0;
 
-        // 2/3 asteroid, 1/3 star
         if (range(1, 100) <= this.level.percentageForAsteroid) {
             this.drawHelper.drawRandomAsteroid(this.level.asteroidSpeed);
+            this.obstaclesCount++;
             this.nextCount = this.level.pauseAfterAsteroid + range(0, this.level.maxTimeToNextAfterAsteroid);
         } else {
             this.drawHelper.drawRandomStar(this.level.starSpeed);
+            this.obstaclesCount++;
             this.nextCount = this.level.pauseAfterStar + range(0, this.level.maxTimeToNextAfterStar);
         }
+
+        if (this.obstaclesCount >= this.level.maxObstacles)
+            this.initLevel(this.levels.shift());
     };
 
     return LevelGenerator;

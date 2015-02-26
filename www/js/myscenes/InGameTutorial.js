@@ -319,11 +319,11 @@ var InGameTutorial = (function ($) {
                     star.y += __4;
                     highlight.y += __4;
                 } else if (!world.shieldsOn) {
-                    star.y += __2;
-                    highlight.y += __2;
+                    star.y += __1;
+                    highlight.y += __1;
                 } else if (star.y > heightQuarter) {
-                    star.y -= __4;
-                    highlight.y -= __4;
+                    star.y -= __2;
+                    highlight.y -= __2;
                 }
                 if (world.points < 1 && !self.stage.has(star)) {
                     var wrapper = createFirstStar();

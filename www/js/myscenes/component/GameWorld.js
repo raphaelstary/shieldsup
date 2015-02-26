@@ -102,7 +102,7 @@ var GameWorld = (function (Object) {
 
             if (needPreciseCollisionDetection(this.shipDrawable, star) && this.shipCollision.isHit(star)) {
                 this.sounds.play(COLLECT_STAR);
-                this.collectAnimator.collectStar(this.lives);
+                this.collectAnimator.collectStar();
                 this.scoreAnimator.showScoredPoints(star.x, star.y);
                 var score = 10;
                 this.scoreDisplay.addScore(score);
@@ -117,11 +117,11 @@ var GameWorld = (function (Object) {
     };
 
     GameWorld.prototype._shipGotHit = function () {
-        var self = this;
-        var currentLife = this.lives;
-        self.livesView.remove(currentLife);
-
         if (--this.lives > 0) {
+            var self = this;
+            var currentLife = this.lives;
+            self.livesView.remove(currentLife);
+        
             self.sounds.play(SHIP_HIT);
             self.shipHitView.hit();
         }
