@@ -1,8 +1,10 @@
-var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords, changePath, Math) {
+var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords, changePath, Math, changeSign, Width,
+    Height, Font, multiply) {
     "use strict";
 
-    function ObstaclesView(stage, trackedAsteroids, trackedStars, is30fps) {
+    function ObstaclesView(stage, trackedAsteroids, trackedStars, messages, is30fps) {
         this.stage = stage;
+        this.messages = messages;
 
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
@@ -151,5 +153,22 @@ var ObstaclesView = (function (Transition, range, calcScreenConst, changeCoords,
         }
     };
 
+    var KEY = 'obstacles_view';
+    var WAVE = 'wave';
+    var FONT = 'GameFont';
+    var LIGHT_GRAY = '#D3D3D3';
+
+    ObstaclesView.prototype.showWaveMessage = function (numberString) {
+        var self = this;
+        var speed = this.is30fps ? 90 : 180;
+        var delay = this.is30fps ? 45 : 90;
+        var msg = self.messages.get(KEY, WAVE) + " " + numberString;
+        var waveWrapper = self.stage.moveFreshTextLater(changeSign(Width.FULL), Height.THIRD, msg, Font._15, FONT,
+            LIGHT_GRAY, multiply(Width.FULL, 2), Height.THIRD, speed, Transition.EASE_OUT_IN_SIN, delay, false,
+            function () {
+                self.stage.remove(waveWrapper.drawable);
+            }, undefined, undefined, 5);
+    };
+
     return ObstaclesView;
-})(Transition, range, calcScreenConst, changeCoords, changePath, Math);
+})(Transition, range, calcScreenConst, changeCoords, changePath, Math, changeSign, Width, Height, Font, multiply);

@@ -61,7 +61,8 @@ var PlayGame = (function ($) {
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.sceneStorage.do30fps);
+        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.messages,
+            self.sceneStorage.do30fps);
         var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
@@ -173,7 +174,12 @@ var PlayGame = (function ($) {
             isPaused = false;
         }
 
+        var itIsOver = false;
         function endGame(points) {
+            if (itIsOver)
+                return;
+            itIsOver = true;
+
             function removeEverything() {
                 self.buttons.remove(pauseButton);
 

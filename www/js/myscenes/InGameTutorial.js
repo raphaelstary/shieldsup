@@ -271,13 +271,13 @@ var InGameTutorial = (function ($) {
                     DURATION = 8;
                 self.stage.animateAlphaPattern(highlight, [
                     {
-                        value: 1,
+                        value: 0.8,
                         duration: DURATION,
-                        easing: Transition.LINEAR
+                        easing: Transition.EASE_IN_QUAD
                     }, {
                         value: 0,
                         duration: DURATION,
-                        easing: Transition.LINEAR
+                        easing: Transition.EASE_OUT_QUAD
                     }
                 ], true);
 
@@ -457,11 +457,12 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(showRotation);
             self.events.unsubscribe(hideRotation);
         }
-        var itsOver = false;
+
+        var itIsOver = false;
         function endGame() {
-            if (itsOver)
+            if (itIsOver)
                 return;
-            itsOver = true;
+            itIsOver = true;
             self.sounds.stop(backSound);
             self.next(nextScene);
         }

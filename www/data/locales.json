@@ -48,7 +48,10 @@
       },
       "splash_screen": {
         "start": "start"
-        }
+      },
+      "obstacles_view": {
+        "wave": "wave"
+      }
     },
     "de": {
       "display_name": "Deutsch",
@@ -99,6 +102,9 @@
       },
       "splash_screen": {
         "start": "start"
-        }
+      },
+      "obstacles_view": {
+        "wave": "Welle"
+      }
     }
 }

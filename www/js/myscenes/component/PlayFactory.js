@@ -2,8 +2,8 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
     CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld, Object) {
     "use strict";
 
-    function createLevel(stage, trackedAsteroids, trackedStars, is30fps) {
-        var obstaclesView = new ObstaclesView(stage, trackedAsteroids, trackedStars, is30fps);
+    function createLevel(stage, trackedAsteroids, trackedStars, messages, is30fps) {
+        var obstaclesView = new ObstaclesView(stage, trackedAsteroids, trackedStars, messages, is30fps);
         return new LevelGenerator(obstaclesView, is30fps);
     }
 
