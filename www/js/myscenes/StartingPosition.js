@@ -87,10 +87,9 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
                 3: lifeThreeWrapper.drawable
             };
             var countDrawables = [
-                fourthDigitWrapper.drawable,
+                firstDigitWrapper.drawable,
                 secondDigitWrapper.drawable,
-                thirdDigitWrapper.drawable,
-                firstDigitWrapper.drawable
+                thirdDigitWrapper.drawable, fourthDigitWrapper.drawable
             ];
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);

@@ -33,7 +33,7 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
 
         var getX;
         if (digitPosition === 0) {
-            getX = ScoreBoard.getFirstX.bind(undefined, this.offSetResizeDependency);
+            getX = ScoreBoard.getFirstX;
         } else if (digitPosition === 1) {
             getX = ScoreBoard.getSecondX.bind(undefined, this.offSetResizeDependency);
         } else if (digitPosition === 2) {
@@ -65,7 +65,7 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
                 if (self.stack.length > 0)
                     self.stack.shift()();
             }, [this.offSetResizeDependency]).drawable;
-        this.countDrawables.splice(digitPosition, 1, newDrawable);
+
         //this.shaker.add(newDrawable);
 
         var first = this.countDrawables[this.countDrawables.length - 1];
@@ -74,6 +74,8 @@ var OdometerView = (function (ScoreBoard, Transition, Math) {
             last.getEndX.bind(last), last.getEndY.bind(last));
         this.stage.mask(newDrawable, first.getCornerX.bind(first), first.getCornerY.bind(first),
             last.getEndX.bind(last), last.getEndY.bind(last));
+
+        this.countDrawables.splice(digitPosition, 1, newDrawable);
     };
 
     return OdometerView;
