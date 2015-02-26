@@ -1,5 +1,5 @@
-var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer,
-    OdometerView, CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld) {
+var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView,
+    CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld, Object) {
     "use strict";
 
     function createLevel(stage, trackedAsteroids, trackedStars, is30fps) {
@@ -8,8 +8,8 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
     }
 
     function createEnergyStateMachine(stage, sounds, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
-        shieldsDownSprite, is30fps) {
-        var energyBarView = new EnergyBarView(stage, energyBarDrawable, is30fps);
+        shieldsDownSprite, shieldsMaxEnergyLevel_OneToFour, is30fps) {
+        var energyBarView = new EnergyBarView(stage, energyBarDrawable, shieldsMaxEnergyLevel_OneToFour, is30fps);
         return new EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
             energyBarView);
     }
@@ -23,8 +23,8 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         var livesView = new LivesView(stage, lifeDrawablesDict, shaker, is30fps);
         var shieldsHitView = new ShieldsHitView(stage, shieldsDrawable, timer, shaker, is30fps);
         return new GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-            shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker, lifeDrawablesDict, endGame, sounds,
-            hullHitView, shieldsHitView, livesView);
+            shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker,
+            Object.keys(lifeDrawablesDict).length, endGame, sounds, hullHitView, shieldsHitView, livesView);
     }
 
     return {
@@ -32,5 +32,5 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         createEnergyStateMachine: createEnergyStateMachine,
         createWorld: createWorld
     };
-})(ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView,
-    ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld);
+})(ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView, ScoreView,
+    ShipHitView, LivesView, ShieldsHitView, GameWorld, Object);

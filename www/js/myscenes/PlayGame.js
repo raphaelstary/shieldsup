@@ -46,9 +46,6 @@ var PlayGame = (function ($) {
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
-                lifeDrawablesDict[1],
-                lifeDrawablesDict[2],
-                lifeDrawablesDict[3],
                 fireDict.left,
                 fireDict.right
             ].forEach(add);
@@ -56,6 +53,7 @@ var PlayGame = (function ($) {
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
+            $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
         setupShaker();
@@ -75,9 +73,9 @@ var PlayGame = (function ($) {
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
-
+        var playerShieldsLevel = 1;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, self.sceneStorage.do30fps);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, self.sceneStorage.do30fps);
 
         var pushRelease;
         var padId;

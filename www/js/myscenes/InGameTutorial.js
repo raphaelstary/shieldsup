@@ -65,9 +65,6 @@ var InGameTutorial = (function ($) {
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
-                lifeDrawablesDict[1],
-                lifeDrawablesDict[2],
-                lifeDrawablesDict[3],
                 fireDict.left,
                 fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
@@ -75,6 +72,7 @@ var InGameTutorial = (function ($) {
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
+            $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
         setupShaker();
@@ -91,7 +89,7 @@ var InGameTutorial = (function ($) {
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, do30fps);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, do30fps);
 
         registerPushRelease();
 
@@ -499,5 +497,6 @@ var InGameTutorial = (function ($) {
     PlayFactory: PlayFactory,
     Event: Event,
     showSettings: showSettings,
-    Key: Key
+    Key: Key,
+    iterateEntries: iterateEntries
 });

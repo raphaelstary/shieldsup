@@ -1,9 +1,9 @@
-var EnergyBarView = (function (Transition) {
+var EnergyBarView = (function (Transition, Math) {
     "use strict";
 
     var TIME = 15;
 
-    function EnergyBarView(stage, drawable, is30fps) {
+    function EnergyBarView(stage, drawable, level, is30fps) {
         this.stage = stage;
         this.drawable = drawable;
         var self = this;
@@ -36,8 +36,8 @@ var EnergyBarView = (function (Transition) {
         }
 
         this.stage.mask(drawable, getA_x, getA_y, getB_x, getB_y);
-
-        var speed = is30fps ? TIME / 2 : TIME;
+        var time = TIME * level;
+        var speed = is30fps ? Math.floor(time / 2) : time;
         this.lastTick = speed - 1;
         this.loadAnimation = this.stage.getAnimation(0, this.drawable.getWidth(), speed, Transition.LINEAR, false);
         this.drainAnimation = this.stage.getAnimation(this.drawable.getWidth(), 0, speed, Transition.LINEAR, false);
@@ -69,4 +69,4 @@ var EnergyBarView = (function (Transition) {
     };
 
     return EnergyBarView;
-})(Transition);
+})(Transition, Math);

@@ -8,7 +8,7 @@ var GameWorld = (function (Object) {
     var COLLECT_STAR = 'kids_cheering';
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, endGame,
+        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame,
         sounds, shipHitView, shieldsHitView, livesView) {
         this.stage = stage;
         this.trackedAsteroids = trackedAsteroids;
@@ -25,7 +25,6 @@ var GameWorld = (function (Object) {
         this.shieldsDrawable = shieldsDrawable;
 
         this.shaker = screenShaker;
-        this.lifeDrawablesDict = lifeDrawablesDict;
         this.endGame = endGame;
 
         this.sounds = sounds;
@@ -35,8 +34,8 @@ var GameWorld = (function (Object) {
         this.livesView = livesView;
 
         this.shieldsOn = false; //part of global game state
-        this.lives = 3; //3; //part of global game state
-        this.initialLives = this.lives;
+        this.lives = initialLives; //3; //part of global game state
+        this.initialLives = initialLives;
         this.points = 0; //part of global game state
 
         this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
