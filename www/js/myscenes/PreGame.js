@@ -1,4 +1,5 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event,
+    checkAndSet30fps) {
     "use strict";
 
     function PreGame(services) {
@@ -10,6 +11,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.buttons = services.buttons;
         this.events = services.events;
         this.device = services.device;
+        this.shaker = services.shaker;
     }
 
     var SHIP = 'ship';
@@ -185,6 +187,13 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         // end of screen
 
         function endOfScreen() {
+            checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
+
+            self.sceneStorage.speedStripes.forEach(function (speedStripeWrapper) {
+                self.stage.remove(speedStripeWrapper.drawable);
+            });
+            delete self.sceneStorage.speedStripes;
+
             [playButton, creditsButton, settingsButton].forEach(self.buttons.remove.bind(self.buttons));
             // end event
             function getLogoY(height) {
@@ -231,4 +240,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event, checkAndSet30fps);

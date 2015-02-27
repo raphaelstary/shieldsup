@@ -1,5 +1,5 @@
 var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, document, screen, installOneTimeTap, window,
-    Orientation, Event, Stats) {
+    Orientation, Event, Stats, checkAndSet30fps) {
     "use strict";
 
     function SplashScreen(services) {
@@ -64,9 +64,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         ship.rotation = Math.PI / 4;
         var shields = this.stage.drawFresh(Width.get(10, 3), Height.get(10, 5), SHIELDS);
         shields.rotation = Math.PI / 4;
-        var logo = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
+        var logo = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
             DARK_GRAY);
-        var logoHighlight = this.stage.drawText(Width.THREE_QUARTER, Height.THIRD, GAME_LOGO_TXT, Font._15,
+        var logoHighlight = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15,
             SPECIAL_FONT, WHITE, 4);
         var fireDict = Fire.draw(this.stage, ship);
         var offSetX = ship.x - Fire.getLeftX(ship);
@@ -116,14 +116,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         ], true);
         var coolDownTime = 60 * 6;
         this.timer.doLater(function () {
-            if (Stats.getFps() < 45) {
-                if (Stats.getMs() > 15) {
-                    // no speed stripes, no shaker, no shine, maybe no highlight, maybe no background stars, maybe no music just sfx
-                }
-                self.sceneStorage.do30fps = true;
-                self.stage.stage.spriteAnimations.set30fps();
-                self.shaker.__init(true);
-            }
+            checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
             self.stage.remove(loading);
             self.stage.remove(loadingHighlight);
 
@@ -261,4 +254,4 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
 
     return SplashScreen;
 })(Width, Height, Math, Font, Transition, Fire, window.document, window.screen, installOneTimeTap, window, Orientation,
-    Event, Stats);
+    Event, Stats, checkAndSet30fps);

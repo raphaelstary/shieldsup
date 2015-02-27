@@ -111,6 +111,81 @@ var LevelGenerator = (function (range) {
                 starSpeed: 210,
                 pauseAfterStar: 50,
                 maxTimeToNextAfterStar: 90
+            }, { // same wave pattern again
+                id: 6,
+                showMessage: true,
+                messageNr: '5',
+                maxObstacles: 20,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 80,
+
+                asteroidSpeed: 90,
+                pauseAfterAsteroid: 30,
+                maxTimeToNextAfterAsteroid: 50,
+
+                starSpeed: 90,
+                pauseAfterStar: 20,
+                maxTimeToNextAfterStar: 50
+            }, {
+                id: 7,
+                showMessage: true,
+                messageNr: '6',
+                maxObstacles: 20,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 80,
+
+                minAsteroidSpeed: 90,
+                maxAsteroidSpeed: 150,
+                pauseAfterAsteroid: 20,
+                maxTimeToNextAfterAsteroid: 30,
+
+                starSpeed: 180,
+                pauseAfterStar: 50,
+                maxTimeToNextAfterStar: 90
+            }, {
+                id: 8,
+                showMessage: true,
+                messageNr: '7',
+                maxObstacles: 40,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 80,
+
+                asteroidSpeed: 150,
+                pauseAfterAsteroid: 60,
+                maxTimeToNextAfterAsteroid: 90,
+                percentageForAsteroidGroup: 70,
+                percentageForStarInAsteroidGroup: 0,
+                minAsteroidGroup: 6,
+                maxAsteroidGroup: 10,
+                asteroidGroupSpawnPause: 20,
+
+                starSpeed: 180,
+                pauseAfterStar: 50,
+                maxTimeToNextAfterStar: 90
+            }, {
+                id: 9,
+                showMessage: true,
+                messageNr: '8',
+                maxObstacles: 80,
+
+                timeToFirst: 240,
+                percentageForAsteroid: 100,
+
+                asteroidSpeed: 120,
+                pauseAfterAsteroid: 60,
+                maxTimeToNextAfterAsteroid: 90,
+                percentageForAsteroidGroup: 70,
+                percentageForStarInAsteroidGroup: 100,
+                minAsteroidGroup: 10,
+                maxAsteroidGroup: 15,
+                asteroidGroupSpawnPause: 20,
+
+                starSpeed: 180,
+                pauseAfterStar: 50,
+                maxTimeToNextAfterStar: 90
             }, {
                 id: 'last',
                 showMessage: true,
@@ -141,9 +216,21 @@ var LevelGenerator = (function (range) {
         this.level = level;
 
         if (this.is30fps) {
-            Object.keys(this.level).forEach(function (key) {
-                this.level[key] /= 2;
-            }, this);
+            [
+                'timeToFirst',
+                'asteroidSpeed',
+                'pauseAfterAsteroid',
+                'maxTimeToNextAfterAsteroid',
+                'minAsteroidSpeed',
+                'maxAsteroidSpeed',
+                'asteroidGroupSpawnPause',
+                'starSpeed',
+                'pauseAfterStar',
+                'maxTimeToNextAfterStar'
+            ].forEach(function (key) {
+                    if (this.level[key] !== undefined)
+                        this.level[key] /= 2;
+                }, this);
         }
 
         this.obstaclesCount = 0;
