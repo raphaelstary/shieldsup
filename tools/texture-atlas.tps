@@ -45,6 +45,23 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
+                <double>0.75</double>
+                <key>extension</key>
+                <string>2880</string>
+                <key>spriteFilter</key>
+                <string></string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>-1</int>
+                    <key>height</key>
+                    <int>-1</int>
+                </QSize>
+            </struct>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
                 <double>0.666667</double>
                 <key>extension</key>
                 <string>2560</string>
@@ -113,9 +130,43 @@
             </struct>
             <struct type="AutoSDSettings">
                 <key>scale</key>
+                <double>0.46875</double>
+                <key>extension</key>
+                <string>1800</string>
+                <key>spriteFilter</key>
+                <string></string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>2560</int>
+                    <key>height</key>
+                    <int>2048</int>
+                </QSize>
+            </struct>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
                 <double>0.446875</double>
                 <key>extension</key>
                 <string>1716</string>
+                <key>spriteFilter</key>
+                <string></string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>2560</int>
+                    <key>height</key>
+                    <int>2048</int>
+                </QSize>
+            </struct>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
+                <double>0.4375</double>
+                <key>extension</key>
+                <string>1680</string>
                 <key>spriteFilter</key>
                 <string></string>
                 <key>acceptFractionalValues</key>
@@ -167,6 +218,23 @@
                 <double>0.355729</double>
                 <key>extension</key>
                 <string>1366</string>
+                <key>spriteFilter</key>
+                <string></string>
+                <key>acceptFractionalValues</key>
+                <false/>
+                <key>maxTextureSize</key>
+                <QSize>
+                    <key>width</key>
+                    <int>2560</int>
+                    <key>height</key>
+                    <int>2048</int>
+                </QSize>
+            </struct>
+            <struct type="AutoSDSettings">
+                <key>scale</key>
+                <double>0.347396</double>
+                <key>extension</key>
+                <string>1334</string>
                 <key>spriteFilter</key>
                 <string></string>
                 <key>acceptFractionalValues</key>

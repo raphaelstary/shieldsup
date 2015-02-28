@@ -27,8 +27,11 @@ var InGameTutorial = (function ($) {
     var STAR = 'star';
     var STAR_WHITE = 'star_white';
 
+    var BACK_GROUND_MUSIC = 'spacey_club';
+
     InGameTutorial.prototype.show = function (nextScene) {
         var self = this;
+        var do30fps = this.sceneStorage.do30fps !== undefined ? this.sceneStorage.do30fps : false;
 
         var shipDrawable = this.sceneStorage.ship;
         var shieldsDrawable = this.sceneStorage.shields.drawable;
@@ -40,13 +43,18 @@ var InGameTutorial = (function ($) {
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
+        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
+
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+
+        function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                resume);
-        });
+                self.sounds, resume);
+        }
+
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -57,16 +65,14 @@ var InGameTutorial = (function ($) {
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
-                lifeDrawablesDict[1],
-                lifeDrawablesDict[2],
-                lifeDrawablesDict[3],
                 fireDict.left,
                 fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
-            countDrawables.forEach(self.shaker.add.bind(self.shaker));
+            //countDrawables.forEach(self.shaker.add.bind(self.shaker));
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
+            $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
         setupShaker();
@@ -82,10 +88,8 @@ var InGameTutorial = (function ($) {
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
-        shieldsDrawable.x = shipDrawable.x;
-        shieldsDrawable.y = shipDrawable.y;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, do30fps);
 
         registerPushRelease();
 
@@ -118,13 +122,14 @@ var InGameTutorial = (function ($) {
                     removeEveryThing();
                     endGame();
                 }, 60);
-            });
+            }, 3);
         }
 
         var skipButton = createSkipStuff();
-
+        self.messages.add(skipButton.text, skipButton.text.data, KEY, SKIP_MSG);
         function removeSkipStuff() {
             self.buttons.remove(skipButton);
+            self.messages.remove(skipButton.text);
         }
 
         function createFirstAsteroid() {
@@ -137,7 +142,7 @@ var InGameTutorial = (function ($) {
             }
 
             var asteroid = self.stage.drawFresh($.subtract($.Width.HALF, getAsteroidWidthHalf),
-                getAsteroidMinusHeightHalf, ASTEROID);
+                getAsteroidMinusHeightHalf, ASTEROID, 5);
             trackedAsteroids[asteroid.id] = asteroid;
 
             return asteroid;
@@ -150,15 +155,16 @@ var InGameTutorial = (function ($) {
 
             var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                 self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                $.Width.TWO_THIRD, $.add(Font._30, get5));
-
+                $.Width.TWO_THIRD, $.add($.Height.get(30), get5));
+            self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
             function getX(width) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
             var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
-                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD, $.add($.Font._35, get5));
-
+                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD,
+                $.add($.Height.get(35), get5));
+            self.messages.add(raise_txt, raise_txt.data, KEY, TO_RAISE_SHIELDS_MSG);
             return [touch_txt, raise_txt];
         }
 
@@ -177,25 +183,45 @@ var InGameTutorial = (function ($) {
             return value > 0 ? value : 1;
         }
 
-        var __4 = get__4(self.device.height);
-        var __2 = get__2(self.device.height);
-        var __1 = get__1(self.device.height);
-        var heightQuarter = $.Height.QUARTER(self.device.height);
+        var __4;
+        var __2;
+        var __1;
+        var heightQuarter;
+        var moveStuff;
+        if (do30fps) {
+            __4 = get__4(self.device.height) * 2;
+            __2 = get__2(self.device.height) * 2;
+            __1 = get__1(self.device.height) * 2;
+            heightQuarter = $.Height.QUARTER(self.device.height);
 
-        var moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
-            __4 = get__4(event.height);
-            __2 = get__2(event.height);
-            __1 = get__1(event.height);
-            heightQuarter = $.Height.QUARTER(event.height);
-        });
+            moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+                __4 = get__4(event.height) * 2;
+                __2 = get__2(event.height) * 2;
+                __1 = get__1(event.height) * 2;
+                heightQuarter = $.Height.QUARTER(event.height);
+            });
+        } else {
+            __4 = get__4(self.device.height);
+            __2 = get__2(self.device.height);
+            __1 = get__1(self.device.height);
+            heightQuarter = $.Height.QUARTER(self.device.height);
 
+            moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
+                __4 = get__4(event.height);
+                __2 = get__2(event.height);
+                __1 = get__1(event.height);
+                heightQuarter = $.Height.QUARTER(event.height);
+            });
+        }
         function moveMyFirstAsteroids() {
+            if (asteroidShutDown)
+                return;
             if (asteroid.y < heightQuarter) {
-                asteroid.y += __4;
+                asteroid.y += __4 + __2;
             } else if (world.shieldsOn) {
-                asteroid.y += __2;
+                asteroid.y += __2 + __1;
             } else if (asteroid.y > heightQuarter) {
-                asteroid.y -= __2;
+                asteroid.y -= __4;
             }
             if (!self.stage.has(asteroid)) {
                 removeTouchNHoldStuff();
@@ -208,10 +234,14 @@ var InGameTutorial = (function ($) {
         var touchTxts = createTouchNHoldTxt();
         var asteroid = createFirstAsteroid();
         var asteroidMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstAsteroids);
+        var asteroidShutDown = false;
 
         function removeTouchNHoldStuff() {
-            if (touchTxts)
+            asteroidShutDown = true;
+            if (touchTxts) {
                 touchTxts.forEach(self.stage.remove.bind(self.stage));
+                touchTxts.forEach(self.messages.remove.bind(self.messages));
+            }
             self.events.unsubscribe(asteroidMovement);
             if (asteroid)
                 self.stage.remove(asteroid); //double remove just in case
@@ -230,22 +260,24 @@ var InGameTutorial = (function ($) {
                     return $.calcScreenConst(self.stage.getImageWidth(STAR), 2);
                 }
 
-                var Z_INDEX = 7;
+                var Z_INDEX = 4;
                 var star = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,
                     STAR, Z_INDEX, undefined, 1, 0, 0.75);
                 var highlight = self.stage.drawFresh($.subtract($.Width.HALF, getStarWidthHalf), getStarMinusHeightHalf,
                     STAR_WHITE, Z_INDEX + 1, [star], 0, 0, 1);
 
                 var DURATION = 15;
+                if (do30fps)
+                    DURATION = 8;
                 self.stage.animateAlphaPattern(highlight, [
                     {
-                        value: 1,
+                        value: 0.8,
                         duration: DURATION,
-                        easing: Transition.LINEAR
+                        easing: Transition.EASE_IN_QUAD
                     }, {
                         value: 0,
                         duration: DURATION,
-                        easing: Transition.LINEAR
+                        easing: Transition.EASE_OUT_QUAD
                     }
                 ], true);
 
@@ -275,12 +307,14 @@ var InGameTutorial = (function ($) {
             function createCollectTxt() {
                 var collectTxt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                     self.messages.get(KEY, COLLECT_STUFF_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                    $.Width.HALF, $.Font._30);
-
+                    $.Width.HALF, $.Height.get(30));
+                self.messages.add(collectTxt, collectTxt.data, KEY, COLLECT_STUFF_MSG);
                 return [collectTxt];
             }
 
             function moveMyFirstStar() {
+                if (starShutDown)
+                    return;
                 if (star.y < heightQuarter) {
                     star.y += __4;
                     highlight.y += __4;
@@ -309,9 +343,14 @@ var InGameTutorial = (function ($) {
             starMovement = self.events.subscribe($.Event.TICK_MOVE, moveMyFirstStar);
         }
 
+        var starShutDown = false;
+
         function removeStarStuff() {
-            if (starTxts)
+            starShutDown = true;
+            if (starTxts) {
                 starTxts.forEach(self.stage.remove.bind(self.stage));
+                starTxts.forEach(self.messages.remove.bind(self.messages));
+            }
             self.events.unsubscribe(starMovement);
             if (star)
                 self.stage.remove(star);
@@ -327,7 +366,9 @@ var InGameTutorial = (function ($) {
             var isPush = false;
             var pushingPointerId;
             pushRelease = self.events.subscribe($.Event.POINTER, function (pointer) {
-                if (!isPush && pushingPointerId == undefined) {
+                if (isPaused)
+                    return;
+                if (!isPush && pushingPointerId == undefined && pointer.type == 'down') {
                     pushingPointerId = pointer.id;
                     isPush = true;
                     energyStates.drainEnergy();
@@ -366,29 +407,77 @@ var InGameTutorial = (function ($) {
             self.events.unsubscribe(keyId);
         }
 
-        var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
+        var goFs = false;
+        var showGoFs = self.events.subscribe($.Event.SHOW_GO_FULL_SCREEN, function () {
+            goFs = true;
+        });
+
+        var hideGoFs = self.events.subscribe($.Event.REMOVE_GO_FULL_SCREEN, function () {
+            goFs = false;
+        });
+        var rotation = false;
+        var showRotation = self.events.subscribe($.Event.SHOW_ROTATE_DEVICE, function () {
+            rotation = true;
+        });
+
+        var hideRotation = self.events.subscribe($.Event.REMOVE_ROTATE_DEVICE, function () {
+            rotation = false;
+        });
+
+        var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
+            if (hidden) {
+                if (!isPaused)
+                    self.sceneStorage.shouldShowSettings = true;
+            } else {
+                self.timer.doLater(function () {
+                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowSettings = false;
+                        doThePause();
+                    }
+                }, 2);
+            }
+        });
+
+        var resumeId = self.events.subscribe($.Event.RESUME, function () {
+            registerPushRelease();
+        });
         var pauseId = self.events.subscribe($.Event.PAUSE, unregisterPushRelease);
 
         function removeCommonGameStuff() {
-            self.shaker.reset();
+            world.reset();
+            self.shaker.reset(do30fps);
             self.events.unsubscribe(collisionTutorial);
             self.events.unsubscribe(moveStuff);
             self.buttons.remove(pauseButton);
             self.events.unsubscribe(resumeId);
             self.events.unsubscribe(pauseId);
+            self.events.unsubscribe(visible);
+            self.events.unsubscribe(showGoFs);
+            self.events.unsubscribe(hideGoFs);
+            self.events.unsubscribe(showRotation);
+            self.events.unsubscribe(hideRotation);
         }
 
+        var itIsOver = false;
         function endGame() {
+            if (itIsOver)
+                return;
+            itIsOver = true;
+            self.sounds.stop(backSound);
             self.next(nextScene);
         }
 
+        var isPaused = false;
+
         function pause() {
             self.stage.hide(pauseButton.text);
+            isPaused = true;
         }
 
         function resume() {
             self.stage.show(pauseButton.text);
             pauseButton.used = false;
+            isPaused = false;
         }
     };
 
@@ -409,5 +498,6 @@ var InGameTutorial = (function ($) {
     PlayFactory: PlayFactory,
     Event: Event,
     showSettings: showSettings,
-    Key: Key
+    Key: Key,
+    iterateEntries: iterateEntries
 });

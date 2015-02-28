@@ -19,10 +19,10 @@ var RotateDevice = (function (Width, Height, Font, Event) {
         this.events.subscribe(Event.SHOW_ROTATE_DEVICE, function () {
 
             backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
-                undefined, 7, 0.8);
+                undefined, 9, 0.8);
 
             rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, ROTATE_DEVICE), Font._15,
-                FONT, WHITE, 8);
+                FONT, WHITE, 11);
         });
 
         this.events.subscribe(Event.REMOVE_ROTATE_DEVICE, function () {

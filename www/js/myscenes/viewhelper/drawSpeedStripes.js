@@ -3,18 +3,18 @@ var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
 
     var SPEED = 'speed';
 
-    function showSpeedStripes(stage, delay) {
+    function showSpeedStripes(stage, delay, is30fps) {
         var speedStripes = [];
-        speedStripes.push(drawSpeed(stage, Width.QUARTER, delay));
-        speedStripes.push(drawSpeed(stage, Width.TWO_THIRD, delay + 34));
-        speedStripes.push(drawSpeed(stage, Width.get(8, 7), delay + 8));
-        speedStripes.push(drawSpeed(stage, Width.get(16, 7), delay + 24));
-        speedStripes.push(drawSpeed(stage, Width.get(16), delay + 16));
+        speedStripes.push(drawSpeed(stage, Width.QUARTER, delay, is30fps));
+        speedStripes.push(drawSpeed(stage, Width.TWO_THIRD, delay + 34, is30fps));
+        speedStripes.push(drawSpeed(stage, Width.get(8, 7), delay + 8, is30fps));
+        speedStripes.push(drawSpeed(stage, Width.get(16, 7), delay + 24, is30fps));
+        speedStripes.push(drawSpeed(stage, Width.get(16), delay + 16, is30fps));
 
         return speedStripes;
     }
 
-    function drawSpeed(stage, xFn, delay) {
+    function drawSpeed(stage, xFn, delay, is30fps) {
         function topOffSet(stage) {
             return calcScreenConst(stage.getImageWidth(SPEED), 2);
         }
@@ -27,7 +27,8 @@ var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
             return height + topOffSet(stage);
         }
 
-        return stage.moveFreshLater(xFn, yStart, SPEED, xFn, yEnd, 30, Transition.LINEAR, delay, true);
+        return stage.moveFreshLater(xFn, yStart, SPEED, xFn, yEnd, is30fps ? 15 : 30, Transition.LINEAR, delay, true,
+            undefined, undefined, undefined, 1);
     }
 
     return showSpeedStripes;

@@ -8,13 +8,15 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
         this.events = services.events;
         this.sceneStorage = services.sceneStorage;
         this.device = services.device;
+        this.sounds = services.sounds;
     }
 
     var SETTINGS_KEY = 'settings';
     var OK = 'ok';
     var FULL_SCREEN = 'full_screen';
     var SOUND = 'sound';
-    var MUSIC = 'music';
+    var NO_SOUND = 'no_sound';
+    //var MUSIC = 'music';
     var LANGUAGE = 'language';
     var ON = 'on';
     var OFF = 'off';
@@ -25,8 +27,10 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
     Settings.prototype.show = function (next) {
         this.sceneStorage.settingsOn = true;
         var self = this;
-        var backBlur, menuBack, fsText, soundText;
-        var musicText, languageText;
+        var backBlur, fsText, soundText;
+        // var menuBack;
+        //var musicText;
+        var languageText;
         var sceneButtons = [];
         var resume = self.events.subscribe(Event.RESUME_SETTINGS, function () {
             sceneButtons.forEach(self.buttons.enable.bind(self.buttons));
@@ -36,21 +40,55 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
         function showSettings() {
 
-            backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, '#000', true,
-                undefined, 7, 0.8);
-            menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.get(10, 9),
-                Height.get(10, 9), '#fff', true, undefined, 8, 0.5);
-            self.stage.move(menuBack, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
+            backBlur = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.FULL, Height.FULL, '#000',
+                true, undefined, 6, 0.8);
+            //menuBack = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.get(10, 9),
+            //    Height.get(10, 9), '#fff', true, undefined, 6, 0.5);
+            self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, function () {
 
-                fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
-                sceneButtons.push(getOnButton(Height.get(20, 5), undefined, false));
-                sceneButtons.push(getOffButton(Height.get(20, 5), undefined, true));
-                soundText = getMenuText(Height.get(20, 7), SOUND);
-                sceneButtons.push(getOnButton(Height.get(20, 8), undefined, true));
-                sceneButtons.push(getOffButton(Height.get(20, 8), undefined, false));
-                musicText = getMenuText(Height.get(20, 10), MUSIC);
-                sceneButtons.push(getOnButton(Height.get(20, 11), undefined, true));
-                sceneButtons.push(getOffButton(Height.get(20, 11), undefined, false));
+                if (self.device.isFullScreenSupported()) {
+                    fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
+                    var fsOn = getOnButton(Height.get(20, 5), function () {
+                        resetButton(fsOff);
+                        styleSelectButton(fsOn);
+
+                        self.sceneStorage.fsUserRequest = true;
+                        self.events.fire(Event.FULL_SCREEN, false);
+
+                    }, self.device.isFullScreen());
+                    sceneButtons.push(fsOn);
+                    var fsOff = getOffButton(Height.get(20, 5), function () {
+                        resetButton(fsOn);
+                        styleSelectButton(fsOff);
+
+                        self.device.exitFullScreen();
+
+                    }, !self.device.isFullScreen());
+                    sceneButtons.push(fsOff);
+                }
+
+                if (self.sounds.isSupported()) {
+                    soundText = getMenuText(Height.get(20, 7), SOUND);
+                    var sfxOn = getOnButton(Height.get(20, 8), function () {
+                        resetButton(sfxOff);
+                        styleSelectButton(sfxOn);
+
+                        self.sounds.unmuteAll();
+                        self.sceneStorage.sfxOn = true;
+                    }, self.sceneStorage.sfxOn);
+                    sceneButtons.push(sfxOn);
+                    var sfxOff = getOffButton(Height.get(20, 8), function () {
+                        resetButton(sfxOn);
+                        styleSelectButton(sfxOff);
+
+                        self.sounds.muteAll();
+                        self.sceneStorage.sfxOn = false;
+                    }, !self.sceneStorage.sfxOn);
+                    sceneButtons.push(sfxOff);
+                } else {
+                    soundText = getMenuText(Height.get(20, 7), NO_SOUND);
+                }
+
                 languageText = getMenuText(Height.get(20, 13), LANGUAGE);
 
                 var raster = [
@@ -108,7 +146,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                 function getMenuText(yFn, msgKey) {
                     var drawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(SETTINGS_KEY, msgKey),
-                        Font._30, FONT, WHITE, 9);
+                        Font._30, FONT, WHITE, 8);
                     self.messages.add(drawable, drawable.data, SETTINGS_KEY, msgKey);
 
                     return drawable;
@@ -123,7 +161,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 function getLanguageButton(xFn, yFn, msg, callback, selected) {
-                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback);
+                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback, 7);
                     button.reset = false;
                     if (selected) {
                         styleSelectButton(button);
@@ -134,18 +172,18 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                 function getOnOffButton(xFn, yFn, msgKey, callback, selected) {
                     var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get(SETTINGS_KEY, msgKey),
-                        callback);
+                        callback, 7);
                     self.messages.add(button.text, button.text.data, SETTINGS_KEY, msgKey);
                     if (selected) {
                         button.text.alpha = 1;
                         button.background.data.filled = true;
+                        button.used = true;
                     }
-                    button.used = true;
                     return button;
                 }
 
                 var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
-                    self.messages.get(SETTINGS_KEY, OK), hideSettings);
+                    self.messages.get(SETTINGS_KEY, OK), hideSettings, 7);
                 self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
                 sceneButtons.push(resumeButton);
 
@@ -155,9 +193,10 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
         function hideSettings() {
             self.events.unsubscribe(resume);
 
-            removeTxt(fsText);
+            if (fsText)
+                removeTxt(fsText);
             removeTxt(soundText);
-            removeTxt(musicText);
+            //removeTxt(musicText);
             removeTxt(languageText);
 
             sceneButtons.forEach(removeBtn);
@@ -172,9 +211,9 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 self.stage.remove(drawable);
             }
 
-            self.stage.move(menuBack, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
+            self.stage.move(backBlur, changeSign(Width.HALF), Height.HALF, 15, Transition.EASE_OUT_EXPO, false,
                 function () {
-                    self.stage.remove(menuBack);
+                    //self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
                     self.events.fire(Event.RESUME);
                     self.sceneStorage.settingsOn = false;

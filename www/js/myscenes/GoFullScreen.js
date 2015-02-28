@@ -7,6 +7,7 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
         this.buttons = services.buttons;
         this.messages = services.messages;
         this.device = services.device;
+        this.sceneStorage = services.sceneStorage;
     }
 
     var KEY = 'go_full_screen';
@@ -24,21 +25,26 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
         this.events.subscribe(Event.SHOW_GO_FULL_SCREEN, function () {
 
             backBlur = self.stage.drawRectangle(Width.HALF, Height.HALF, Width.FULL, Height.FULL, BLACK, true,
-                undefined, 7, 0.8);
+                undefined, 9, 0.8);
 
+            if (self.sceneStorage.fsUserRequest) {
+                self.sceneStorage.fsUserRequest = false;
+                rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GO_FS), Font._15,
+                    FONT, WHITE, 11);
+            } else {
+                rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, FS_REQUEST),
+                    Font._15, FONT, WHITE, 11);
+            }
 
-            rotateText = self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, FS_REQUEST), Font._15,
-                FONT, WHITE, 8);
-
-            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.TWO_THIRD, self.messages.get(KEY, GO_FS),
+            goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS),
                 function () {
                     // sadly not working on IE11
-                });
+                }, 10);
 
-            cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_QUARTER,
+            cancelBtn = self.buttons.createSecondaryButton(Width.HALF, Height.THREE_FIFTH,
                 self.messages.get(KEY, CANCEL), function () {
                     self.events.fire(Event.FULL_SCREEN, true);
-                });
+                }, 10);
 
             // full screen hack for IE11, it accepts only calls from some DOM elements like button, link or div NOT canvas
             var screenElement = document.getElementsByTagName('canvas')[0];
@@ -49,11 +55,24 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
 
             installOneTimeTap(wrapper, function (event) {
                 wrapper.parentNode.replaceChild(screenElement, wrapper);
-                if (isHit({
+                if (event.clientX != undefined && event.clientY != undefined && isHit({
                         x: event.clientX,
                         y: event.clientY
                     }, cancelBtn.input)) {
                     return;
+                } else {
+                    var touches = event.changedTouches;
+                    if (touches) {
+                        for (var i = 0; i < touches.length; i++) {
+                            var touch = touches[i];
+                            if (isHit({
+                                    x: touch.clientX,
+                                    y: touch.clientY
+                                }, cancelBtn.input)) {
+                                return;
+                            }
+                        }
+                    }
                 }
                 self.device.requestFullScreen();
             });

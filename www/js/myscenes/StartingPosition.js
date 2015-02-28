@@ -11,11 +11,13 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
     var ENERGY_FULL = 'energy_full';
 
     StartingPosition.prototype.show = function (nextScene) {
-        drawSharedGameStuff(this.stage, this.sceneStorage);
+        drawSharedGameStuff(this.stage, this.sceneStorage, this.sceneStorage.do30fps);
 
         var self = this;
         var spacing = Transition.EASE_IN_OUT_ELASTIC;
         var speed = 60;
+        if (this.sceneStorage.do30fps)
+            speed /= 2;
 
         function lifeX(width) {
             return calcScreenConst(width, 10);
@@ -34,21 +36,30 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
             return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE) * 2;
         }
 
+        var numberOfCallbacks = 0;
         function moveLifeLater(xFn, delay) {
+            numberOfCallbacks++;
             return self.stage.moveFreshLater(lifeStartX, Height.TOP_RASTER, PLAYER_LIFE, xFn, Height.TOP_RASTER, speed,
-                spacing,
-                delay, false, goodToGo);
+                spacing, delay, false, goodToGo);
         }
 
-        var lifeOneWrapper = moveLifeLater(lifeX, 20);
-        var lifeTwoWrapper = moveLifeLater(lifeTwoEndX, 15);
-        var lifeThreeWrapper = moveLifeLater(lifeThreeEndX, 10);
+        var lifeDrawablesDict = {};
+        //noinspection FallThroughInSwitchStatementJS
+        switch (self.sceneStorage.userLives) {
+            case 3:
+                lifeDrawablesDict[3] = moveLifeLater(lifeThreeEndX, 10);
+            case 2:
+                lifeDrawablesDict[2] = moveLifeLater(lifeTwoEndX, 15);
+            case 1:
+                lifeDrawablesDict[1] = moveLifeLater(lifeX, 20);
+        }
 
         function energyStartX(width) {
             var x = EnergyBar.getX(width);
             return x - x * 2;
         }
 
+        numberOfCallbacks++;
         var energyBarWrapper = self.stage.moveFresh(energyStartX, EnergyBar.getY, ENERGY_FULL, EnergyBar.getX,
             EnergyBar.getY, speed, spacing, false, goodToGo);
 
@@ -57,6 +68,7 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         }
 
         function moveDigitLater(xFn, delay, dependencies, callback) {
+            numberOfCallbacks++;
             return self.stage.moveFreshTextLater(add(xFn, getScreenOffSet), ScoreBoard.getY, '0', ScoreBoard.getSize,
                 ScoreBoard.font, ScoreBoard.color, xFn, ScoreBoard.getY, speed, spacing, delay, false, goodToGo,
                 callback, dependencies);
@@ -74,20 +86,13 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
                 dependencies);
         });
 
-        var numberOfCallbacks = 8;
-
         function goodToGo() {
             if (--numberOfCallbacks > 0)
                 return;
 
-            var lifeDrawablesDict = {
-                1: lifeOneWrapper.drawable,
-                2: lifeTwoWrapper.drawable,
-                3: lifeThreeWrapper.drawable
-            };
             var countDrawables = [
-                fourthDigitWrapper.drawable,
-                secondDigitWrapper.drawable, thirdDigitWrapper.drawable, firstDigitWrapper.drawable
+                firstDigitWrapper.drawable,
+                secondDigitWrapper.drawable, thirdDigitWrapper.drawable, fourthDigitWrapper.drawable
             ];
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);

@@ -1,10 +1,9 @@
-var EnergyBarView = (function (Transition) {
+var EnergyBarView = (function (Transition, Math) {
     "use strict";
 
-    var TIME = 120;
-    var LAST_TICK = TIME - 1;
+    var TIME = 15;
 
-    function EnergyBarView(stage, drawable) {
+    function EnergyBarView(stage, drawable, level, is30fps) {
         this.stage = stage;
         this.drawable = drawable;
         var self = this;
@@ -37,9 +36,11 @@ var EnergyBarView = (function (Transition) {
         }
 
         this.stage.mask(drawable, getA_x, getA_y, getB_x, getB_y);
-
-        this.loadAnimation = this.stage.getAnimation(0, this.drawable.getWidth(), TIME, Transition.LINEAR, false);
-        this.drainAnimation = this.stage.getAnimation(this.drawable.getWidth(), 0, TIME, Transition.LINEAR, false);
+        var time = TIME * level;
+        var speed = is30fps ? Math.floor(time / 2) : time;
+        this.lastTick = speed - 1;
+        this.loadAnimation = this.stage.getAnimation(0, this.drawable.getWidth(), speed, Transition.LINEAR, false);
+        this.drainAnimation = this.stage.getAnimation(this.drawable.getWidth(), 0, speed, Transition.LINEAR, false);
     }
 
     EnergyBarView.prototype.drain = function (callback) {
@@ -53,16 +54,19 @@ var EnergyBarView = (function (Transition) {
     EnergyBarView.prototype.__animateMaskWidth = function (animation, callback) {
         var self = this;
         var position = 0;
-        if (this.stage.stage.animations.has(this.drawable))
-            position = LAST_TICK - this.stage.stage.animations.dict[this.drawable.id].time;
+        if (this.stage.stage.animations.has(this.drawable)) {
+            position = this.lastTick - this.stage.stage.animations.dict[this.drawable.id][0].time;
+        }
 
+        this.stage.stage.animations.remove(this.drawable);
         this.stage.basicAnimation(this.drawable, function (value) {
             self.drawable.mask.width = value;
         }, animation, callback);
 
-        this.stage.stage.animations.dict[this.drawable.id].time = position;
+        this.stage.stage.animations.dict[this.drawable.id][0].time = position;
+
         this.drawable.mask.width = Transition.LINEAR(position, animation.start, animation.length, animation.duration);
     };
 
     return EnergyBarView;
-})(Transition);
+})(Transition, Math);

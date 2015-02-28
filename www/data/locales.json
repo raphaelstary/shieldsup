@@ -30,7 +30,7 @@
         "ok": "ok",
         "full_screen": "full screen",
         "sound": "sound",
-        "music": "music",
+        "no_sound": "sound not supported",
         "language": "language",
         "on": "on",
         "off": "off"
@@ -48,7 +48,10 @@
       },
       "splash_screen": {
         "start": "start"
-        }
+      },
+      "obstacles_view": {
+        "wave": "wave"
+      }
     },
     "de": {
       "display_name": "Deutsch",
@@ -80,8 +83,8 @@
       "settings": {
         "ok": "ok",
         "full_screen": "Fullscreen",
-        "sound": "Soundeffekte",
-        "music": "Musik",
+        "sound": "Ton",
+        "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
         "language": "Sprache",
         "on": "An",
         "off": "Aus"
@@ -99,6 +102,9 @@
       },
       "splash_screen": {
         "start": "start"
-        }
+      },
+      "obstacles_view": {
+        "wave": "Welle"
+      }
     }
 }

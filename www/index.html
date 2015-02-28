@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Crappy Space Miner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimal-ui">
+    <link rel="icon" href="favicon.ico">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="css/app.css">
@@ -17,6 +18,7 @@
 <script src="js/highfivejs/utils/concatenateProperties.js"></script>
 <script src="js/highfivejs/utils/getFunctionName.js"></script>
 <script src="js/highfivejs/utils/Vectors.js"></script>
+<script src="js/highfivejs/platform/Stats.js"></script>
 <script src="js/highfivejs/screen/getDevicePixelRatio.js"></script>
 <script src="js/highfivejs/app/Event.js"></script>
 
@@ -131,6 +133,7 @@
 <script src="js/highfivejs/scene/SceneManager.js"></script>
 
 <!--my scenes start-->
+<script src="js/myscenes/component/checkAndSet30fps.js"></script>
 <script src="js/myscenes/viewhelper/ScoreBoard.js"></script>
 
 <script src="js/myscenes/component/CollectView.js"></script>
@@ -157,6 +160,7 @@
 
 <script src="js/myscenes/Settings.js"></script>
 <script src="js/myscenes/showSettings.js"></script>
+<script src="js/myscenes/ShowSettingsEvented.js"></script>
 <script src="js/myscenes/Credits.js"></script>
 <script src="js/myscenes/GetReady.js"></script>
 <script src="js/myscenes/GoFullScreen.js"></script>
@@ -181,11 +185,13 @@
 <script src="js/highfivejs/screen/ResizeHandler.js"></script>
 <script src="js/highfivejs/screen/SimpleLoadingScreen.js"></script>
 <script src="js/highfivejs/screen/OrientationHandler.js"></script>
+<script src="js/highfivejs/screen/VisibilityHandler.js"></script>
 <script src="js/highfivejs/screen/FullScreenHandler.js"></script>
 <script src="js/highfivejs/net/ResourceLoader.js"></script>
 <script src="js/highfivejs/platform/bootstrap/installCanvas.js"></script>
 <script src="js/highfivejs/screen/bootstrap/installResize.js"></script>
 <script src="js/highfivejs/screen/bootstrap/installOrientation.js"></script>
+<script src="js/highfivejs/screen/bootstrap/installVisibility.js"></script>
 <script src="js/highfivejs/screen/bootstrap/installFullScreen.js"></script>
 <script src="js/highfivejs/input/bootstrap/installPointer.js"></script>
 <script src="js/highfivejs/input/bootstrap/installKeyBoard.js"></script>

@@ -8,7 +8,10 @@ var KillScreen = (function () {
     }
 
     var FINAL_EXPLOSION = 'final_explosion/final_explosion';
-    var SHIP_EXPLOSION = 'ship-explosion';
+    var SHIP_EXPLOSION = 'radio_stager_01';
+    var SHIP_HIT = 'slamming_metal_lid';
+    var STAR_EXPLOSION = 'booming_reverse_01';
+    var ASTEROID_EXPLOSION = 'booming_rumble';
 
     KillScreen.prototype.show = function (nextScene) {
         var speedStripes = this.sceneStorage.speedStripes;
@@ -25,10 +28,12 @@ var KillScreen = (function () {
             self.stage.remove(speedStripeWrapper.drawable);
         });
 
-        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 22, false);
+        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 10, false);
         self.stage.remove(fire.left);
         self.stage.remove(fire.right);
-
+        self.sounds.play(SHIP_HIT);
+        self.sounds.play(STAR_EXPLOSION);
+        self.sounds.play(ASTEROID_EXPLOSION);
         self.sounds.play(SHIP_EXPLOSION);
         self.stage.animate(shipDrawable, explosionSprite, function () {
             self.stage.remove(shipDrawable);

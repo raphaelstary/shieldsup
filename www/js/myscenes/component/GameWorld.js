@@ -2,11 +2,13 @@ var GameWorld = (function (Object) {
     "use strict";
 
     var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
-    var ASTEROID_EXPLOSION = 'asteroid-explosion';
-    var STAR_EXPLOSION = 'star-explosion';
+    var ASTEROID_EXPLOSION = 'booming_rumble';
+    var SHIP_HIT = 'slamming_metal_lid';
+    var STAR_EXPLOSION = 'booming_reverse_01';
+    var COLLECT_STAR = 'kids_cheering';
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, lifeDrawablesDict, endGame,
+        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame,
         sounds, shipHitView, shieldsHitView, livesView) {
         this.stage = stage;
         this.trackedAsteroids = trackedAsteroids;
@@ -23,7 +25,6 @@ var GameWorld = (function (Object) {
         this.shieldsDrawable = shieldsDrawable;
 
         this.shaker = screenShaker;
-        this.lifeDrawablesDict = lifeDrawablesDict;
         this.endGame = endGame;
 
         this.sounds = sounds;
@@ -33,12 +34,16 @@ var GameWorld = (function (Object) {
         this.livesView = livesView;
 
         this.shieldsOn = false; //part of global game state
-        this.lives = 3; //3; //part of global game state
-        this.initialLives = this.lives;
+        this.lives = initialLives; //3; //part of global game state
+        this.initialLives = initialLives;
         this.points = 0; //part of global game state
 
         this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
     }
+
+    GameWorld.prototype.reset = function () {
+        this.scoreDisplay.reset();
+    };
 
     GameWorld.prototype.checkCollisions = function () {
         var self = this;
@@ -96,8 +101,8 @@ var GameWorld = (function (Object) {
             }
 
             if (needPreciseCollisionDetection(this.shipDrawable, star) && this.shipCollision.isHit(star)) {
-                this.sounds.play('coin');
-                this.collectAnimator.collectStar(this.lives);
+                this.sounds.play(COLLECT_STAR);
+                this.collectAnimator.collectStar();
                 this.scoreAnimator.showScoredPoints(star.x, star.y);
                 var score = 10;
                 this.scoreDisplay.addScore(score);
@@ -112,12 +117,12 @@ var GameWorld = (function (Object) {
     };
 
     GameWorld.prototype._shipGotHit = function () {
-        var self = this;
-        var currentLife = this.lives;
-        self.livesView.remove(currentLife);
-
         if (--this.lives > 0) {
-            self.sounds.play(ASTEROID_EXPLOSION);
+            var self = this;
+            var currentLife = this.lives;
+            self.livesView.remove(currentLife);
+        
+            self.sounds.play(SHIP_HIT);
             self.shipHitView.hit();
         }
     };

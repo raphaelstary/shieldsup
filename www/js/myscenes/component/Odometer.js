@@ -7,6 +7,10 @@ var Odometer = (function (Math) {
         this.totalScore = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     }
 
+    Odometer.prototype.reset = function () {
+        this.view.reset();
+    };
+
     Odometer.prototype.addScore = function (score) {
         var self = this;
         var scoreString = score.toString();
@@ -31,13 +35,13 @@ var Odometer = (function (Math) {
 
             for (var step = 0; step < delta; step++) {
 
-                var oldValue = (currentDigit + step) % 10;
-                var newValue = (currentDigit + 1 + step) % 10;
-                self.view.animateTransition(digitPosition, oldValue, newValue);
-
                 if ((currentDigit + step) % 10 === newDigit) {
                     break;
                 }
+
+                var oldValue = (currentDigit + step) % 10;
+                var newValue = (currentDigit + 1 + step) % 10;
+                self.view.animateTransition(digitPosition, oldValue, newValue);
             }
 
             self.totalScore[digitPosition] = newDigit;

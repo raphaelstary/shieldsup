@@ -1,10 +1,11 @@
 var LivesView = (function (calcScreenConst, Transition) {
     "use strict";
 
-    function LivesView(stage, livesDict, shaker) {
+    function LivesView(stage, livesDict, shaker, is30fps) {
         this.stage = stage;
         this.livesDict = livesDict;
         this.shaker = shaker;
+        this.is30fps = is30fps;
     }
 
     LivesView.prototype.remove = function (lifeNr) {
@@ -19,7 +20,7 @@ var LivesView = (function (calcScreenConst, Transition) {
         }
 
         var self = this;
-        var DURATION = 15;
+        var DURATION = this.is30fps ? 7 : 15;
         this.stage.move(life, getX, getEndY, DURATION, Transition.LINEAR, false, function () {
             self.stage.remove(life);
             self.shaker.remove(life);

@@ -1,9 +1,9 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
     PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event,
-    TapManager) {
+    TapManager, ShowSettingsEvented) {
     "use strict";
 
-    var CLICK = 'click';
+    var CLICK = 'computer_data_03';
     var FONT = 'GameFont';
     var WHITE = '#fff';
     var VIOLET = '#3a2e3f';
@@ -11,7 +11,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     function installMyScenes(sceneServices) {
 
         // custom game services START
-        var shaker = new ScreenShaker();
+        var shaker = new ScreenShaker(sceneServices.device);
         sceneServices.events.subscribe(Event.RESIZE, shaker.resize.bind(shaker));
         sceneServices.events.subscribe(Event.TICK_MOVE, shaker.update.bind(shaker));
         sceneServices.shaker = shaker;
@@ -19,15 +19,17 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var tap = new TapManager();
         sceneServices.events.subscribe(Event.POINTER, tap.inputChanged.bind(tap));
 
-        sceneServices.buttons = new ButtonFactory(sceneServices.stage, tap, sceneServices.timer, FONT,
-            function () {
+        sceneServices.buttons = new ButtonFactory(sceneServices.stage, tap, sceneServices.timer, FONT, function () {
                 sceneServices.sounds.play(CLICK);
-            }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2, 8);
+            }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2);
+
+        sceneServices.sceneStorage.sfxOn = true;
 
         // custom game services END
 
         var goFullScreen = new GoFullScreen(sceneServices);
         var rotateDevice = new RotateDevice(sceneServices);
+        var settingsEvented = new ShowSettingsEvented(sceneServices);
         var splashScreen = new SplashScreen(sceneServices);
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
@@ -41,6 +43,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var sceneManager = new SceneManager();
         sceneManager.add(goFullScreen.show.bind(goFullScreen), true);
         sceneManager.add(rotateDevice.show.bind(rotateDevice), true);
+        sceneManager.add(settingsEvented.show.bind(settingsEvented), true);
         sceneManager.add(splashScreen.show.bind(splashScreen), true);
         sceneManager.add(intro.show.bind(intro), true);
         sceneManager.add(preGame.show.bind(preGame), true);
@@ -56,4 +59,5 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
-    ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event, TapManager);
+    ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event, TapManager,
+    ShowSettingsEvented);

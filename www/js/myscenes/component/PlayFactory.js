@@ -1,30 +1,30 @@
-var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer,
-    OdometerView, CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld) {
+var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView,
+    CollectView, ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld, Object) {
     "use strict";
 
-    function createLevel(stage, trackedAsteroids, trackedStars) {
-        var obstaclesView = new ObstaclesView(stage, trackedAsteroids, trackedStars);
-        return new LevelGenerator(obstaclesView);
+    function createLevel(stage, trackedAsteroids, trackedStars, messages, is30fps) {
+        var obstaclesView = new ObstaclesView(stage, trackedAsteroids, trackedStars, messages, is30fps);
+        return new LevelGenerator(obstaclesView, is30fps);
     }
 
     function createEnergyStateMachine(stage, sounds, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
-        shieldsDownSprite) {
-        var energyBarView = new EnergyBarView(stage, energyBarDrawable);
+        shieldsDownSprite, shieldsMaxEnergyLevel_OneToFour, is30fps) {
+        var energyBarView = new EnergyBarView(stage, energyBarDrawable, shieldsMaxEnergyLevel_OneToFour, is30fps);
         return new EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
             energyBarView);
     }
 
     function createWorld(stage, sounds, timer, shaker, countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable,
-        trackedAsteroids, trackedStars, shipCollision, shieldsCollision, endGame) {
-        var scoreDisplay = new Odometer(new OdometerView(stage, countDrawables, shaker));
-        var collectAnimator = new CollectView(stage, shipDrawable, shaker);
-        var scoreAnimator = new ScoreView(stage);
-        var hullHitView = new ShipHitView(stage, shipDrawable, timer, shaker);
-        var livesView = new LivesView(stage, lifeDrawablesDict, shaker);
-        var shieldsHitView = new ShieldsHitView(stage, shieldsDrawable, timer, shaker);
+        trackedAsteroids, trackedStars, shipCollision, shieldsCollision, endGame, is30fps) {
+        var scoreDisplay = new Odometer(new OdometerView(stage, countDrawables, shaker, is30fps));
+        var collectAnimator = new CollectView(stage, shipDrawable, shaker, is30fps);
+        var scoreAnimator = new ScoreView(stage, is30fps);
+        var hullHitView = new ShipHitView(stage, shipDrawable, timer, shaker, is30fps);
+        var livesView = new LivesView(stage, lifeDrawablesDict, shaker, is30fps);
+        var shieldsHitView = new ShieldsHitView(stage, shieldsDrawable, timer, shaker, is30fps);
         return new GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-            shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker, lifeDrawablesDict, endGame, sounds,
-            hullHitView, shieldsHitView, livesView);
+            shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker,
+            Object.keys(lifeDrawablesDict).length, endGame, sounds, hullHitView, shieldsHitView, livesView);
     }
 
     return {
@@ -32,5 +32,5 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         createEnergyStateMachine: createEnergyStateMachine,
         createWorld: createWorld
     };
-})(ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView,
-    ScoreView, ShipHitView, LivesView, ShieldsHitView, GameWorld);
+})(ObstaclesView, LevelGenerator, EnergyBarView, EnergyStateMachine, Odometer, OdometerView, CollectView, ScoreView,
+    ShipHitView, LivesView, ShieldsHitView, GameWorld, Object);

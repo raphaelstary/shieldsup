@@ -27,12 +27,14 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', function () {
+        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+
+        function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                resume);
-        });
+                self.sounds, resume);
+        }
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -44,16 +46,14 @@ var PlayGame = (function ($) {
                 shipDrawable,
                 shieldsDrawable,
                 energyBarDrawable,
-                lifeDrawablesDict[1],
-                lifeDrawablesDict[2],
-                lifeDrawablesDict[3],
                 fireDict.left,
                 fireDict.right
             ].forEach(add);
-            countDrawables.forEach(add);
+            //countDrawables.forEach(add);
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
+            $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
         setupShaker();
@@ -61,7 +61,8 @@ var PlayGame = (function ($) {
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars);
+        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.messages,
+            self.sceneStorage.do30fps);
         var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
@@ -71,14 +72,11 @@ var PlayGame = (function ($) {
 
         var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame);
+            shieldsCollision, endGame, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
-
-        shieldsDrawable.x = shipDrawable.x;
-        shieldsDrawable.y = shipDrawable.y;
-
+        var playerShieldsLevel = 1;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, self.sceneStorage.do30fps);
 
         var pushRelease;
         var padId;
@@ -88,7 +86,9 @@ var PlayGame = (function ($) {
             var isPush = false;
             var pushingPointerId;
             pushRelease = self.events.subscribe($.Event.POINTER, function (pointer) {
-                if (!isPush && pushingPointerId == undefined) {
+                if (isPaused)
+                    return;
+                if (!isPush && pushingPointerId == undefined && pointer.type == 'down') {
                     pushingPointerId = pointer.id;
                     isPush = true;
                     energyStates.drainEnergy();
@@ -123,6 +123,37 @@ var PlayGame = (function ($) {
 
         registerPushRelease();
 
+        var goFs = false;
+        var showGoFs = self.events.subscribe($.Event.SHOW_GO_FULL_SCREEN, function () {
+            goFs = true;
+        });
+
+        var hideGoFs = self.events.subscribe($.Event.REMOVE_GO_FULL_SCREEN, function () {
+            goFs = false;
+        });
+        var rotation = false;
+        var showRotation = self.events.subscribe($.Event.SHOW_ROTATE_DEVICE, function () {
+            rotation = true;
+        });
+
+        var hideRotation = self.events.subscribe($.Event.REMOVE_ROTATE_DEVICE, function () {
+            rotation = false;
+        });
+
+        var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
+            if (hidden) {
+                if (!isPaused)
+                    self.sceneStorage.shouldShowSettings = true;
+            } else {
+                self.timer.doLater(function () {
+                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowSettings = false;
+                        doThePause();
+                    }
+                }, 2);
+            }
+        });
+
         var resumeId = self.events.subscribe($.Event.RESUME, registerPushRelease);
         var pauseId = self.events.subscribe($.Event.PAUSE, function () {
             self.events.unsubscribe(pushRelease);
@@ -130,16 +161,25 @@ var PlayGame = (function ($) {
             self.events.unsubscribe(keyId);
         });
 
+        var isPaused = false;
+
         function pause() {
             self.stage.hide(pauseButton.text);
+            isPaused = true;
         }
 
         function resume() {
             self.stage.show(pauseButton.text);
             pauseButton.used = false;
+            isPaused = false;
         }
 
+        var itIsOver = false;
         function endGame(points) {
+            if (itIsOver)
+                return;
+            itIsOver = true;
+
             function removeEverything() {
                 self.buttons.remove(pauseButton);
 
@@ -157,10 +197,18 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(keyId);
                 self.events.unsubscribe(resumeId);
                 self.events.unsubscribe(pauseId);
-                self.shaker.reset();
+                world.reset();
+                self.shaker.reset(self.sceneStorage.do30fps);
                 self.stage.detachCollisionDetector(shipCollision);
                 self.stage.detachCollisionDetector(shieldsCollision);
                 self.stage.remove(anotherShieldsDrawable);
+                self.stage.remove(shieldsDrawable);
+
+                self.events.unsubscribe(visible);
+                self.events.unsubscribe(showGoFs);
+                self.events.unsubscribe(hideGoFs);
+                self.events.unsubscribe(showRotation);
+                self.events.unsubscribe(hideRotation);
             }
 
             removeEverything();
@@ -180,6 +228,8 @@ var PlayGame = (function ($) {
         delete this.sceneStorage.lives;
 
         this.sceneStorage.points = points;
+
+        this.sounds.stop(this.sceneStorage.music);
 
         nextScene();
     };

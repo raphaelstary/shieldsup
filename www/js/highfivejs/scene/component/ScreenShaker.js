@@ -1,19 +1,25 @@
-var ScreenShaker = (function (Math, Object) {
+var ScreenShaker = (function (Math, Object, calcScreenConst) {
     "use strict";
 
-    function ScreenShaker() {
+    function ScreenShaker(device) {
         this.shaker = {};
+        this.device = device;
         this.__init();
     }
 
-    ScreenShaker.prototype.__init = function () {
+    ScreenShaker.prototype.__init = function (is30fps) {
         this.shaking = false;
         this.smallShaking = false;
         this.bigShaking = false;
 
         this.time = 0;
-        this.duration = 60;
+        this.duration = is30fps ? 30 : 60;
         this.lastOffSetY = 0;
+
+        this.__150 = calcScreenConst(this.device.height, 480, 150);
+        this.__50 = calcScreenConst(this.device.height, 480, 50);
+        this.__25 = calcScreenConst(this.device.height, 480, 25);
+        this.__5 = calcScreenConst(this.device.height, 480, 5);
     };
 
     ScreenShaker.prototype.startBigShake = function () {
@@ -25,7 +31,8 @@ var ScreenShaker = (function (Math, Object) {
 
             Object.keys(this.shaker).forEach(function (key) {
                 var item = self.shaker[key];
-                item.x = item._startValueX;
+                if (item._startValueX != undefined)
+                    item.x = item._startValueX;
             });
 
             if (this.bigShaking) {
@@ -50,7 +57,8 @@ var ScreenShaker = (function (Math, Object) {
             }
             Object.keys(this.shaker).forEach(function (key) {
                 var item = self.shaker[key];
-                item.x = item._startValueX;
+                if (item._startValueX != undefined)
+                    item.x = item._startValueX;
             });
         }
 
@@ -63,13 +71,14 @@ var ScreenShaker = (function (Math, Object) {
         if (this.shaking) {
             var self = this;
             if (this.smallShaking) {
-                var offSet = elasticOutShake(this.time, this.duration, 25, 5);
+                var offSet = elasticOutShake(this.time, this.duration, this.__25, this.__5);
 
                 Object.keys(this.shaker).forEach(function (key) {
                     var item = self.shaker[key];
-                    if (self.time == 0) {
+                    if (self.time == 0 || item._startValueX == undefined) {
                         item._startValueX = item.x;
                     }
+
                     if (offSet != 0) {
                         item.x = item._startValueX + offSet;
                     } else {
@@ -78,14 +87,14 @@ var ScreenShaker = (function (Math, Object) {
                 });
 
             } else if (this.bigShaking) {
-                var amplitude = 150;
-                var period = 5;
-                var offSetX = elasticOutShake(this.time, this.duration, amplitude - 50, period + 5);
+                var amplitude = this.__150;
+                var period = this.__5;
+                var offSetX = elasticOutShake(this.time, this.duration, amplitude - this.__50, period + this.__5);
                 var offSetY = elasticOutShake(this.time, this.duration, amplitude, period);
 
                 Object.keys(this.shaker).forEach(function (key) {
                     var item = self.shaker[key];
-                    if (self.time == 0) {
+                    if (self.time == 0 || item._startValueX == undefined) {
                         item._startValueX = item.x;
 //                            item._startValueY = item.y;
                         self.lastOffSetY = 0;
@@ -143,7 +152,12 @@ var ScreenShaker = (function (Math, Object) {
         delete this.shaker[drawable.id];
     };
 
-    ScreenShaker.prototype.resize = function () {
+    ScreenShaker.prototype.resize = function (event) {
+        this.bigShaking = false;
+        this.smallShaking = false;
+        this.shaking = false;
+        this.time = 0;
+        
         var self = this;
         Object.keys(this.shaker).forEach(function (key) {
             var item = self.shaker[key];
@@ -151,12 +165,17 @@ var ScreenShaker = (function (Math, Object) {
                 item._startValueX = item.x;
             }
         });
+
+        this.__150 = calcScreenConst(event.height, 480, 150);
+        this.__50 = calcScreenConst(event.height, 480, 50);
+        this.__25 = calcScreenConst(event.height, 480, 25);
+        this.__5 = calcScreenConst(event.height, 480, 5);
     };
 
-    ScreenShaker.prototype.reset = function () {
+    ScreenShaker.prototype.reset = function (is30fps) {
         this.shaker = {};
-        this.__init();
+        this.__init(is30fps);
     };
 
     return ScreenShaker;
-})(Math, Object);
+})(Math, Object, calcScreenConst);
