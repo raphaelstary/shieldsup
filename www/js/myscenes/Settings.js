@@ -20,6 +20,8 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
     var LANGUAGE = 'language';
     var ON = 'on';
     var OFF = 'off';
+    var CREDITS = 'credits';
+    var RESET_GAME = 'reset_game';
 
     var FONT = 'GameFont';
     var WHITE = '#fff';
@@ -48,7 +50,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                 if (self.device.isFullScreenSupported()) {
                     fsText = getMenuText(Height.get(20, 4), FULL_SCREEN);
-                    var fsOn = getOnButton(Height.get(20, 5), function () {
+                    var fsOn = getOnButton(Height.get(20, 4), function () {
                         resetButton(fsOff);
                         styleSelectButton(fsOn);
 
@@ -57,7 +59,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
 
                     }, self.device.isFullScreen());
                     sceneButtons.push(fsOn);
-                    var fsOff = getOffButton(Height.get(20, 5), function () {
+                    var fsOff = getOffButton(Height.get(20, 4), function () {
                         resetButton(fsOn);
                         styleSelectButton(fsOff);
 
@@ -68,8 +70,8 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 if (self.sounds.isSupported()) {
-                    soundText = getMenuText(Height.get(20, 7), SOUND);
-                    var sfxOn = getOnButton(Height.get(20, 8), function () {
+                    soundText = getMenuText(Height.get(40, 13), SOUND);
+                    var sfxOn = getOnButton(Height.get(40, 13), function () {
                         resetButton(sfxOff);
                         styleSelectButton(sfxOn);
 
@@ -77,7 +79,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                         self.sceneStorage.sfxOn = true;
                     }, self.sceneStorage.sfxOn);
                     sceneButtons.push(sfxOn);
-                    var sfxOff = getOffButton(Height.get(20, 8), function () {
+                    var sfxOff = getOffButton(Height.get(40, 13), function () {
                         resetButton(sfxOn);
                         styleSelectButton(sfxOff);
 
@@ -86,30 +88,30 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                     }, !self.sceneStorage.sfxOn);
                     sceneButtons.push(sfxOff);
                 } else {
-                    soundText = getMenuText(Height.get(20, 7), NO_SOUND);
+                    soundText = getMenuText(Height.get(40, 13), NO_SOUND);
                 }
 
-                languageText = getMenuText(Height.get(20, 13), LANGUAGE);
+                languageText = getMenuText(Height.get(40, 18), LANGUAGE);
 
                 var raster = [
                     {
-                        x: Width.get(10, 3),
-                        y: Height.get(20, 14)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 18)
                     }, {
-                        x: Width.get(10, 7),
-                        y: Height.get(20, 14)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 21)
                     }, {
-                        x: Width.get(10, 3),
-                        y: Height.get(40, 31)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 24)
                     }, {
-                        x: Width.get(10, 7),
-                        y: Height.get(40, 31)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 27)
                     }, {
-                        x: Width.get(10, 3),
-                        y: Height.get(40, 34)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 30)
                     }, {
-                        x: Width.get(10, 7),
-                        y: Height.get(40, 34)
+                        x: Width.get(40, 29),
+                        y: Height.get(40, 33)
                     }
                 ];
 
@@ -145,7 +147,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 function getMenuText(yFn, msgKey) {
-                    var drawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(SETTINGS_KEY, msgKey),
+                    var drawable = self.stage.drawText(Width.THIRD, yFn, self.messages.get(SETTINGS_KEY, msgKey),
                         Font._30, FONT, WHITE, 8);
                     self.messages.add(drawable, drawable.data, SETTINGS_KEY, msgKey);
 
@@ -153,15 +155,15 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                 }
 
                 function getOnButton(yFn, callback, selected) {
-                    return getOnOffButton(Width.get(10, 4), yFn, ON, callback, selected);
+                    return getOnOffButton(Width.get(40, 25), yFn, ON, callback, selected);
                 }
 
                 function getOffButton(yFn, callback, selected) {
-                    return getOnOffButton(Width.get(10, 6), yFn, OFF, callback, selected);
+                    return getOnOffButton(Width.get(10, 8), yFn, OFF, callback, selected);
                 }
 
                 function getLanguageButton(xFn, yFn, msg, callback, selected) {
-                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback, 7);
+                    var button = self.buttons.createSecondaryButton(xFn, yFn, msg, callback, 7, false, Width.THIRD);
                     button.reset = false;
                     if (selected) {
                         styleSelectButton(button);
@@ -182,11 +184,20 @@ var Settings = (function (Width, Height, changeSign, Transition, Event) {
                     return button;
                 }
 
-                var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(20, 18),
+                var resetGameButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(20, 13),
+                    self.messages.get(SETTINGS_KEY, RESET_GAME), hideSettings, 7);
+                self.messages.add(resetGameButton.text, resetGameButton.text.data, SETTINGS_KEY, RESET_GAME);
+                sceneButtons.push(resetGameButton);
+
+                var creditsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(20, 15),
+                    self.messages.get(SETTINGS_KEY, CREDITS), hideSettings, 7);
+                self.messages.add(creditsButton.text, creditsButton.text.data, SETTINGS_KEY, CREDITS);
+                sceneButtons.push(creditsButton);
+
+                var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(40, 35),
                     self.messages.get(SETTINGS_KEY, OK), hideSettings, 7);
                 self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
                 sceneButtons.push(resumeButton);
-
             });
         }
 

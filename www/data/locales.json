@@ -33,7 +33,9 @@
             "no_sound": "sound not supported",
             "language": "language",
             "on": "on",
-            "off": "off"
+            "off": "off",
+            "credits": "credits",
+            "reset_game": "reset game"
         },
         "go_full_screen": {
             "exit_full_screen": "exit full screen?",
@@ -93,7 +95,9 @@
             "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
             "language": "Sprache",
             "on": "An",
-            "off": "Aus"
+            "off": "Aus",
+            "credits": "Credits",
+            "reset_game": "Spiel zur\u00DCcksetzen"
         },
         "go_full_screen": {
             "exit_full_screen": "Fullscreen beenden?",

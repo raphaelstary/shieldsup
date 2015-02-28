@@ -64,10 +64,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
         ship.rotation = Math.PI / 4;
         var shields = this.stage.drawFresh(Width.get(10, 3), Height.get(10, 5), SHIELDS);
         shields.rotation = Math.PI / 4;
-        var logo = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
-            DARK_GRAY);
-        var logoHighlight = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15,
-            SPECIAL_FONT, WHITE, 4);
+        var logo = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15, SPECIAL_FONT, DARK_GRAY, 4);
+        var logoHighlight = this.stage.drawText(Width.HALF, Height.QUARTER, GAME_LOGO_TXT, Font._15, SPECIAL_FONT,
+            WHITE, 5);
         var fireDict = Fire.draw(this.stage, ship);
         var offSetX = ship.x - Fire.getLeftX(ship);
         fireDict.left.rotationAnchorOffsetX = offSetX;
@@ -150,7 +149,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             removeSceneStuff();
 
             var goFsScreen = false;
+            var shouldShowGoFsScreen = false;
             var rotateScreen = false;
+            var shouldShowRotateScreen = false;
 
             var usedOnce = false;
             self.events.subscribe(Event.FULL_SCREEN, function (isFullScreen) {
@@ -161,7 +162,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     }
                     goFsScreen = false;
                     self.events.fire(Event.REMOVE_GO_FULL_SCREEN);
-                    if (!rotateScreen) {
+                    if (!rotateScreen && !shouldShowRotateScreen) {
                         if (self.sceneStorage.settingsOn) {
                             self.events.fire(Event.RESUME_SETTINGS);
                         } else if (self.sceneStorage.shouldShowSettings) {
@@ -170,13 +171,19 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         } else {
                             self.events.fire(Event.RESUME);
                         }
+                    } else if (shouldShowRotateScreen) {
+                        shouldShowRotateScreen = false;
+                        rotateScreen = true;
+                        self.events.fire(Event.SHOW_ROTATE_DEVICE);
                     }
                 } else {
                     if (!rotateScreen) {
                         self.events.fireSync(Event.PAUSE);
+                        goFsScreen = true;
+                        self.events.fire(Event.SHOW_GO_FULL_SCREEN);
+                    } else {
+                        shouldShowGoFsScreen = true;
                     }
-                    goFsScreen = true;
-                    self.events.fire(Event.SHOW_GO_FULL_SCREEN);
                 }
             });
 
@@ -189,7 +196,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     if (orientation === Orientation.PORTRAIT) {
                         rotateScreen = false;
                         self.events.fire(Event.REMOVE_ROTATE_DEVICE);
-                        if (!goFsScreen) {
+                        if (!goFsScreen && !shouldShowGoFsScreen) {
                             if (self.sceneStorage.settingsOn) {
                                 self.events.fire(Event.RESUME_SETTINGS);
                             } else if (self.sceneStorage.shouldShowSettings) {
@@ -198,13 +205,19 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                             } else {
                                 self.events.fire(Event.RESUME);
                             }
+                        } else if (shouldShowGoFsScreen) {
+                            shouldShowGoFsScreen = false;
+                            goFsScreen = true;
+                            self.events.fire(Event.SHOW_GO_FULL_SCREEN);
                         }
                     } else {
                         if (!goFsScreen) {
                             self.events.fireSync(Event.PAUSE);
+                            rotateScreen = true;
+                            self.events.fire(Event.SHOW_ROTATE_DEVICE);
+                        } else {
+                            shouldShowRotateScreen = true;
                         }
-                        rotateScreen = true;
-                        self.events.fire(Event.SHOW_ROTATE_DEVICE);
                     }
                 });
 
