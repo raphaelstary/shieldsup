@@ -1,4 +1,4 @@
-var ButtonFactory = (function () {
+var ButtonFactory = (function (Math) {
     "use strict";
 
     function ButtonFactory(stage, input, timer, font, playSoundCallback, primaryColor, primaryTextColor,
@@ -63,7 +63,7 @@ var ButtonFactory = (function () {
         }
 
         function getHeight() {
-            return textDrawable.getHeight() * 2;
+            return Math.floor(textDrawable.getHeight() * 2.5);
         }
 
         var backgroundWrapper = this.stage.drawRectangleWithInput(xFn, yFn, widthFn ? widthFn : getWidth, getHeight,
@@ -124,4 +124,4 @@ var ButtonFactory = (function () {
     };
 
     return ButtonFactory;
-})();
+})(Math);

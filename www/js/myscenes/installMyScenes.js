@@ -21,11 +21,13 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         sceneServices.buttons = new ButtonFactory(sceneServices.stage, tap, sceneServices.timer, FONT, function () {
                 sceneServices.sounds.play(CLICK);
-            }, WHITE, VIOLET, Font._30, 2, WHITE, WHITE, Font._40, 1.2);
+        }, WHITE, VIOLET, Font._30, 3, WHITE, WHITE, Font._40, 2);
 
         sceneServices.sceneStorage.sfxOn = true;
 
         // custom game services END
+        // todo remove debug
+        //sceneServices.sounds.muteAll();
 
         var goFullScreen = new GoFullScreen(sceneServices);
         var rotateDevice = new RotateDevice(sceneServices);
