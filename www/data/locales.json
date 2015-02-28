@@ -1,21 +1,21 @@
 {
     "en": {
-      "display_name": "English",
+        "display_name": "English",
         "tutorial": {
             "touch_and_hold": "touch & hold anywhere",
             "to_raise_shields": "to raise shields",
             "collect_stuff": "collect stars to score points",
-          "skip_tutorial": "skip >"
+            "skip_tutorial": "skip >"
         },
         "credits": {
             "a": "a",
             "game": "game",
             "by": "by",
             "graphics": "graphics",
-          "back": "back"
+            "back": "back"
         },
-      "post_game": {
-        "game_over": "game over",
+        "post_game": {
+            "game_over": "game over",
             "score": "score",
             "best": "best",
             "play_again": "play again"
@@ -26,85 +26,97 @@
             "credits": "credits",
             "more_games": "more games"
         },
-      "settings": {
-        "ok": "ok",
-        "full_screen": "full screen",
-        "sound": "sound",
-        "no_sound": "sound not supported",
-        "language": "language",
-        "on": "on",
-        "off": "off"
-      },
-      "go_full_screen": {
-        "exit_full_screen": "exit full screen?",
-        "go_full_screen": "go full screen",
-        "cancel": "exit"
-      },
-      "rotate": {
-        "rotate_device": "please, rotate device"
-      },
-      "game": {
-        "get_ready": "get ready"
-      },
-      "splash_screen": {
-        "start": "start"
-      },
-      "obstacles_view": {
-        "wave": "wave"
-      }
+        "settings": {
+            "ok": "ok",
+            "full_screen": "full screen",
+            "sound": "sound",
+            "no_sound": "sound not supported",
+            "language": "language",
+            "on": "on",
+            "off": "off"
+        },
+        "go_full_screen": {
+            "exit_full_screen": "exit full screen?",
+            "go_full_screen": "go full screen",
+            "cancel": "exit"
+        },
+        "rotate": {
+            "rotate_device": "please, rotate device"
+        },
+        "game": {
+            "get_ready": "get ready"
+        },
+        "splash_screen": {
+            "start": "start"
+        },
+        "obstacles_view": {
+            "wave": "wave"
+        },
+        "common_buttons": {
+            "play": "play",
+            "achievements": "achievements",
+            "settings": "settings",
+            "more_games": "more games"
+        }
     },
     "de": {
-      "display_name": "Deutsch",
+        "display_name": "Deutsch",
         "tutorial": {
-          "touch_and_hold": "touch & halten",
-          "to_raise_shields": "um deine Schilde hochzufahren",
-          "collect_stuff": "sammle Sterne um Punkte zu bekommen",
-          "skip_tutorial": "weiter >"
+            "touch_and_hold": "touch & halten",
+            "to_raise_shields": "um deine Schilde hochzufahren",
+            "collect_stuff": "sammle Sterne um Punkte zu bekommen",
+            "skip_tutorial": "weiter >"
         },
         "credits": {
-          "a": "ein",
-          "game": "Spiel",
-          "by": "von",
-          "graphics": "Grafiken",
-          "back": "zur\u00DCck"
+            "a": "ein",
+            "game": "Spiel",
+            "by": "von",
+            "graphics": "Grafiken",
+            "back": "zur\u00DCck"
         },
-      "post_game": {
-        "game_over": "spiel vorbei",
-        "score": "Punkte",
-        "best": "Rekord",
-        "play_again": "nochmal spielen!"
+        "post_game": {
+            "game_over": "spiel vorbei",
+            "score": "Punkte",
+            "best": "Rekord",
+            "play_again": "nochmal spielen!"
         },
         "pre_game": {
-          "settings": "Einstellungen",
-          "play": "Spielen !",
-          "credits": "Credits",
-          "more_games": "mehr Spiele"
+            "settings": "Einstellungen",
+            "play": "Spielen !",
+            "credits": "Credits",
+            "more_games": "mehr Spiele"
         },
-      "settings": {
-        "ok": "ok",
-        "full_screen": "Fullscreen",
-        "sound": "Ton",
-        "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
-        "language": "Sprache",
-        "on": "An",
-        "off": "Aus"
-      },
-      "go_full_screen": {
-        "exit_full_screen": "Fullscreen beenden?",
-        "go_full_screen": "Weiter in Fullscreen",
-        "cancel": "beenden"
-      },
-      "rotate": {
-        "rotate_device": "Bitte, GER\u00C4T drehen"
-      },
-      "game": {
-        "get_ready": "los geht's"
-      },
-      "splash_screen": {
-        "start": "start"
-      },
-      "obstacles_view": {
-        "wave": "Welle"
-      }
+        "settings": {
+            "ok": "ok",
+            "full_screen": "Fullscreen",
+            "sound": "Ton",
+            "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
+            "language": "Sprache",
+            "on": "An",
+            "off": "Aus"
+        },
+        "go_full_screen": {
+            "exit_full_screen": "Fullscreen beenden?",
+            "go_full_screen": "Weiter in Fullscreen",
+            "cancel": "beenden"
+        },
+        "rotate": {
+            "rotate_device": "Bitte, GER\u00C4T drehen"
+        },
+        "game": {
+            "get_ready": "los geht's"
+        },
+        "splash_screen": {
+            "start": "start"
+        },
+        "obstacles_view": {
+            "wave": "Welle"
+        },
+        "common_buttons": {
+            "play": "Spielen",
+            "achievements": "Troph\u00C4en",
+            "settings": "Einstellungen",
+            "more_games": "Mehr Spiele"
+        }
     }
 }

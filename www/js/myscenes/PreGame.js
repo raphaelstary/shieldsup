@@ -26,6 +26,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var SHIELDS_ON_SOUND = 'warp_engineering_05';
     var SHIP_ARRIVES = 'star_drive_engaged';
     var BACK_GROUND_MUSIC = 'space_log';
+    var BUTTON_KEY = 'common_buttons';
+    var ACHIEVEMENTS = 'achievements';
+    var MORE_GAMES = 'more_games';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -72,26 +75,46 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             undefined,
             [shipDrawable]);
 
-        var playButton, creditsButton, settingsButton;
+        var playButton, creditsButton, settingsButton, achievementsButton, moreGamesButton;
 
         function shipIsAtEndPosition() {
             sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
 
             function createButtons() {
+                function getButtonWidth(width, height) {
+                    if (width < height) {
+                        return Width.HALF(width);
+                    }
+                    return Width.QUARTER(width);
+                }
+
                 playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-                    self.messages.get(KEY, PLAY), startPlaying, 3);
+                    self.messages.get(KEY, PLAY), startPlaying, 3, false, getButtonWidth);
                 self.messages.add(playButton.text, playButton.text.data, KEY, PLAY);
 
                 shieldsDrawable.x = shipDrawable.x;
                 shieldsDrawable.y = shipDrawable.y;
                 shieldsAnimation();
 
-                creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, CREDITS), goToCreditsScreen, 3);
-                self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
-                settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), showSettingsScreen, 3);
+                achievementsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(50, 41),
+                    self.messages.get(BUTTON_KEY, ACHIEVEMENTS), showSettingsScreen, 3, false, getButtonWidth);
+                self.messages.add(achievementsButton.text, achievementsButton.text.data, BUTTON_KEY, ACHIEVEMENTS);
+
+                settingsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(50, 44),
+                    self.messages.get(BUTTON_KEY, SETTINGS), showSettingsScreen, 3, false, getButtonWidth);
                 self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
+
+                moreGamesButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(50, 47),
+                    self.messages.get(BUTTON_KEY, MORE_GAMES), showMoreGames, 3, false, getButtonWidth);
+                self.messages.add(moreGamesButton.text, moreGamesButton.text.data, BUTTON_KEY, MORE_GAMES);
+
+                function showMoreGames() {
+                    window.location.href = window.moreGamesLink;
+                }
+
+                //creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
+                //    self.messages.get(KEY, CREDITS), goToCreditsScreen, 3);
+                //self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
             }
 
             function showSettingsScreen() {

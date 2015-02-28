@@ -19,7 +19,7 @@ var ButtonFactory = (function () {
         this.secondaryWidthFactor = secondaryWidthFactor;
     }
 
-    ButtonFactory.prototype.createPrimaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit) {
+    ButtonFactory.prototype.createPrimaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn) {
         function pressPrimaryButton(text, background) {
             background.alpha = 1;
         }
@@ -30,10 +30,10 @@ var ButtonFactory = (function () {
 
         return this.__createButton(xFn, yFn, msg, this.primaryTextSize, this.primaryColor, this.primaryTextColor, 1,
             callback, true, undefined, this.primaryWidthFactor, pressPrimaryButton, resetPrimaryButton, zIndex,
-            multiSubmit);
+            multiSubmit, widthFn);
     };
 
-    ButtonFactory.prototype.createSecondaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit) {
+    ButtonFactory.prototype.createSecondaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn) {
         function pressSecondaryButton(text, background) {
             text.alpha = 1;
             background.data.filled = true;
@@ -47,11 +47,11 @@ var ButtonFactory = (function () {
         return this.__createButton(xFn, yFn, msg, this.secondaryTextSize, this.secondaryColor, this.secondaryTextColor,
             0.5, callback, false, function () {
                 return 1;
-            }, this.secondaryWidthFactor, pressSecondaryButton, resetSecondaryButton, zIndex, multiSubmit);
+            }, this.secondaryWidthFactor, pressSecondaryButton, resetSecondaryButton, zIndex, multiSubmit, widthFn);
     };
 
     ButtonFactory.prototype.__createButton = function (xFn, yFn, msg, txtSizeFn, color, textColor, textAlpha, callback,
-        backgroundFilled, lineWidthFn, widthMultiplier, pressButton, resetButton, zIndex, multiSubmit) {
+        backgroundFilled, lineWidthFn, widthMultiplier, pressButton, resetButton, zIndex, multiSubmit, widthFn) {
 
         var isMultiSubmitOn = multiSubmit !== undefined ? multiSubmit : false;
 
@@ -66,8 +66,8 @@ var ButtonFactory = (function () {
             return textDrawable.getHeight() * 2;
         }
 
-        var backgroundWrapper = this.stage.drawRectangleWithInput(xFn, yFn, getWidth, getHeight, color,
-            backgroundFilled, lineWidthFn, zIndex, 0.5, undefined, undefined, [textDrawable]);
+        var backgroundWrapper = this.stage.drawRectangleWithInput(xFn, yFn, widthFn ? widthFn : getWidth, getHeight,
+            color, backgroundFilled, lineWidthFn, zIndex, 0.5, undefined, undefined, [textDrawable]);
 
         var touchable = backgroundWrapper.input;
         var backgroundDrawable = backgroundWrapper.drawable;
