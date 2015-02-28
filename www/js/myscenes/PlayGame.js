@@ -25,9 +25,30 @@ var PlayGame = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
+        var distanceDrawable = this.sceneStorage.distance;
+
+        var distanceCounter = 0;
+        var evenCounter = 0;
+
+        var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
+            if (self.sceneStorage.do30fps) {
+                if (evenCounter % 2 == 0) {
+
+                    distanceCounter++;
+                    distanceDrawable.data.msg = distanceCounter.toString() + ' m';
+
+                    evenCounter = 0;
+                }
+                evenCounter++
+            } else {
+                distanceCounter++;
+                distanceDrawable.data.msg = distanceCounter.toString() + ' m';
+            }
+        });
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
+            3);
 
         function doThePause() {
             pause();
@@ -35,6 +56,7 @@ var PlayGame = (function ($) {
             $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
         }
+
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -42,14 +64,8 @@ var PlayGame = (function ($) {
         function setupShaker() {
             var add = self.shaker.add.bind(self.shaker);
             [
-                pauseButton.text,
-                shipDrawable,
-                shieldsDrawable,
-                energyBarDrawable,
-                fireDict.left,
-                fireDict.right
+                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(add);
-            //countDrawables.forEach(add);
             speedStripes.forEach(function (wrapper) {
                 self.shaker.add(wrapper.drawable);
             });
@@ -175,6 +191,7 @@ var PlayGame = (function ($) {
         }
 
         var itIsOver = false;
+
         function endGame(points) {
             if (itIsOver)
                 return;
@@ -209,6 +226,7 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(hideGoFs);
                 self.events.unsubscribe(showRotation);
                 self.events.unsubscribe(hideRotation);
+                self.events.unsubscribe(distanceMeter);
             }
 
             removeEverything();

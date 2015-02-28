@@ -22,6 +22,8 @@ var KillScreen = (function () {
         delete this.sceneStorage.fire;
         var countDrawables = this.sceneStorage.counts;
         delete this.sceneStorage.counts;
+        var distanceDrawable = this.sceneStorage.distance;
+        delete this.sceneStorage.distance;
 
         var self = this;
         speedStripes.forEach(function (speedStripeWrapper) {
@@ -40,6 +42,7 @@ var KillScreen = (function () {
             countDrawables.forEach(function (count) {
                 self.stage.remove(count);
             });
+            self.stage.remove(distanceDrawable);
 
             nextScene();
         });

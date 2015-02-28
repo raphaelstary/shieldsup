@@ -46,7 +46,8 @@ var InGameTutorial = (function ($) {
         var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
+            3);
 
         function doThePause() {
             pause();
@@ -61,12 +62,7 @@ var InGameTutorial = (function ($) {
 
         function setupShaker() {
             [
-                pauseButton.text,
-                shipDrawable,
-                shieldsDrawable,
-                energyBarDrawable,
-                fireDict.left,
-                fireDict.right
+                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
             //countDrawables.forEach(self.shaker.add.bind(self.shaker));
             speedStripes.forEach(function (wrapper) {
@@ -459,6 +455,7 @@ var InGameTutorial = (function ($) {
         }
 
         var itIsOver = false;
+
         function endGame() {
             if (itIsOver)
                 return;

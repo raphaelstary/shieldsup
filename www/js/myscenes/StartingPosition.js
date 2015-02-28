@@ -63,6 +63,11 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         var energyBarWrapper = self.stage.moveFresh(energyStartX, EnergyBar.getY, ENERGY_FULL, EnergyBar.getX,
             EnergyBar.getY, speed, spacing, false, goodToGo);
 
+        numberOfCallbacks++;
+        var distanceMeterWrapper = self.stage.moveFreshTextLater(changeSign(Width.HALF), Height.TOP_RASTER, '0 m',
+            Font._35, 'GameFont', '#fff', Width.HALF, Height.TOP_RASTER, speed, spacing, 10, false, goodToGo, undefined,
+            undefined, undefined, 0.5);
+
         function getScreenOffSet(width) {
             return calcScreenConst(width, 5);
         }
@@ -95,14 +100,18 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
                 secondDigitWrapper.drawable, thirdDigitWrapper.drawable, fourthDigitWrapper.drawable
             ];
 
-            self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);
+            self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables,
+                distanceMeterWrapper.drawable);
         }
     };
 
-    StartingPosition.prototype.next = function (nextScene, energyBarDrawable, lifeDrawablesDict, countDrawables) {
+    StartingPosition.prototype.next = function (nextScene, energyBarDrawable, lifeDrawablesDict, countDrawables,
+        distanceDrawable) {
+
         this.sceneStorage.energyBar = energyBarDrawable;
         this.sceneStorage.lives = lifeDrawablesDict;
         this.sceneStorage.counts = countDrawables;
+        this.sceneStorage.distance = distanceDrawable;
 
         nextScene();
     };
