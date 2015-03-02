@@ -11,8 +11,7 @@
             "a": "a",
             "game": "game",
             "by": "by",
-            "graphics": "graphics",
-            "back": "back"
+            "graphics": "graphics"
         },
         "post_game": {
             "game_over": "game over",
@@ -58,7 +57,8 @@
             "play": "play",
             "achievements": "achievements",
             "settings": "settings",
-            "more_games": "more games"
+            "more_games": "more games",
+            "back": "back"
         }
     },
     "de": {
@@ -73,8 +73,7 @@
             "a": "ein",
             "game": "Spiel",
             "by": "von",
-            "graphics": "Grafiken",
-            "back": "zur\u00DCck"
+            "graphics": "Grafiken"
         },
         "post_game": {
             "game_over": "spiel vorbei",
@@ -120,7 +119,8 @@
             "play": "Spielen",
             "achievements": "Troph\u00C4en",
             "settings": "Einstellungen",
-            "more_games": "Mehr Spiele"
+            "more_games": "Mehr Spiele",
+            "back": "zur\u00DCck"
         }
     }
 }

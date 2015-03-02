@@ -36,7 +36,7 @@ var Credits = (function (Transition, window, calcScreenConst, subtract, add, Wid
         var self = this;
         var texts = [];
         var backButton = self.buttons.createSecondaryButton(Width.get(32, 5), Height.get(25, 2),
-            self.messages.get(KEY, BACK_MSG), endScene, 7);
+            self.messages.get('common_buttons', BACK_MSG), endScene, 7);
         self.sceneStorage.menuSceneButtons.push(backButton);
         var game_txt = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GAME_MSG), Font._15,
             SPECIAL_FONT, LIGHT_GREY, 8);

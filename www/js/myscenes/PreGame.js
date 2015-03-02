@@ -95,12 +95,22 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
                 shieldsDrawable.y = shipDrawable.y;
                 shieldsAnimation();
 
+                function goToSettings() {
+                    self.sceneStorage.menuScene = 'settings';
+                    showSettingsScreen();
+                }
+
+                function goToAchievements() {
+                    self.sceneStorage.menuScene = 'achievements';
+                    showSettingsScreen();
+                }
+
                 achievementsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 385),
-                    self.messages.get(BUTTON_KEY, ACHIEVEMENTS), showSettingsScreen, 3, false, getButtonWidth);
+                    self.messages.get(BUTTON_KEY, ACHIEVEMENTS), goToAchievements, 3, false, getButtonWidth);
                 self.messages.add(achievementsButton.text, achievementsButton.text.data, BUTTON_KEY, ACHIEVEMENTS);
 
                 settingsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 420),
-                    self.messages.get(BUTTON_KEY, SETTINGS), showSettingsScreen, 3, false, getButtonWidth);
+                    self.messages.get(BUTTON_KEY, SETTINGS), goToSettings, 3, false, getButtonWidth);
                 self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
 
                 moreGamesButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 455),
@@ -120,38 +130,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             function hideSettings() {
                 settingsButton.used = false;
+                achievementsButton.used = false;
             }
 
             createButtons();
-            function goToCreditsScreen() {
-
-                var creditsScreen = new Credits({
-                    stage: self.stage,
-                    messages: self.messages,
-                    buttons: self.buttons
-                });
-
-                var stuff = [shipDrawable, leftFireDrawable, rightFireDrawable, logoDrawable, logoHighlightDrawable];
-                stuff.forEach(self.stage.hide.bind(self.stage));
-
-                function continuePreGame() {
-                    doTheShields = true;
-                    createButtons();
-                    stuff.forEach(self.stage.show.bind(self.stage));
-                    self.stage.animate(leftFireDrawable, leftFireWrapper.sprite);
-                    self.stage.animate(rightFireDrawable, rightFireWrapper.sprite);
-                }
-
-                doTheShields = false;
-                self.stage.hide(shieldsDrawable);
-
-                self.buttons.remove(playButton);
-                self.buttons.remove(achievementsButton);
-                self.buttons.remove(settingsButton);
-                self.buttons.remove(moreGamesButton);
-
-                creditsScreen.show(continuePreGame);
-            }
         }
 
         function startPlaying() {

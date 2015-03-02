@@ -11,6 +11,12 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
         this.sounds = services.sounds;
     }
 
+    var SubScenes = {
+        ACHIEVEMENTS: 'achievements',
+        SETTINGS: 'settings',
+        GAME_MENU: 'game_menu'
+    };
+
     Menu.prototype.show = function (next) {
         this.sceneStorage.menuOn = true;
         var self = this;
@@ -20,13 +26,21 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
             self.sceneStorage.menuSceneButtons.forEach(self.buttons.enable.bind(self.buttons));
         });
 
-        showMenu();
+        showMenu(this.sceneStorage.menuScene);
 
         function showMenu() {
 
             backBlur = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.FULL, Height.FULL, '#000',
                 true, undefined, 6, 0.8);
-            self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, showSettings);
+            var callback;
+            if (self.sceneStorage.menuScene == SubScenes.ACHIEVEMENTS) {
+                callback = showAchievements;
+            } else if (self.sceneStorage.menuScene == SubScenes.SETTINGS) {
+                callback = showSettings;
+            } else if (self.sceneStorage.menuScene == SubScenes.GAME_MENU) {
+                callback = showGameMenu;
+            }
+            self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, callback);
         }
 
         function hideMenu() {
@@ -54,6 +68,20 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
                 sounds: self.sounds
             });
             settings.show(hideMenu);
+        }
+
+        function showAchievements() {
+            var achievements = new Achievements({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                sceneStorage: self.sceneStorage
+            });
+            achievements.show(hideMenu);
+        }
+
+        function showGameMenu() {
+
         }
     };
 
