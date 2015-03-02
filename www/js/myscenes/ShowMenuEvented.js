@@ -1,7 +1,7 @@
-var ShowSettingsEvented = (function (Event, showSettings) {
+var ShowMenuEvented = (function (Event, showMenu) {
     "use strict";
 
-    function ShowSettingsEvented(services) {
+    function ShowMenuEvented(services) {
         this.events = services.events;
         this.stage = services.stage;
         this.buttons = services.buttons;
@@ -11,20 +11,20 @@ var ShowSettingsEvented = (function (Event, showSettings) {
         this.sounds = services.sounds;
     }
 
-    ShowSettingsEvented.prototype.show = function (next) {
+    ShowMenuEvented.prototype.show = function (next) {
         var self = this;
 
         function resume() {
-            self.events.fire(Event.RESUME_AFTER_SETTINGS);
+            self.events.fire(Event.RESUME_AFTER_MENU);
         }
 
-        this.events.subscribe(Event.SHOW_SETTINGS, function () {
-            showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+        this.events.subscribe(Event.SHOW_MENU, function () {
+            showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
         });
 
         next();
     };
 
-    return ShowSettingsEvented;
-})(Event, showSettings);
+    return ShowMenuEvented;
+})(Event, showMenu);

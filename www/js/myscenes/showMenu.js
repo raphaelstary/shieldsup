@@ -1,8 +1,8 @@
-var showSettings = (function (Settings) {
+var showMenu = (function (Menu) {
     "use strict";
 
     return function (stage, buttons, messages, events, sceneStorage, device, sounds, nextCallback) {
-        var settings = new Settings({
+        var menu = new Menu({
             stage: stage,
             buttons: buttons,
             messages: messages,
@@ -11,6 +11,6 @@ var showSettings = (function (Settings) {
             device: device,
             sounds: sounds
         });
-        settings.show(nextCallback);
+        menu.show(nextCallback);
     };
-})(Settings);
+})(Menu);

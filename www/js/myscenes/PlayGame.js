@@ -53,7 +53,7 @@ var PlayGame = (function ($) {
         function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+            $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
         }
 
@@ -159,11 +159,11 @@ var PlayGame = (function ($) {
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
                 if (!isPaused)
-                    self.sceneStorage.shouldShowSettings = true;
+                    self.sceneStorage.shouldShowMenu = true;
             } else {
                 self.timer.doLater(function () {
-                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
-                        self.sceneStorage.shouldShowSettings = false;
+                    if (self.sceneStorage.shouldShowMenu && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowMenu = false;
                         doThePause();
                     }
                 }, 2);
@@ -264,7 +264,7 @@ var PlayGame = (function ($) {
     changeSign: changeSign,
     Width: Width,
     Math: Math,
-    showSettings: showSettings,
+    showMenu: showMenu,
     Event: Event,
     Key: Key
 });

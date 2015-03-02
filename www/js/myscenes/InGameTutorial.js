@@ -52,7 +52,7 @@ var InGameTutorial = (function ($) {
         function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+            $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
         }
 
@@ -423,11 +423,11 @@ var InGameTutorial = (function ($) {
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
                 if (!isPaused)
-                    self.sceneStorage.shouldShowSettings = true;
+                    self.sceneStorage.shouldShowMenu = true;
             } else {
                 self.timer.doLater(function () {
-                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
-                        self.sceneStorage.shouldShowSettings = false;
+                    if (self.sceneStorage.shouldShowMenu && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowMenu = false;
                         doThePause();
                     }
                 }, 2);
@@ -494,7 +494,7 @@ var InGameTutorial = (function ($) {
     drawShields: drawShields,
     PlayFactory: PlayFactory,
     Event: Event,
-    showSettings: showSettings,
+    showMenu: showMenu,
     Key: Key,
     iterateEntries: iterateEntries
 });

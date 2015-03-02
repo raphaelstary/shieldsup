@@ -163,11 +163,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                     goFsScreen = false;
                     self.events.fire(Event.REMOVE_GO_FULL_SCREEN);
                     if (!rotateScreen && !shouldShowRotateScreen) {
-                        if (self.sceneStorage.settingsOn) {
-                            self.events.fire(Event.RESUME_SETTINGS);
-                        } else if (self.sceneStorage.shouldShowSettings) {
-                            self.sceneStorage.shouldShowSettings = false;
-                            self.events.fire(Event.SHOW_SETTINGS);
+                        if (self.sceneStorage.menuOn) {
+                            self.events.fire(Event.RESUME_MENU);
+                        } else if (self.sceneStorage.shouldShowMenu) {
+                            self.sceneStorage.shouldShowMenu = false;
+                            self.events.fire(Event.SHOW_MENU);
                         } else {
                             self.events.fire(Event.RESUME);
                         }
@@ -197,11 +197,11 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         rotateScreen = false;
                         self.events.fire(Event.REMOVE_ROTATE_DEVICE);
                         if (!goFsScreen && !shouldShowGoFsScreen) {
-                            if (self.sceneStorage.settingsOn) {
-                                self.events.fire(Event.RESUME_SETTINGS);
-                            } else if (self.sceneStorage.shouldShowSettings) {
-                                self.sceneStorage.shouldShowSettings = false;
-                                self.events.fire(Event.SHOW_SETTINGS);
+                            if (self.sceneStorage.menuOn) {
+                                self.events.fire(Event.RESUME_MENU);
+                            } else if (self.sceneStorage.shouldShowMenu) {
+                                self.sceneStorage.shouldShowMenu = false;
+                                self.events.fire(Event.SHOW_MENU);
                             } else {
                                 self.events.fire(Event.RESUME);
                             }

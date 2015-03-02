@@ -1,4 +1,4 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event,
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showMenu, Event,
     checkAndSet30fps) {
     "use strict";
 
@@ -114,7 +114,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             function showSettingsScreen() {
                 self.events.fireSync(Event.PAUSE);
-                showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                     self.sounds, hideSettings)
             }
 
@@ -260,4 +260,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event, checkAndSet30fps);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showMenu, Event, checkAndSet30fps);

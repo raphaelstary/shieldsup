@@ -1,7 +1,7 @@
-var Settings = (function (Width, Height, changeSign, Transition, Event, Credits) {
+var Menu = (function (Width, Height, changeSign, Transition, Event, Credits) {
     "use strict";
 
-    function Settings(services) {
+    function Menu(services) {
         this.stage = services.stage;
         this.buttons = services.buttons;
         this.messages = services.messages;
@@ -11,7 +11,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
         this.sounds = services.sounds;
     }
 
-    var SETTINGS_KEY = 'settings';
+    var KEY = 'settings';
     var OK = 'ok';
     var FULL_SCREEN = 'full_screen';
     var SOUND = 'sound';
@@ -26,21 +26,21 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
     var FONT = 'GameFont';
     var WHITE = '#fff';
 
-    Settings.prototype.show = function (next) {
-        this.sceneStorage.settingsOn = true;
+    Menu.prototype.show = function (next) {
+        this.sceneStorage.menuOn = true;
         var self = this;
         var backBlur, fsText, soundText;
         // var menuBack;
         //var musicText;
         var languageText;
         var sceneButtons = [];
-        var resume = self.events.subscribe(Event.RESUME_SETTINGS, function () {
+        var resume = self.events.subscribe(Event.RESUME_MENU, function () {
             sceneButtons.forEach(self.buttons.enable.bind(self.buttons));
         });
 
-        showSettings();
+        showMenu();
 
-        function showSettings() {
+        function showMenu() {
 
             backBlur = self.stage.drawRectangle(changeSign(Width.HALF), Height.HALF, Width.FULL, Height.FULL, '#000',
                 true, undefined, 6, 0.8);
@@ -60,7 +60,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
                     //self.stage.remove(menuBack);
                     self.stage.remove(backBlur);
                     self.events.fire(Event.RESUME);
-                    self.sceneStorage.settingsOn = false;
+                    self.sceneStorage.menuOn = false;
                     next();
                 });
         }
@@ -186,9 +186,9 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
             }
 
             function getMenuText(yFn, msgKey) {
-                var drawable = self.stage.drawText(Width.THIRD, yFn, self.messages.get(SETTINGS_KEY, msgKey), Font._30,
+                var drawable = self.stage.drawText(Width.THIRD, yFn, self.messages.get(KEY, msgKey), Font._30,
                     FONT, WHITE, 8);
-                self.messages.add(drawable, drawable.data, SETTINGS_KEY, msgKey);
+                self.messages.add(drawable, drawable.data, KEY, msgKey);
 
                 return drawable;
             }
@@ -212,9 +212,9 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
             }
 
             function getOnOffButton(xFn, yFn, msgKey, callback, selected) {
-                var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get(SETTINGS_KEY, msgKey),
+                var button = self.buttons.createSecondaryButton(xFn, yFn, self.messages.get(KEY, msgKey),
                     callback, 7);
-                self.messages.add(button.text, button.text.data, SETTINGS_KEY, msgKey);
+                self.messages.add(button.text, button.text.data, KEY, msgKey);
                 if (selected) {
                     button.text.alpha = 1;
                     button.background.data.filled = true;
@@ -224,18 +224,18 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
             }
 
             var resetGameButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(20, 13),
-                self.messages.get(SETTINGS_KEY, RESET_GAME), resetGameData, 7);
-            self.messages.add(resetGameButton.text, resetGameButton.text.data, SETTINGS_KEY, RESET_GAME);
+                self.messages.get(KEY, RESET_GAME), resetGameData, 7);
+            self.messages.add(resetGameButton.text, resetGameButton.text.data, KEY, RESET_GAME);
             sceneButtons.push(resetGameButton);
 
             var creditsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(20, 15),
-                self.messages.get(SETTINGS_KEY, CREDITS), showCredits, 7);
-            self.messages.add(creditsButton.text, creditsButton.text.data, SETTINGS_KEY, CREDITS);
+                self.messages.get(KEY, CREDITS), showCredits, 7);
+            self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
             sceneButtons.push(creditsButton);
 
             var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(40, 35),
-                self.messages.get(SETTINGS_KEY, OK), hideSettings, 7);
-            self.messages.add(resumeButton.text, resumeButton.text.data, SETTINGS_KEY, OK);
+                self.messages.get(KEY, OK), hideSettings, 7);
+            self.messages.add(resumeButton.text, resumeButton.text.data, KEY, OK);
             sceneButtons.push(resumeButton);
 
         }
@@ -262,5 +262,5 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
         }
     };
 
-    return Settings;
+    return Menu;
 })(Width, Height, changeSign, Transition, Event, Credits);
