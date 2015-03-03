@@ -1,6 +1,6 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
     PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event,
-    TapManager, ShowMenuEvented, NextQuests) {
+    TapManager, ShowMenuEvented, NextQuests, CompletedQuests) {
     "use strict";
 
     var CLICK = 'computer_data_03';
@@ -41,6 +41,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var getReady = new GetReady(sceneServices);
         var playGame = new PlayGame(sceneServices);
         var killScreen = new KillScreen(sceneServices);
+        var completedQuests = new CompletedQuests(sceneServices);
         var postGame = new PostGame(sceneServices);
 
         var sceneManager = new SceneManager();
@@ -56,6 +57,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         sceneManager.add(getReady.show.bind(getReady));
         sceneManager.add(playGame.show.bind(playGame));
         sceneManager.add(killScreen.show.bind(killScreen));
+        sceneManager.add(completedQuests.show.bind(completedQuests));
         sceneManager.add(postGame.show.bind(postGame));
 
         return sceneManager;
@@ -64,4 +66,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
     ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event, TapManager, ShowMenuEvented,
-    NextQuests);
+    NextQuests, CompletedQuests);
