@@ -59,6 +59,21 @@
             "settings": "settings",
             "more_games": "more games",
             "back": "back"
+        },
+        "achievements": {
+            "done": "done",
+            "conqueror": "conqueror",
+            "conqueror_description": "Defeat the Monster at the end of the asteroid field",
+            "shopping_queen": "shopping queen",
+            "shopping_queen_description": "Buy everything in the shop",
+            "closer": "The Closer",
+            "closer_description": "complete all missions",
+            "live_once": "you only live once",
+            "live_once_description": "loose no life in a complete run",
+            "star_gazer": "Star Gazer",
+            "star_gazer_description": "collect all stars in a complete run",
+            "faster_than_light": "faster than light",
+            "faster_than_light_description": "complete the mission mode in 1 hour or less"
         }
     },
     "de": {
@@ -121,6 +136,21 @@
             "settings": "Einstellungen",
             "more_games": "Mehr Spiele",
             "back": "zur\u00DCck"
+        },
+        "achievements": {
+            "done": "Geschafft",
+            "conqueror": "Bezwinger",
+            "conqueror_description": "Besiege das Ungeheuer am Ende des Asteroidenfelds",
+            "shopping_queen": "shopping queen",
+            "shopping_queen_description": "Kaufe alles im Shop",
+            "closer": "Abschliesser",
+            "closer_description": "Erledige alle Missionen",
+            "live_once": "Man lebt nur einmal",
+            "live_once_description": "verliere kein leben bei einem vollst\u00C4ndigen flug",
+            "star_gazer": "Sterngucker",
+            "star_gazer_description": "Sammle alle Sterne bei einem vollst\u00C4ndigen flug",
+            "faster_than_light": "Schneller als das Licht",
+            "faster_than_light_description": "Erledige den Missions Modus in 1 Stunde oder weniger"
         }
     }
 }
