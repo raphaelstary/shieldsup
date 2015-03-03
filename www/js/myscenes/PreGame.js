@@ -19,7 +19,6 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var SHIELDS = 'shields';
 
     var KEY = 'pre_game';
-    var CREDITS = 'credits';
     var PLAY = 'play';
     var SETTINGS = 'settings';
     var SHIELDS_UP_SOUND = 'hydraulics_engaged';

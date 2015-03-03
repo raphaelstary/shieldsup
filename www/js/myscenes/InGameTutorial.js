@@ -52,6 +52,7 @@ var InGameTutorial = (function ($) {
         function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
+            self.sceneStorage.menuScene = 'pause_menu';
             $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
                 self.sounds, resume);
         }

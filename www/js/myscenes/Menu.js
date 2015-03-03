@@ -1,4 +1,4 @@
-var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
+var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu) {
     "use strict";
 
     function Menu(services) {
@@ -14,7 +14,7 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
     var SubScenes = {
         ACHIEVEMENTS: 'achievements',
         SETTINGS: 'settings',
-        GAME_MENU: 'game_menu'
+        PAUSE_MENU: 'pause_menu'
     };
 
     Menu.prototype.show = function (next) {
@@ -37,8 +37,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
                 callback = showAchievements;
             } else if (self.sceneStorage.menuScene == SubScenes.SETTINGS) {
                 callback = showSettings;
-            } else if (self.sceneStorage.menuScene == SubScenes.GAME_MENU) {
-                callback = showGameMenu;
+            } else if (self.sceneStorage.menuScene == SubScenes.PAUSE_MENU) {
+                callback = showPauseMenu;
             }
             self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, callback);
         }
@@ -80,10 +80,19 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings) {
             achievements.show(hideMenu);
         }
 
-        function showGameMenu() {
-
+        function showPauseMenu() {
+            var pauseMenu = new PauseMenu({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                sceneStorage: self.sceneStorage,
+                sounds: self.sounds,
+                events: self.events,
+                device: self.device
+            });
+            pauseMenu.show(hideMenu);
         }
     };
 
     return Menu;
-})(Width, Height, changeSign, Transition, Event, Settings);
+})(Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu);

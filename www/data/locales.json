@@ -58,7 +58,8 @@
             "achievements": "achievements",
             "settings": "settings",
             "more_games": "more games",
-            "back": "back"
+            "back": "back",
+            "resume": "resume"
         },
         "achievements": {
             "done": "done",
@@ -74,6 +75,10 @@
             "star_gazer_description": "collect all stars in a complete run",
             "faster_than_light": "faster than light",
             "faster_than_light_description": "complete the mission mode in 1 hour or less"
+        },
+        "pause_menu": {
+            "missions": "missions",
+            "complete": "complete"
         }
     },
     "de": {
@@ -135,7 +140,8 @@
             "achievements": "Troph\u00C4en",
             "settings": "Einstellungen",
             "more_games": "Mehr Spiele",
-            "back": "zur\u00DCck"
+            "back": "zur\u00DCck",
+            "resume": "weiter"
         },
         "achievements": {
             "done": "Geschafft",
@@ -151,6 +157,10 @@
             "star_gazer_description": "Sammle alle Sterne bei einem vollst\u00C4ndigen flug",
             "faster_than_light": "Schneller als das Licht",
             "faster_than_light_description": "Erledige den Missions Modus in 1 Stunde oder weniger"
+        },
+        "pause_menu": {
+            "missions": "missions",
+            "complete": "complete"
         }
     }
 }

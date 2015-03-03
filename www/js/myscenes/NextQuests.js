@@ -9,12 +9,8 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
         this.timer = services.timer;
     }
 
-    var KEY = 'quests';
-
     var FONT = 'GameFont';
     var WHITE = '#fff';
-    var VIOLET = '#3a2e3f';
-    var LIGHT_GREY = '#c4c4c4';
 
     NextQuests.prototype.show = function (next) {
         var self = this;

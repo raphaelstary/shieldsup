@@ -16,7 +16,6 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
     var FULL_SCREEN = 'full_screen';
     var SOUND = 'sound';
     var NO_SOUND = 'no_sound';
-    //var MUSIC = 'music';
     var LANGUAGE = 'language';
     var ON = 'on';
     var OFF = 'off';
