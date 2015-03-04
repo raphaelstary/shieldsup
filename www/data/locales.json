@@ -59,7 +59,8 @@
             "settings": "settings",
             "more_games": "more games",
             "back": "back",
-            "resume": "resume"
+            "resume": "resume",
+            "skip": "skip >"
         },
         "achievements": {
             "done": "done",
@@ -141,7 +142,8 @@
             "settings": "Einstellungen",
             "more_games": "Mehr Spiele",
             "back": "zur\u00DCck",
-            "resume": "weiter"
+            "resume": "weiter",
+            "skip": "weiter >"
         },
         "achievements": {
             "done": "Geschafft",

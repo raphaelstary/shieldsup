@@ -12,6 +12,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
     var DONE = 'done';
     var MISSIONS = 'missions';
     var COMPLETE = 'complete';
+    var SKIP = 'skip';
 
     var FONT = 'GameFont';
     var SPECIAL_FONT = 'SpecialGameFont';
@@ -34,9 +35,11 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         var quest_count_txt = self.stage.drawText(Width.TWO_THIRD, Height.get(48, 5),
             '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 8);
 
-        questIn(Height.get(48, 10), 'Reach 500 meters', false);
-        questIn(Height.get(48, 18), 'Destroy 10 asteroids in one run without taking a hit', true, 10);
-        questIn(Height.get(48, 26), 'Collect 10 stars in a row', true, 20, true);
+        var drawables = [];
+        drawables.push.apply(drawables, questIn(Height.get(48, 10), 'Reach 500 meters', false));
+        drawables.push.apply(drawables,
+            questIn(Height.get(48, 18), 'Destroy 10 asteroids in one run without taking a hit', true, 10));
+        drawables.push.apply(drawables, questIn(Height.get(48, 26), 'Collect 10 stars in a row', true, 20, true));
 
         function questIn(yFn, name, success, delay, forceNext) {
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,
@@ -54,6 +57,8 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
                 self.stage.move(txt, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false,
                     questOut(txt, yFn, false, forceNext));
             }
+
+            return [bg, txt];
         }
 
         function questOut(drawable, yFn, success, forceNext) {
@@ -64,8 +69,11 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
                     badge = self.stage.drawText(Width.get(20, 17), subtract(yFn, Height.get(480, 10)),
                         self.messages.get('achievements', DONE), Font._40, SPECIAL_FONT, GOLD, 8, undefined,
                         Math.PI / 8);
+                    drawables.push(badge);
                 }
                 self.timer.doLater(function () {
+                    if (itIsOver)
+                        return;
                     if (badge) {
                         self.stage.remove(badge);
                     }
@@ -80,11 +88,22 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
             };
         }
 
+        var itIsOver = false;
         function nextScene() {
+            if (itIsOver)
+                return;
+            itIsOver = true;
+            self.buttons.remove(skipButton);
             self.stage.remove(quests_header);
             self.stage.remove(quest_count_txt);
             next();
         }
+
+        var skipButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height._400,
+            self.messages.get('common_buttons', SKIP), function () {
+                drawables.forEach(self.stage.remove.bind(self.stage));
+                nextScene();
+            }, 3);
     };
 
     return CompletedQuests;
