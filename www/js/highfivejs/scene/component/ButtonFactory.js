@@ -58,8 +58,10 @@ var ButtonFactory = (function (Math) {
         var textDrawable = this.stage.drawText(xFn, yFn, msg, txtSizeFn, this.font, textColor, zIndex + 1, undefined,
             undefined, textAlpha);
 
-        function getWidth() {
-            return textDrawable.getWidth() * widthMultiplier;
+        function getWidth(width) {
+            var max = Width.get(10, 9)(width);
+            var myWidth = textDrawable.getWidth() * widthMultiplier;
+            return myWidth <= max ? myWidth : max;
         }
 
         function getHeight() {
