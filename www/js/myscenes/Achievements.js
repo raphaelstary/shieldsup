@@ -32,7 +32,7 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math) {
         var self = this;
         var drawables = [];
 
-        var backButton = self.buttons.createSecondaryButton(Width.get(32, 5), Height.get(48, 3),
+        var backButton = self.buttons.createSecondaryButton(Width.get(32, 7), Height.get(48, 3),
             self.messages.get(COMMON_KEY, BACK), endScene, 7);
         self.sceneStorage.menuSceneButtons.push(backButton);
 

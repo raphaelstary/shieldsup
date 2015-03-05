@@ -69,7 +69,7 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
             next();
         }
 
-        var skipButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height._400,
+        var skipButton = self.buttons.createSecondaryButton(Width.get(32, 24), Height.BOTTOM_RASTER,
             self.messages.get('common_buttons', 'skip'), function () {
                 drawables.forEach(self.stage.remove.bind(self.stage));
                 nextScene();

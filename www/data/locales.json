@@ -14,10 +14,12 @@
             "graphics": "graphics"
         },
         "post_game": {
-            "game_over": "game over",
-            "score": "score",
-            "best": "best",
-            "play_again": "play again"
+            "summary": "Summary",
+            "total_stars": "Total Stars",
+            "best": "Best",
+            "stars": "Stars",
+            "distance": "Distance",
+            "new_record": "new"
         },
         "pre_game": {
             "settings": "settings",
@@ -97,10 +99,12 @@
             "graphics": "Grafiken"
         },
         "post_game": {
-            "game_over": "spiel vorbei",
-            "score": "Punkte",
+            "summary": "\u00DCbersicht",
+            "total_stars": "Sterne Gesamt",
             "best": "Rekord",
-            "play_again": "nochmal spielen!"
+            "stars": "Sterne",
+            "distance": "Entfernung",
+            "new_record": "neu"
         },
         "pre_game": {
             "settings": "Einstellungen",
@@ -161,8 +165,8 @@
             "faster_than_light_description": "Erledige den Missions Modus in 1 Stunde oder weniger"
         },
         "pause_menu": {
-            "missions": "missions",
-            "complete": "complete"
+            "missions": "Missionen",
+            "complete": "geschafft"
         }
     }
 }

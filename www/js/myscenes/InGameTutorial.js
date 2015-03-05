@@ -106,20 +106,13 @@ var InGameTutorial = (function ($) {
         }
 
         function createSkipStuff() {
-            function getY(height) {
-                return $.calcScreenConst(height, 20, 3);
-            }
-
-            function getX(width) {
-                return $.calcScreenConst(width, 8, 6);
-            }
-
-            return self.buttons.createSecondaryButton(getX, getY, self.messages.get(KEY, SKIP_MSG), function () {
-                self.timer.doLater(function () {
-                    removeEveryThing();
-                    endGame();
-                }, 60);
-            }, 3);
+            return self.buttons.createSecondaryButton($.Width.get(32, 24), $.Height.BOTTOM_RASTER,
+                self.messages.get(KEY, SKIP_MSG), function () {
+                    self.timer.doLater(function () {
+                        removeEveryThing();
+                        endGame();
+                    }, 60);
+                }, 3);
         }
 
         var skipButton = createSkipStuff();

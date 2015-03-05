@@ -28,12 +28,13 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         var self = this;
         var speed = this.sceneStorage.do30fps ? 30 : 60;
         var duration = this.sceneStorage.do30fps ? 45 : 90;
+        var _10 = this.sceneStorage.do30fps ? 5 : 10;
 
         var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
-            self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 8);
+            self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
-        var quest_count_txt = self.stage.drawText(Width.TWO_THIRD, Height.get(48, 5),
-            '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 8);
+        var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
+            '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
 
         var drawables = [];
         drawables.push.apply(drawables, questIn(Height.get(48, 10), 'Reach 500 meters', false));
@@ -61,19 +62,27 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
             return [bg, txt];
         }
 
+        var doOnce = true;
         function questOut(drawable, yFn, success, forceNext) {
             return function () {
                 var badge;
                 if (success) {
-                    drawable.data.color = DARK_GOLD;
-                    badge = self.stage.drawText(Width.get(20, 17), subtract(yFn, Height.get(480, 10)),
-                        self.messages.get('achievements', DONE), Font._40, SPECIAL_FONT, GOLD, 8, undefined,
-                        Math.PI / 8);
-                    drawables.push(badge);
+                    self.timer.doLater(function () {
+                        drawable.data.color = DARK_GOLD;
+                        badge = self.stage.drawText(Width.get(20, 17), subtract(yFn, Height.get(480, 10)),
+                            self.messages.get('achievements', DONE), Font._40, SPECIAL_FONT, GOLD, 8, undefined,
+                            Math.PI / 8);
+                        drawables.push(badge);
+                    }, _10);
                 }
                 self.timer.doLater(function () {
                     if (itIsOver)
                         return;
+                    if (doOnce) {
+                        doOnce = false;
+                        self.stage.remove(quests_header);
+                        self.stage.remove(quest_count_txt);
+                    }
                     if (badge) {
                         self.stage.remove(badge);
                     }
@@ -89,17 +98,16 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         }
 
         var itIsOver = false;
+
         function nextScene() {
             if (itIsOver)
                 return;
             itIsOver = true;
             self.buttons.remove(skipButton);
-            self.stage.remove(quests_header);
-            self.stage.remove(quest_count_txt);
             next();
         }
 
-        var skipButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height._400,
+        var skipButton = self.buttons.createSecondaryButton(Width.get(32, 24), Height.BOTTOM_RASTER,
             self.messages.get('common_buttons', SKIP), function () {
                 drawables.forEach(self.stage.remove.bind(self.stage));
                 nextScene();

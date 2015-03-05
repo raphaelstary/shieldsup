@@ -237,16 +237,17 @@ var PlayGame = (function ($) {
                     self.stage.remove(energyBarDrawable);
                 });
 
-            self.next(nextScene, points);
+            self.next(nextScene, points, distanceCounter);
         }
     };
 
-    PlayGame.prototype.next = function (nextScene, points) {
+    PlayGame.prototype.next = function (nextScene, points, distanceValue) {
         delete this.sceneStorage.shields;
         delete this.sceneStorage.energyBar;
         delete this.sceneStorage.lives;
 
         this.sceneStorage.points = points;
+        this.sceneStorage.distanceValue = distanceValue;
 
         this.sounds.stop(this.sceneStorage.music);
 

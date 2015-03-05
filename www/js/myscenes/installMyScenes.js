@@ -27,7 +27,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         // custom game services END
         // todo remove debug
-        //sceneServices.sounds.muteAll();
+        sceneServices.sounds.muteAll();
 
         var goFullScreen = new GoFullScreen(sceneServices);
         var rotateDevice = new RotateDevice(sceneServices);

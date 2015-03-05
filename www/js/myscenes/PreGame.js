@@ -20,12 +20,12 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
     var KEY = 'pre_game';
     var PLAY = 'play';
-    var SETTINGS = 'settings';
     var SHIELDS_UP_SOUND = 'hydraulics_engaged';
     var SHIELDS_ON_SOUND = 'warp_engineering_05';
     var SHIP_ARRIVES = 'star_drive_engaged';
     var BACK_GROUND_MUSIC = 'space_log';
     var BUTTON_KEY = 'common_buttons';
+    var SETTINGS = 'settings';
     var ACHIEVEMENTS = 'achievements';
     var MORE_GAMES = 'more_games';
 
@@ -110,7 +110,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
                 settingsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 420),
                     self.messages.get(BUTTON_KEY, SETTINGS), goToSettings, 3, false, getButtonWidth);
-                self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
+                self.messages.add(settingsButton.text, settingsButton.text.data, BUTTON_KEY, SETTINGS);
 
                 moreGamesButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 455),
                     self.messages.get(BUTTON_KEY, MORE_GAMES), showMoreGames, 3, false, getButtonWidth);

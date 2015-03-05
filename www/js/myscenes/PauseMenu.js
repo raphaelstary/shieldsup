@@ -50,7 +50,7 @@ var PauseMenu = (function (Settings, Achievements, Width, Height) {
                 Font._30, SPECIAL_FONT, WHITE, 8);
             drawables.push(quests_header);
 
-            var quest_count_txt = self.stage.drawText(Width.TWO_THIRD, Height.get(48, 5),
+            var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
                 '2 / 40 ' + self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
             drawables.push(quest_count_txt);
 
