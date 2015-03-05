@@ -68,6 +68,8 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
                 var badge;
                 if (success) {
                     self.timer.doLater(function () {
+                        if (itIsOver)
+                            return;
                         drawable.data.color = DARK_GOLD;
                         badge = self.stage.drawText(Width.get(20, 17), subtract(yFn, Height.get(480, 10)),
                             self.messages.get('achievements', DONE), Font._40, SPECIAL_FONT, GOLD, 8, undefined,
@@ -110,6 +112,8 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         var skipButton = self.buttons.createSecondaryButton(Width.get(32, 24), Height.BOTTOM_RASTER,
             self.messages.get('common_buttons', SKIP), function () {
                 drawables.forEach(self.stage.remove.bind(self.stage));
+                self.stage.remove(quests_header);
+                self.stage.remove(quest_count_txt);
                 nextScene();
             }, 3);
     };
