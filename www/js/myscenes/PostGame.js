@@ -37,6 +37,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     var WHITE = '#fff';
 
     var BUTTON_KEY = 'common_buttons';
+    var RESUME = 'resume';
     var SETTINGS = 'settings';
     var ACHIEVEMENTS = 'achievements';
     var MORE_GAMES = 'more_games';
@@ -157,8 +158,8 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     }
 
                     playButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(480, 345),
-                        self.messages.get(BUTTON_KEY, 'resume'), goToResume, 3, false, getButtonWidth);
-                    self.messages.add(playButton.text, playButton.text.data, BUTTON_KEY, 'resume');
+                        self.messages.get(BUTTON_KEY, RESUME), goToResume, 3, false, getButtonWidth);
+                    self.messages.add(playButton.text, playButton.text.data, BUTTON_KEY, RESUME);
 
                     achievementsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 385),
                         self.messages.get(BUTTON_KEY, ACHIEVEMENTS), goToAchievements, 3, false, getButtonWidth);
