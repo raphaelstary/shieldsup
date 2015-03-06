@@ -53,60 +53,74 @@ var Shop = (function (Width, Height, add, Font) {
         var shakerLuckResizeId = self.events.subscribe(Event.RESIZE, shakerLuck.resize.bind(shakerLuck));
         var shakerLuckTickId = self.events.subscribe(Event.TICK_MOVE, shakerLuck.update.bind(shakerLuck));
 
-        var header = self.stage.drawText(Width.HALF, Height.get(48, 5), self.messages.get(KEY, SHOP), Font._15, FONT,
+        var header = self.stage.drawText(Width.HALF, Height.get(48, 4), self.messages.get(KEY, SHOP), Font._15, FONT,
             LIGHT_GREY);
         self.messages.add(header, header.data, KEY, SHOP);
 
-        var starsYFn = Height.get(48, 10);
+        var starsYFn = Height.get(48, 8);
         var starLeft = self.stage.drawFresh(Width.get(10, 3), starsYFn, STAR);
         var starValues = self.stage.drawText(Width.HALF, starsYFn, '350', Font._20, SPECIAL_FONT, WHITE);
         var starRight = self.stage.drawFresh(Width.get(10, 7), starsYFn, STAR);
 
-        var symbolXFn = Width.get(32, 4);
+        var symbolXFn = Width.get(32, 5);
         var buttonXFn = Width.get(32, 27);
 
-        var energyYFn = Height.get(48, 15);
-        var shields = self.stage.drawFresh(symbolXFn, energyYFn, SHIELDS, undefined, undefined, undefined, undefined,
+        var energyYFn = Height.get(48, 13);
+        var shields = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48)), SHIELDS, undefined, undefined,
+            undefined, undefined,
             0.2);
-        var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 2)), ENERGY_FULL, undefined,
+        var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 3)), ENERGY_FULL, undefined,
             undefined, undefined, undefined, 0.2);
         var energyLine = drawLine(energyYFn, 2);
-        var energyButton = self.buttons.createSecondaryButton(buttonXFn, energyYFn, '150', function () {
+        var energyButton = self.buttons.createSecondaryButton(buttonXFn, add(energyYFn, Height.get(48)), '150',
+            function () {
             shakerEnergy.startSmallShake();
         }, 3, true, buttonsWidth);
         shakerEnergy.add(energyButton.text);
         shakerEnergy.add(energyButton.background);
         energyButton.text.data.color = DARK_GRAY;
-        var energyTxt = drawDescription(Height.get(48, 17), self.messages.get(KEY, ENERGY_DESCRIPTION));
+        var energyTxt = drawDescription(add(energyYFn, Height.get(48, 2)), self.messages.get(KEY, ENERGY_DESCRIPTION));
         self.messages.add(energyTxt, energyTxt.data, KEY, ENERGY_DESCRIPTION);
+        var energyBG = drawBackGround(energyYFn);
 
-        var lifeYFn = Height.get(48, 21);
-        var life = self.stage.drawFresh(symbolXFn, lifeYFn, PLAYER_LIFE);
+        var lifeYFn = Height.get(48, 20);
+        var life = self.stage.drawFresh(symbolXFn, add(lifeYFn, Height.get(48)), PLAYER_LIFE);
         var lifeLine = drawLine(lifeYFn, 0);
-        var lifeButton = self.buttons.createSecondaryButton(buttonXFn, lifeYFn, '250', function () {
-            shakerLife.startSmallShake();
+        var lifeButton = self.buttons.createSecondaryButton(buttonXFn, add(lifeYFn, Height.get(48)), '250',
+            function () {
+                lifeLine[0].data.filled = true;
+                //shakerLife.startSmallShake();
         }, 3, true, buttonsWidth);
         shakerLife.add(lifeButton.text);
         shakerLife.add(lifeButton.background);
-        var lifeTxt = drawDescription(Height.get(48, 23), self.messages.get(KEY, LIFE_DESCRIPTION));
+        var lifeTxt = drawDescription(add(lifeYFn, Height.get(48, 2)), self.messages.get(KEY, LIFE_DESCRIPTION));
         self.messages.add(lifeTxt, lifeTxt.data, KEY, LIFE_DESCRIPTION);
+        var lifeBG = drawBackGround(lifeYFn);
 
         var luckYFn = Height.get(48, 27);
-        var luck = self.stage.drawText(symbolXFn, luckYFn, self.messages.get(KEY, LUCK), Font._40, FONT, WHITE);
+        var luck = self.stage.drawText(symbolXFn, add(luckYFn, Height.get(48)), self.messages.get(KEY, LUCK), Font._40,
+            FONT, WHITE);
         self.messages.add(luck, luck.data, KEY, LUCK);
         var luckLine = drawLine(luckYFn, 3);
-        var luckButton = self.buttons.createSecondaryButton(buttonXFn, luckYFn, '200', function () {
+        var luckButton = self.buttons.createSecondaryButton(buttonXFn, add(luckYFn, Height.get(48)), '200',
+            function () {
             shakerLuck.startSmallShake();
         }, 3, true, buttonsWidth);
         shakerLuck.add(luckButton.text);
         shakerLuck.add(luckButton.background);
-        var luckTxt = drawDescription(Height.get(48, 29), self.messages.get(KEY, LUCK_DESCRIPTION));
+        var luckTxt = drawDescription(add(luckYFn, Height.get(48, 2)), self.messages.get(KEY, LUCK_DESCRIPTION));
         self.messages.add(luckTxt, luckTxt.data, KEY, LUCK_DESCRIPTION);
+        var luckBG = drawBackGround(luckYFn);
 
         showButtons();
 
+        function drawBackGround(yFn) {
+            return self.stage.drawRectangle(Width.HALF, add(yFn, Height.get(48)), Width.get(10, 9), Height.get(48, 6),
+                WHITE, true, undefined, 3, 0.1);
+        }
+
         function drawDescription(yFn, txt) {
-            return self.stage.drawText(Width.get(32, 15), yFn, txt, Font._60, FONT, LIGHT_GREY, undefined, undefined,
+            return self.stage.drawText(Width.get(32, 16), yFn, txt, Font._60, FONT, LIGHT_GREY, undefined, undefined,
                 undefined, undefined, Width.HALF, Height.get(50));
         }
 
@@ -115,9 +129,9 @@ var Shop = (function (Width, Height, add, Font) {
         }
 
         function drawLine(yFn, fullCount) {
-            var one = drawOne(Width.get(32, 10), yFn, fullCount > 0);
-            var two = drawOne(Width.get(32, 15), yFn, fullCount > 1);
-            var three = drawOne(Width.get(32, 20), yFn, fullCount > 2);
+            var one = drawOne(Width.get(32, 11), yFn, fullCount > 0);
+            var two = drawOne(Width.get(32, 16), yFn, fullCount > 1);
+            var three = drawOne(Width.get(32, 21), yFn, fullCount > 2);
             return [one, two, three];
         }
 
