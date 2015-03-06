@@ -24,6 +24,7 @@ var Shop = (function (Width, Height, add, Font) {
     var GOLD = '#ffd700';
     var DARK_GOLD = '#B8860B';
     var LIGHT_GREY = '#c4c4c4';
+    var DARK_GRAY = '#A9A9A9';
 
     var PLAYER_LIFE = 'player_life';
     var STAR = 'star';
@@ -39,6 +40,18 @@ var Shop = (function (Width, Height, add, Font) {
 
     Shop.prototype.show = function (next) {
         var self = this;
+
+        var shakerEnergy = new ScreenShaker(self.device);
+        var shakerEnergyResizeId = self.events.subscribe(Event.RESIZE, shakerEnergy.resize.bind(shakerEnergy));
+        var shakerEnergyTickId = self.events.subscribe(Event.TICK_MOVE, shakerEnergy.update.bind(shakerEnergy));
+
+        var shakerLife = new ScreenShaker(self.device);
+        var shakerLifeResizeId = self.events.subscribe(Event.RESIZE, shakerLife.resize.bind(shakerLife));
+        var shakerLifeTickId = self.events.subscribe(Event.TICK_MOVE, shakerLife.update.bind(shakerLife));
+
+        var shakerLuck = new ScreenShaker(self.device);
+        var shakerLuckResizeId = self.events.subscribe(Event.RESIZE, shakerLuck.resize.bind(shakerLuck));
+        var shakerLuckTickId = self.events.subscribe(Event.TICK_MOVE, shakerLuck.update.bind(shakerLuck));
 
         var header = self.stage.drawText(Width.HALF, Height.get(48, 5), self.messages.get(KEY, SHOP), Font._15, FONT,
             LIGHT_GREY);
@@ -59,7 +72,11 @@ var Shop = (function (Width, Height, add, Font) {
             undefined, undefined, undefined, 0.2);
         var energyLine = drawLine(energyYFn, 2);
         var energyButton = self.buttons.createSecondaryButton(buttonXFn, energyYFn, '150', function () {
+            shakerEnergy.startSmallShake();
         }, 3, true, buttonsWidth);
+        shakerEnergy.add(energyButton.text);
+        shakerEnergy.add(energyButton.background);
+        energyButton.text.data.color = DARK_GRAY;
         var energyTxt = drawDescription(Height.get(48, 17), self.messages.get(KEY, ENERGY_DESCRIPTION));
         self.messages.add(energyTxt, energyTxt.data, KEY, ENERGY_DESCRIPTION);
 
@@ -67,7 +84,10 @@ var Shop = (function (Width, Height, add, Font) {
         var life = self.stage.drawFresh(symbolXFn, lifeYFn, PLAYER_LIFE);
         var lifeLine = drawLine(lifeYFn, 0);
         var lifeButton = self.buttons.createSecondaryButton(buttonXFn, lifeYFn, '250', function () {
+            shakerLife.startSmallShake();
         }, 3, true, buttonsWidth);
+        shakerLife.add(lifeButton.text);
+        shakerLife.add(lifeButton.background);
         var lifeTxt = drawDescription(Height.get(48, 23), self.messages.get(KEY, LIFE_DESCRIPTION));
         self.messages.add(lifeTxt, lifeTxt.data, KEY, LIFE_DESCRIPTION);
 
@@ -76,7 +96,10 @@ var Shop = (function (Width, Height, add, Font) {
         self.messages.add(luck, luck.data, KEY, LUCK);
         var luckLine = drawLine(luckYFn, 3);
         var luckButton = self.buttons.createSecondaryButton(buttonXFn, luckYFn, '200', function () {
+            shakerLuck.startSmallShake();
         }, 3, true, buttonsWidth);
+        shakerLuck.add(luckButton.text);
+        shakerLuck.add(luckButton.background);
         var luckTxt = drawDescription(Height.get(48, 29), self.messages.get(KEY, LUCK_DESCRIPTION));
         self.messages.add(luckTxt, luckTxt.data, KEY, LUCK_DESCRIPTION);
 
