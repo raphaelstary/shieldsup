@@ -1,4 +1,4 @@
-var PauseMenu = (function (Settings, Achievements, Width, Height) {
+var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
     "use strict";
 
     function PauseMenu(services) {
@@ -55,13 +55,14 @@ var PauseMenu = (function (Settings, Achievements, Width, Height) {
             drawables.push(quest_count_txt);
 
             showQuest(Height.get(48, 10), 'Reach 500 meters');
-            showQuest(Height.get(48, 16), 'Destroy 10 asteroids in one run without taking a hit');
-            showQuest(Height.get(48, 22), 'Collect 10 stars in a row');
+            showQuest(Height.get(48, 17), 'Destroy 10 asteroids in one run without taking a hit');
+            showQuest(Height.get(48, 24), 'Collect 10 stars in a row');
 
             function showQuest(yFn, text) {
-                var background = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(48, 5), VIOLET,
+                var background = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(48, 6), VIOLET,
                     true, undefined, 7);
-                var textDrawable = self.stage.drawText(Width.HALF, yFn, text, Font._60, FONT, LIGHT_GREY, 8);
+                var textDrawable = self.stage.drawText(Width.HALF, yFn, text, Font._40, FONT, LIGHT_GREY, 8, undefined,
+                    undefined, undefined, Width.get(10, 8), Height.get(25));
                 drawables.push(background, textDrawable);
             }
 
@@ -117,4 +118,4 @@ var PauseMenu = (function (Settings, Achievements, Width, Height) {
     };
 
     return PauseMenu;
-})(Settings, Achievements, Width, Height);
+})(Settings, Achievements, Width, Height, Font);

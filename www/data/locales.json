@@ -82,6 +82,13 @@
         "pause_menu": {
             "missions": "missions",
             "complete": "complete"
+        },
+        "shop": {
+            "shop": "shop",
+            "luck": "luck",
+            "energy_description": "increase the energy of your shield generator",
+            "life_description": "get an extra life",
+            "luck_description": "increase the chance that stars & items appear"
         }
     },
     "de": {
@@ -167,6 +174,13 @@
         "pause_menu": {
             "missions": "Missionen",
             "complete": "geschafft"
+        },
+        "shop": {
+            "shop": "shop",
+            "luck": "gl\u00DCck",
+            "energy_description": "erh\u00D6he die energie deines schildgenerators",
+            "life_description": "erhalte ein extra leben",
+            "luck_description": "erh\u00D6he die chance f\u00DCr sterne & extras"
         }
     }
 }

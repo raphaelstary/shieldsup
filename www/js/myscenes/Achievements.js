@@ -37,23 +37,24 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math) {
         self.sceneStorage.menuSceneButtons.push(backButton);
 
         drawAchievement(Height.get(48, 8), CONQUEROR);
-        drawAchievement(Height.get(48, 14), SHOPPING_QUEEN);
-        drawAchievement(Height.get(48, 20), CLOSER, true);
-        drawAchievement(Height.get(48, 26), LIVE_ONCE);
-        drawAchievement(Height.get(48, 32), STAR_GAZER);
-        drawAchievement(Height.get(48, 38), FASTER_THAN_LIGHT);
+        drawAchievement(Height.get(48, 15), SHOPPING_QUEEN);
+        drawAchievement(Height.get(48, 22), CLOSER, true);
+        drawAchievement(Height.get(48, 29), LIVE_ONCE);
+        drawAchievement(Height.get(48, 36), STAR_GAZER);
+        drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT);
 
         function drawAchievement(yFn, header, complete) {
-            var achievement_1_bg = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(480, 50),
+            var achievement_1_bg = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(480, 60),
                 complete ? DARK_GOLD : VIOLET, true, undefined, 7);
             if (complete) {
                 drawables.push(self.stage.drawText(Width.get(20, 17), subtract(yFn, Height.get(480, 10)),
                     self.messages.get(KEY, DONE), Font._40, SPECIAL_FONT, GOLD, 8, undefined, Math.PI / 8));
             }
-            var achievement_1_header = self.stage.drawText(Width.HALF, subtract(yFn, Height.get(480, 13)),
+            var achievement_1_header = self.stage.drawText(Width.HALF, subtract(yFn, Height.get(480, 15)),
                 self.messages.get(KEY, header), Font._40, SPECIAL_FONT, WHITE, 8);
             var achievement_1_text = self.stage.drawText(Width.HALF, add(yFn, Height.get(480, 10)),
-                self.messages.get(KEY, header + '_description'), Font._60, FONT, LIGHT_GREY, 8);
+                self.messages.get(KEY, header + '_description'), Font._60, FONT, LIGHT_GREY, 8, undefined, undefined,
+                undefined, Width.get(10, 8), Height.get(30));
             drawables.push(achievement_1_bg, achievement_1_header, achievement_1_text);
         }
 

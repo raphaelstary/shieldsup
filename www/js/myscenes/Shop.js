@@ -1,4 +1,4 @@
-var Shop = (function () {
+var Shop = (function (Width, Height, add, Font) {
     "use strict";
 
     function Shop(services) {
@@ -25,41 +25,67 @@ var Shop = (function () {
     var DARK_GOLD = '#B8860B';
     var LIGHT_GREY = '#c4c4c4';
 
+    var PLAYER_LIFE = 'player_life';
+    var STAR = 'star';
+    var SHIELDS = 'shields';
+    var ENERGY_FULL = 'energy_full';
+
+    var KEY = 'shop';
+    var SHOP = 'shop';
+    var ENERGY_DESCRIPTION = 'energy_description';
+    var LIFE_DESCRIPTION = 'life_description';
+    var LUCK = 'luck';
+    var LUCK_DESCRIPTION = 'luck_description';
+
     Shop.prototype.show = function (next) {
         var self = this;
 
-        var header = self.stage.drawText(Width.HALF, Height.get(48, 5), 'Shop', Font._15, FONT, LIGHT_GREY);
+        var header = self.stage.drawText(Width.HALF, Height.get(48, 5), self.messages.get(KEY, SHOP), Font._15, FONT,
+            LIGHT_GREY);
+        self.messages.add(header, header.data, KEY, SHOP);
 
         var starsYFn = Height.get(48, 10);
-        var starLeft = self.stage.drawFresh(Width.get(10, 3), starsYFn, 'star');
+        var starLeft = self.stage.drawFresh(Width.get(10, 3), starsYFn, STAR);
         var starValues = self.stage.drawText(Width.HALF, starsYFn, '350', Font._20, SPECIAL_FONT, WHITE);
-        var starRight = self.stage.drawFresh(Width.get(10, 7), starsYFn, 'star');
+        var starRight = self.stage.drawFresh(Width.get(10, 7), starsYFn, STAR);
 
         var symbolXFn = Width.get(32, 4);
         var buttonXFn = Width.get(32, 27);
 
-        var energyYFn = Height.get(48, 16);
-        var shields = self.stage.drawFresh(symbolXFn, energyYFn, 'shields', undefined, undefined, undefined, undefined,
+        var energyYFn = Height.get(48, 15);
+        var shields = self.stage.drawFresh(symbolXFn, energyYFn, SHIELDS, undefined, undefined, undefined, undefined,
             0.2);
-        var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 2)), 'energy_full', undefined,
+        var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 2)), ENERGY_FULL, undefined,
             undefined, undefined, undefined, 0.2);
         var energyLine = drawLine(energyYFn, 2);
         var energyButton = self.buttons.createSecondaryButton(buttonXFn, energyYFn, '150', function () {
-        }, 5, true, buttonsWidth);
+        }, 3, true, buttonsWidth);
+        var energyTxt = drawDescription(Height.get(48, 17), self.messages.get(KEY, ENERGY_DESCRIPTION));
+        self.messages.add(energyTxt, energyTxt.data, KEY, ENERGY_DESCRIPTION);
 
-        var lifeYFn = Height.get(48, 22);
-        var life = self.stage.drawFresh(symbolXFn, lifeYFn, 'player_life');
+        var lifeYFn = Height.get(48, 21);
+        var life = self.stage.drawFresh(symbolXFn, lifeYFn, PLAYER_LIFE);
         var lifeLine = drawLine(lifeYFn, 0);
         var lifeButton = self.buttons.createSecondaryButton(buttonXFn, lifeYFn, '250', function () {
-        }, 5, true, buttonsWidth);
+        }, 3, true, buttonsWidth);
+        var lifeTxt = drawDescription(Height.get(48, 23), self.messages.get(KEY, LIFE_DESCRIPTION));
+        self.messages.add(lifeTxt, lifeTxt.data, KEY, LIFE_DESCRIPTION);
 
-        var luckYFn = Height.get(48, 28);
-        var luck = self.stage.drawText(symbolXFn, luckYFn, 'luck', Font._40, FONT, WHITE);
+        var luckYFn = Height.get(48, 27);
+        var luck = self.stage.drawText(symbolXFn, luckYFn, self.messages.get(KEY, LUCK), Font._40, FONT, WHITE);
+        self.messages.add(luck, luck.data, KEY, LUCK);
         var luckLine = drawLine(luckYFn, 3);
         var luckButton = self.buttons.createSecondaryButton(buttonXFn, luckYFn, '200', function () {
-        }, 5, true, buttonsWidth);
+        }, 3, true, buttonsWidth);
+        var luckTxt = drawDescription(Height.get(48, 29), self.messages.get(KEY, LUCK_DESCRIPTION));
+        self.messages.add(luckTxt, luckTxt.data, KEY, LUCK_DESCRIPTION);
 
         showButtons();
+
+        function drawDescription(yFn, txt) {
+            return self.stage.drawText(Width.get(32, 15), yFn, txt, Font._60, FONT, LIGHT_GREY, undefined, undefined,
+                undefined, undefined, Width.HALF, Height.get(50));
+        }
 
         function buttonsWidth(width) {
             return Width.get(32, 5)(width);
@@ -141,4 +167,4 @@ var Shop = (function () {
     };
 
     return Shop;
-})();
+})(Width, Height, add, Font);
