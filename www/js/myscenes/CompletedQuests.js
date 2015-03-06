@@ -33,8 +33,8 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
             self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
-        var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
-            '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
+        //var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
+        //    '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
 
         var drawables = [];
         drawables.push.apply(drawables, questIn(Height.get(48, 10), 'Reach 500 meters', false));
@@ -83,7 +83,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
                     if (doOnce) {
                         doOnce = false;
                         self.stage.remove(quests_header);
-                        self.stage.remove(quest_count_txt);
+                        //self.stage.remove(quest_count_txt);
                     }
                     if (badge) {
                         self.stage.remove(badge);
@@ -113,7 +113,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
             self.messages.get('common_buttons', SKIP), function () {
                 drawables.forEach(self.stage.remove.bind(self.stage));
                 self.stage.remove(quests_header);
-                self.stage.remove(quest_count_txt);
+                //self.stage.remove(quest_count_txt);
                 nextScene();
             }, 3);
     };
