@@ -227,8 +227,9 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                         self.events.unsubscribe(nextScene);
                         self.timer.doLater(next, 6);
                     });
+                    self.events.fireSync(Event.PAUSE);
                     self.events.fire(Event.SHOW_ROTATE_DEVICE);
-                    self.events.fire(Event.PAUSE);
+
                 }
             }
             if (!isFs && self.device.isMobile) {
