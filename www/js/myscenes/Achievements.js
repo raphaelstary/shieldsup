@@ -1,4 +1,4 @@
-var Achievements = (function (Width, Height, Font, subtract, add, Math) {
+var Achievements = (function (Width, Height, Font, subtract, add, Math, localStorage) {
     "use strict";
 
     function Achievements(services) {
@@ -7,6 +7,14 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math) {
         this.buttons = services.buttons;
         this.sceneStorage = services.sceneStorage;
     }
+
+    var GAME_KEY = 'shields_up-';
+    var ACHIEVEMENT_CONQUEROR = GAME_KEY + 'achievement_conqueror';
+    var ACHIEVEMENT_SHOPPING_QUEEN = GAME_KEY + 'achievement_shopping_queen';
+    var ACHIEVEMENT_CLOSER = GAME_KEY + 'achievement_closer';
+    var ACHIEVEMENT_LIVE_ONCE = GAME_KEY + 'achievement_live_once';
+    var ACHIEVEMENT_STAR_GAZER = GAME_KEY + 'achievement_star_gazer';
+    var ACHIEVEMENT_FASTER_THAN_LIGHT = GAME_KEY + 'achievement_faster_than_light';
 
     var KEY = 'achievements';
     var DONE = 'done';
@@ -36,12 +44,16 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math) {
             self.messages.get(COMMON_KEY, BACK), endScene, 7);
         self.sceneStorage.menuSceneButtons.push(backButton);
 
-        drawAchievement(Height.get(48, 8), CONQUEROR);
-        drawAchievement(Height.get(48, 15), SHOPPING_QUEEN);
-        drawAchievement(Height.get(48, 22), CLOSER, true);
-        drawAchievement(Height.get(48, 29), LIVE_ONCE);
-        drawAchievement(Height.get(48, 36), STAR_GAZER);
-        drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT);
+        drawAchievement(Height.get(48, 8), CONQUEROR, loadBoolean(ACHIEVEMENT_CONQUEROR));
+        drawAchievement(Height.get(48, 15), SHOPPING_QUEEN, loadBoolean(ACHIEVEMENT_SHOPPING_QUEEN));
+        drawAchievement(Height.get(48, 22), CLOSER, loadBoolean(CLOSER));
+        drawAchievement(Height.get(48, 29), LIVE_ONCE, loadBoolean(LIVE_ONCE));
+        drawAchievement(Height.get(48, 36), STAR_GAZER, loadBoolean(STAR_GAZER));
+        drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT, loadBoolean(FASTER_THAN_LIGHT));
+
+        function loadBoolean(key) {
+            return localStorage.getItem(key) == 'true';
+        }
 
         function drawAchievement(yFn, header, complete) {
             var achievement_1_bg = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(480, 60),
@@ -75,4 +87,4 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math) {
     };
 
     return Achievements;
-})(Width, Height, Font, subtract, add, Math);
+})(Width, Height, Font, subtract, add, Math, lclStorage);

@@ -1,20 +1,3 @@
-var lclStorage;
-try {
-    lclStorage = window.localStorage;
-} catch (e) {
-    lclStorage = {
-        dict: {},
-        getItem: function (id) {
-            "use strict";
-            return this.dict[id];
-        },
-        setItem: function (id, value) {
-            "use strict";
-            this.dict[id] = value;
-        }
-    }
-}
-
 var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract, showMenu) {
     "use strict";
 
