@@ -67,7 +67,7 @@
         "achievements": {
             "done": "done",
             "conqueror": "conqueror",
-            "conqueror_description": "Defeat the Monster at the end of the asteroid field",
+            "conqueror_description": "Make it through the asteroid field",
             "shopping_queen": "shopping queen",
             "shopping_queen_description": "Buy everything in the shop",
             "closer": "The Closer",
@@ -159,7 +159,7 @@
         "achievements": {
             "done": "Geschafft",
             "conqueror": "Bezwinger",
-            "conqueror_description": "Besiege das Ungeheuer am Ende des Asteroidenfelds",
+            "conqueror_description": "Fliege durch das gesamte Asteroidenfeld",
             "shopping_queen": "shopping queen",
             "shopping_queen_description": "Kaufe alles im Shop",
             "closer": "Abschliesser",

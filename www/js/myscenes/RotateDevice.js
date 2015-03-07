@@ -26,7 +26,7 @@ var RotateDevice = (function (Width, Height, Font, Event) {
 
             rect = self.stage.drawRectangle(Width.HALF, Height.TWO_THIRD, Width.get(7), Height.HALF, WHITE, true,
                 undefined, 11, 0.5, Math.PI / 2);
-            self.stage.animateRotation(rect, 0, 90, Transition.LINEAR, true);
+            self.stage.animateRotation(rect, 0, 180, Transition.LINEAR, true);
         });
 
         this.events.subscribe(Event.REMOVE_ROTATE_DEVICE, function () {
