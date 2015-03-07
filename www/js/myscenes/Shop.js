@@ -1,4 +1,4 @@
-var Shop = (function (Width, Height, add, Font) {
+var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event) {
     "use strict";
 
     function Shop(services) {
@@ -10,6 +10,12 @@ var Shop = (function (Width, Height, add, Font) {
         this.events = services.events;
         this.device = services.device;
     }
+
+    var GAME_KEY = 'shields_up-';
+    var TOTAL_STARS = GAME_KEY + 'total_stars';
+    var SHOP_ENERGY = GAME_KEY + 'shop_energy';
+    var SHOP_LIFE = GAME_KEY + 'shop_life';
+    var SHOP_LUCK = GAME_KEY + 'shop_luck';
 
     var BUTTON_KEY = 'common_buttons';
     var PLAY = 'play';
@@ -38,20 +44,15 @@ var Shop = (function (Width, Height, add, Font) {
     var LUCK = 'luck';
     var LUCK_DESCRIPTION = 'luck_description';
 
+    var MENU_SETTINGS = 'settings';
+    var MENU_ACHIEVEMENTS = 'achievements';
+
+    var energyPrices = [100, 300, 900];
+    var lifePrices = [200, 400, 1200];
+    var luckPrices = [150, 350, 1000];
+
     Shop.prototype.show = function (next) {
-        var self = this;
-
-        var shakerEnergy = new ScreenShaker(self.device);
-        var shakerEnergyResizeId = self.events.subscribe(Event.RESIZE, shakerEnergy.resize.bind(shakerEnergy));
-        var shakerEnergyTickId = self.events.subscribe(Event.TICK_MOVE, shakerEnergy.update.bind(shakerEnergy));
-
-        var shakerLife = new ScreenShaker(self.device);
-        var shakerLifeResizeId = self.events.subscribe(Event.RESIZE, shakerLife.resize.bind(shakerLife));
-        var shakerLifeTickId = self.events.subscribe(Event.TICK_MOVE, shakerLife.update.bind(shakerLife));
-
-        var shakerLuck = new ScreenShaker(self.device);
-        var shakerLuckResizeId = self.events.subscribe(Event.RESIZE, shakerLuck.resize.bind(shakerLuck));
-        var shakerLuckTickId = self.events.subscribe(Event.TICK_MOVE, shakerLuck.update.bind(shakerLuck));
+        var self = this, totalStarsValue, starsValue, energyItem, lifeItem, luckItem;
 
         var header = self.stage.drawText(Width.HALF, Height.get(48, 4), self.messages.get(KEY, SHOP), Font._15, FONT,
             LIGHT_GREY);
@@ -59,60 +60,105 @@ var Shop = (function (Width, Height, add, Font) {
 
         var starsYFn = Height.get(48, 8);
         var starLeft = self.stage.drawFresh(Width.get(10, 3), starsYFn, STAR);
-        var starValues = self.stage.drawText(Width.HALF, starsYFn, '350', Font._20, SPECIAL_FONT, WHITE);
         var starRight = self.stage.drawFresh(Width.get(10, 7), starsYFn, STAR);
 
         var symbolXFn = Width.get(32, 5);
-        var buttonXFn = Width.get(32, 27);
 
         var energyYFn = Height.get(48, 13);
         var shields = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48)), SHIELDS, undefined, undefined,
-            undefined, undefined,
-            0.2);
+            undefined, undefined, 0.2);
         var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 3)), ENERGY_FULL, undefined,
             undefined, undefined, undefined, 0.2);
-        var energyLine = drawLine(energyYFn, 2);
-        var energyButton = self.buttons.createSecondaryButton(buttonXFn, add(energyYFn, Height.get(48)), '150',
-            function () {
-            shakerEnergy.startSmallShake();
-        }, 3, true, buttonsWidth);
-        shakerEnergy.add(energyButton.text);
-        shakerEnergy.add(energyButton.background);
-        energyButton.text.data.color = DARK_GRAY;
-        var energyTxt = drawDescription(add(energyYFn, Height.get(48, 2)), self.messages.get(KEY, ENERGY_DESCRIPTION));
-        self.messages.add(energyTxt, energyTxt.data, KEY, ENERGY_DESCRIPTION);
-        var energyBG = drawBackGround(energyYFn);
 
         var lifeYFn = Height.get(48, 20);
         var life = self.stage.drawFresh(symbolXFn, add(lifeYFn, Height.get(48)), PLAYER_LIFE);
-        var lifeLine = drawLine(lifeYFn, 0);
-        var lifeButton = self.buttons.createSecondaryButton(buttonXFn, add(lifeYFn, Height.get(48)), '250',
-            function () {
-                lifeLine[0].data.filled = true;
-                //shakerLife.startSmallShake();
-        }, 3, true, buttonsWidth);
-        shakerLife.add(lifeButton.text);
-        shakerLife.add(lifeButton.background);
-        var lifeTxt = drawDescription(add(lifeYFn, Height.get(48, 2)), self.messages.get(KEY, LIFE_DESCRIPTION));
-        self.messages.add(lifeTxt, lifeTxt.data, KEY, LIFE_DESCRIPTION);
-        var lifeBG = drawBackGround(lifeYFn);
 
         var luckYFn = Height.get(48, 27);
         var luck = self.stage.drawText(symbolXFn, add(luckYFn, Height.get(48)), self.messages.get(KEY, LUCK), Font._40,
             FONT, WHITE);
         self.messages.add(luck, luck.data, KEY, LUCK);
-        var luckLine = drawLine(luckYFn, 3);
-        var luckButton = self.buttons.createSecondaryButton(buttonXFn, add(luckYFn, Height.get(48)), '200',
-            function () {
-            shakerLuck.startSmallShake();
-        }, 3, true, buttonsWidth);
-        shakerLuck.add(luckButton.text);
-        shakerLuck.add(luckButton.background);
-        var luckTxt = drawDescription(add(luckYFn, Height.get(48, 2)), self.messages.get(KEY, LUCK_DESCRIPTION));
-        self.messages.add(luckTxt, luckTxt.data, KEY, LUCK_DESCRIPTION);
-        var luckBG = drawBackGround(luckYFn);
 
+        createShopItems();
         showButtons();
+
+        function createShopItems() {
+            totalStarsValue = loadInteger(TOTAL_STARS);
+            starsValue = self.stage.drawText(Width.HALF, starsYFn, totalStarsValue.toString(), Font._20, SPECIAL_FONT,
+                WHITE);
+
+            energyItem = createShopItem(energyYFn, ENERGY_DESCRIPTION, SHOP_ENERGY, energyPrices);
+            lifeItem = createShopItem(lifeYFn, LIFE_DESCRIPTION, SHOP_LIFE, lifePrices);
+            luckItem = createShopItem(luckYFn, LUCK_DESCRIPTION, SHOP_LUCK, luckPrices);
+        }
+
+        function removeShopItems() {
+            self.stage.remove(starsValue);
+
+            removeShopItem(energyItem);
+            removeShopItem(lifeItem);
+            removeShopItem(luckItem);
+        }
+
+        function loadInteger(key) {
+            var value = localStorage.getItem(key);
+            if (value == null)
+                return 0;
+            return parseInt(value);
+        }
+
+        function createShopItem(yFn, descriptionKey, storageKey, prices) {
+            var upgrades = loadInteger(storageKey);
+            var price = prices[upgrades];
+
+            var shaker = new ScreenShaker(self.device);
+            var shakerResizeId = self.events.subscribe(Event.RESIZE, shaker.resize.bind(shaker));
+            var shakerTickId = self.events.subscribe(Event.TICK_MOVE, shaker.update.bind(shaker));
+
+            var line = drawLine(yFn, upgrades);
+            var canBuy = true;
+            var button = self.buttons.createSecondaryButton(Width.get(32, 27), add(yFn, Height.get(48)),
+                price.toString(), function () {
+                    if (canBuy) {
+                        localStorage.setItem(storageKey, (++upgrades).toString());
+                        localStorage.setItem(TOTAL_STARS, totalStarsValue - price);
+
+                        removeShopItems();
+                        createShopItems();
+                    } else {
+                        shaker.startSmallShake();
+                    }
+                }, 3, true, buttonsWidth);
+            shaker.add(button.text);
+            shaker.add(button.background);
+            var description = drawDescription(add(yFn, Height.get(48, 2)), self.messages.get(KEY, descriptionKey));
+            self.messages.add(description, description.data, KEY, descriptionKey);
+            var background = drawBackGround(yFn);
+
+            if (price > totalStarsValue) {
+                canBuy = false;
+                button.text.data.color = DARK_GRAY;
+            }
+
+            return {
+                shaker: shaker,
+                shakerResizeId: shakerResizeId,
+                shakerTickId: shakerTickId,
+                line: line,
+                button: button,
+                description: description,
+                background: background
+            }
+        }
+
+        function removeShopItem(item) {
+            self.events.unsubscribe(item.shakerResizeId);
+            self.events.unsubscribe(item.shakerTickId);
+            item.line.forEach(self.stage.remove.bind(self.stage));
+            self.buttons.remove(item.button);
+            self.messages.remove(item.description);
+            self.stage.remove(item.description);
+            self.stage.remove(item.background);
+        }
 
         function drawBackGround(yFn) {
             return self.stage.drawRectangle(Width.HALF, add(yFn, Height.get(48)), Width.get(10, 9), Height.get(48, 6),
@@ -144,12 +190,12 @@ var Shop = (function (Width, Height, add, Font) {
         function showButtons() {
 
             function goToSettings() {
-                self.sceneStorage.menuScene = 'settings';
+                self.sceneStorage.menuScene = MENU_SETTINGS;
                 showSettingsScreen();
             }
 
             function goToAchievements() {
-                self.sceneStorage.menuScene = 'achievements';
+                self.sceneStorage.menuScene = MENU_ACHIEVEMENTS;
                 showSettingsScreen();
             }
 
@@ -198,10 +244,11 @@ var Shop = (function (Width, Height, add, Font) {
             if (itIsOver)
                 return;
             itIsOver = true;
+            self.messages.resetStorage();
 
             next();
         }
     };
 
     return Shop;
-})(Width, Height, add, Font);
+})(Width, Height, add, Font, ScreenShaker, lclStorage, Event);

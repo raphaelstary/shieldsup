@@ -28,19 +28,35 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
         this.device = services.device;
     }
 
+    var GAME_KEY = 'shields_up-';
+    var STORAGE_BEST_STARS = GAME_KEY + 'best_stars';
+    var STORAGE_BEST_DISTANCE = GAME_KEY + 'best_distance';
+    var STORAGE_TOTAL_STARS = GAME_KEY + 'total_stars';
+
+    var STARS = 'stars';
+    var DISTANCE = 'distance';
+    var MENU_SETTINGS = 'settings';
+    var MENU_ACHIEVEMENTS = 'achievements';
+    var TOTAL_STARS = 'total_stars';
+    var MISSIONS = 'missions';
+    var PAUSE_KEY = 'pause_menu';
+    var COMPLETE = 'complete';
     var BEST = 'best';
-    var ALL_TIME_HIGH_SCORE_STARS = 'all_time_high_score_distance_stars';
-    var ALL_TIME_HIGH_SCORE_DISTANCE = 'all_time_high_score_distance';
+    var NEW_RECORD = 'new_record';
     var KEY = 'post_game';
     var FONT = 'GameFont';
     var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
+    var GOLD = '#ffd700';
 
     var BUTTON_KEY = 'common_buttons';
     var RESUME = 'resume';
     var SETTINGS = 'settings';
     var ACHIEVEMENTS = 'achievements';
     var MORE_GAMES = 'more_games';
+
+    var DOOR_AIR_LOCK_CLOSING = 'door_air_lock_closing';
+    var THUNDER_ROLL = 'thunder_roll';
 
     PostGame.prototype.show = function (nextScene) {
         var points = this.sceneStorage.points || 0;
@@ -49,13 +65,13 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
         delete this.sceneStorage.distanceValue;
 
         var self = this;
-        var thunder = self.sounds.play('thunder_roll');
+        var thunder = self.sounds.play(THUNDER_ROLL);
         var speed = 60;
         if (this.sceneStorage.do30fps)
             speed /= 2;
 
         var quest_count_txt = self.stage.moveFreshText(Width.THREE_QUARTER, subtract(Height.get(48, 5), Height.FULL),
-            '2 / 40 ' + self.messages.get('pause_menu', 'complete'), Font._60, FONT, WHITE, Width.THREE_QUARTER,
+            '2 / 40 ' + self.messages.get(PAUSE_KEY, COMPLETE), Font._60, FONT, WHITE, Width.THREE_QUARTER,
             Height.get(48, 5), speed, Transition.EASE_OUT_ELASTIC, false, function () {
 
                 function moveIn(text, xFn, yFn, delay, callback) {
@@ -71,67 +87,129 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     return Height.HALF(height) + Font._30(0, height) * 2;
                 }
 
-                var allTimeHighScore_stars = localStorage.getItem(ALL_TIME_HIGH_SCORE_STARS);
-                if (allTimeHighScore_stars == null)
-                    allTimeHighScore_stars = '0';
+                var bestStarsValue = localStorage.getItem(STORAGE_BEST_STARS);
+                if (bestStarsValue == null)
+                    bestStarsValue = '0';
 
-                var allTimeHighScore_distance = localStorage.getItem(ALL_TIME_HIGH_SCORE_DISTANCE);
-                if (allTimeHighScore_distance == null)
-                    allTimeHighScore_distance = '0';
+                var bestDistanceValue = localStorage.getItem(STORAGE_BEST_DISTANCE);
+                if (bestDistanceValue == null)
+                    bestDistanceValue = '0';
 
-                var totalStars = localStorage.getItem(ALL_TIME_HIGH_SCORE_DISTANCE);
-                if (totalStars == null)
-                    totalStars = '0';
+                var newStarsRecord = points > parseInt(bestStarsValue);
+                var newDistanceRecord = distance > parseInt(bestDistanceValue);
 
-                var quests_header = moveIn(self.messages.get('pause_menu', 'missions'), Width.THIRD, Height.get(48, 5),
-                    1, function () {
-                        self.messages.add(quests_header.drawable, quests_header.drawable.data, 'pause_menu',
-                            'missions');
+                if (newStarsRecord)
+                    localStorage.setItem(STORAGE_BEST_STARS, points);
+
+                if (newDistanceRecord)
+                    localStorage.setItem(STORAGE_BEST_DISTANCE, distance);
+
+                var totalStarsValue = localStorage.getItem(STORAGE_TOTAL_STARS);
+                if (totalStarsValue == null)
+                    totalStarsValue = '0';
+
+                localStorage.setItem(STORAGE_TOTAL_STARS, parseInt(totalStarsValue) + points);
+                totalStarsValue = localStorage.getItem(STORAGE_TOTAL_STARS);
+
+                var quests_header = moveIn(self.messages.get(PAUSE_KEY, MISSIONS), Width.THIRD, Height.get(48, 5), 1,
+                    function () {
+                        self.messages.add(quests_header.drawable, quests_header.drawable.data, PAUSE_KEY, MISSIONS);
                     });
 
-                var totalStarsWrapper = moveIn(self.messages.get(KEY, 'total_stars'), Width.HALF, Height.get(48, 9), 7,
+                var totalStarsWrapper = moveIn(self.messages.get(KEY, TOTAL_STARS), Width.HALF, Height.get(48, 9), 7,
                     function () {
                         self.messages.add(totalStarsWrapper.drawable, totalStarsWrapper.drawable.data, KEY,
-                            'total_stars');
+                            TOTAL_STARS);
                     });
-                var totalStarsDigitWrapper = moveIn(totalStars, Width.HALF, Height.get(48, 12), 9);
+                var totalStarsDigitWrapper = moveIn(totalStarsValue, Width.HALF, Height.get(48, 12), 9);
 
                 var leftColFn = Width.get(16, 4);
                 var rightColFn = Width.get(16, 12);
-                var goldScoreWrapper = moveIn(self.messages.get(KEY, 'stars'), leftColFn, Height.THIRD, 10,
-                    function () {
-                        self.messages.add(goldScoreWrapper.drawable, goldScoreWrapper.drawable.data, KEY, 'stars');
-                    });
+                var goldScoreWrapper = moveIn(self.messages.get(KEY, STARS), leftColFn, Height.THIRD, 10, function () {
+                    self.messages.add(goldScoreWrapper.drawable, goldScoreWrapper.drawable.data, KEY, STARS);
+                });
                 var goldScoreDigitsWrapper = moveIn(points.toString(), leftColFn, getNewScoreY, 15);
                 var goldBestWrapper = moveIn(self.messages.get(KEY, BEST), leftColFn, Height.HALF, 20, function () {
                     self.messages.add(goldBestWrapper.drawable, goldBestWrapper.drawable.data, KEY, BEST);
                 });
-                var goldHighScoreWrapper = moveIn(allTimeHighScore_stars, leftColFn, getHighScoreY, 25);
+                var goldHighScoreWrapper = moveIn(bestStarsValue, leftColFn, getHighScoreY, 25);
 
-                var distanceScoreWrapper = moveIn(self.messages.get(KEY, 'distance'), rightColFn, Height.THIRD, 27,
+                var distanceScoreWrapper = moveIn(self.messages.get(KEY, DISTANCE), rightColFn, Height.THIRD, 27,
                     function () {
                         self.messages.add(distanceScoreWrapper.drawable, distanceScoreWrapper.drawable.data, KEY,
-                            'distance');
+                            DISTANCE);
                     });
                 var distanceScoreDigitsWrapper = moveIn(distance.toString() + ' m', rightColFn, getNewScoreY, 30);
                 var distanceBestWrapper = moveIn(self.messages.get(KEY, BEST), rightColFn, Height.HALF, 32,
                     function () {
                         self.messages.add(distanceBestWrapper.drawable, distanceBestWrapper.drawable.data, KEY, BEST);
                     });
-                var distanceHighScoreWrapper = moveIn(allTimeHighScore_distance + ' m', rightColFn, getHighScoreY, 35,
+                var distanceHighScoreWrapper = moveIn(bestDistanceValue + ' m', rightColFn, getHighScoreY, 35,
                     showButtons);
 
-                var playButton, achievementsButton, settingsButton, moreGamesButton;
+                var playButton, achievementsButton, settingsButton, moreGamesButton, newDistance, newDistanceHighlight, newStars, newStarsHighlight;
 
                 function showButtons() {
+                    function getNewStarsX() {
+                        return goldScoreDigitsWrapper.drawable.getCornerX() -
+                            goldScoreDigitsWrapper.drawable.getWidth();
+                    }
+
+                    function getNewDistanceX() {
+                        return distanceScoreDigitsWrapper.drawable.getCornerX() -
+                            distanceScoreDigitsWrapper.drawable.getWidthHalf();
+                    }
+
+                    if (newDistanceRecord) {
+                        newDistance = self.stage.drawText(getNewDistanceX, getNewScoreY,
+                            self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,
+                            [distanceScoreDigitsWrapper]);
+                        newDistanceHighlight = self.stage.drawText(getNewDistanceX, getNewScoreY,
+                            self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
+                            [distanceScoreDigitsWrapper]);
+                        self.stage.animateAlphaPattern(newDistanceHighlight, [
+                            {
+                                value: 1,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }, {
+                                value: 0,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }
+                        ], true);
+                        self.messages.add(newDistance, newDistance.data, KEY, NEW_RECORD);
+                        self.messages.add(newDistanceHighlight, newDistanceHighlight.data, KEY, NEW_RECORD);
+                    }
+
+                    if (newStarsRecord) {
+                        newStars = self.stage.drawText(getNewStarsX, getNewScoreY, self.messages.get(KEY, NEW_RECORD),
+                            Font._30, SPECIAL_FONT, GOLD, 3, [goldScoreDigitsWrapper]);
+                        newStarsHighlight = self.stage.drawText(getNewStarsX, getNewScoreY,
+                            self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
+                            [goldScoreDigitsWrapper]);
+                        self.stage.animateAlphaPattern(newStarsHighlight, [
+                            {
+                                value: 1,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }, {
+                                value: 0,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }
+                        ], true);
+                        self.messages.add(newStars, newStars.data, KEY, NEW_RECORD);
+                        self.messages.add(newStarsHighlight, newStarsHighlight.data, KEY, NEW_RECORD);
+                    }
 
                     function goToSettings() {
-                        self.sceneStorage.menuScene = 'settings';
+                        self.sceneStorage.menuScene = MENU_SETTINGS;
                         showSettingsScreen();
                     }
 
                     function goToAchievements() {
-                        self.sceneStorage.menuScene = 'achievements';
+                        self.sceneStorage.menuScene = MENU_ACHIEVEMENTS;
                         showSettingsScreen();
                     }
 
@@ -191,11 +269,8 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                             return;
                         itIsOver = true;
 
-                        if (points > parseInt(allTimeHighScore_stars, 10))
-                            localStorage.setItem(ALL_TIME_HIGH_SCORE_STARS, points);
-
                         self.sounds.stop(thunder);
-                        self.sounds.play('door_air_lock_closing');
+                        self.sounds.play(DOOR_AIR_LOCK_CLOSING);
                         //self.sounds.stop(coins);
                         nextScene();
                     });
@@ -210,6 +285,14 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     moveOut(distanceHighScoreWrapper.drawable, rightColFn, getHighScoreY, 3);
 
                     moveOut(goldHighScoreWrapper.drawable, leftColFn, getHighScoreY, 5, function () {
+                        if (newDistance) {
+                            self.stage.remove(newDistance);
+                            self.stage.remove(newDistanceHighlight);
+                        }
+                        if (newStars) {
+                            self.stage.remove(newStars);
+                            self.stage.remove(newStarsHighlight);
+                        }
                         self.buttons.remove(playButton);
                         self.buttons.remove(achievementsButton);
                         self.buttons.remove(settingsButton);
