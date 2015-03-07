@@ -1,4 +1,4 @@
-var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event) {
+var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event, showMenu) {
     "use strict";
 
     function Shop(services) {
@@ -26,9 +26,6 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     var FONT = 'GameFont';
     var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
-    var VIOLET = '#3a2e3f';
-    var GOLD = '#ffd700';
-    var DARK_GOLD = '#B8860B';
     var LIGHT_GREY = '#c4c4c4';
     var DARK_GRAY = '#A9A9A9';
 
@@ -52,31 +49,38 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     var luckPrices = [150, 350, 1000];
 
     Shop.prototype.show = function (next) {
-        var self = this, totalStarsValue, starsValue, energyItem, lifeItem, luckItem;
+        var self = this, totalStarsValue, starsValue, energyItem, lifeItem, luckItem, drawables = [];
 
         var header = self.stage.drawText(Width.HALF, Height.get(48, 4), self.messages.get(KEY, SHOP), Font._15, FONT,
             LIGHT_GREY);
+        drawables.push(header);
         self.messages.add(header, header.data, KEY, SHOP);
 
         var starsYFn = Height.get(48, 8);
         var starLeft = self.stage.drawFresh(Width.get(10, 3), starsYFn, STAR);
+        drawables.push(starLeft);
         var starRight = self.stage.drawFresh(Width.get(10, 7), starsYFn, STAR);
+        drawables.push(starRight);
 
         var symbolXFn = Width.get(32, 5);
 
         var energyYFn = Height.get(48, 13);
         var shields = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48)), SHIELDS, undefined, undefined,
             undefined, undefined, 0.2);
+        drawables.push(shields);
         var energy = self.stage.drawFresh(symbolXFn, add(energyYFn, Height.get(48, 3)), ENERGY_FULL, undefined,
             undefined, undefined, undefined, 0.2);
+        drawables.push(energy);
 
         var lifeYFn = Height.get(48, 20);
         var life = self.stage.drawFresh(symbolXFn, add(lifeYFn, Height.get(48)), PLAYER_LIFE);
+        drawables.push(life);
 
         var luckYFn = Height.get(48, 27);
         var luck = self.stage.drawText(symbolXFn, add(luckYFn, Height.get(48)), self.messages.get(KEY, LUCK), Font._40,
             FONT, WHITE);
         self.messages.add(luck, luck.data, KEY, LUCK);
+        drawables.push(luck);
 
         createShopItems();
         showButtons();
@@ -238,12 +242,22 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             self.messages.add(moreGamesButton.text, moreGamesButton.text.data, BUTTON_KEY, MORE_GAMES);
         }
 
+        function removeButtons() {
+            self.buttons.remove(playButton);
+            self.buttons.remove(achievementsButton);
+            self.buttons.remove(settingsButton);
+            self.buttons.remove(moreGamesButton);
+        }
+
         var itIsOver = false;
 
         function nextScene() {
             if (itIsOver)
                 return;
             itIsOver = true;
+            removeShopItems();
+            drawables.forEach(self.stage.remove.bind(self.stage));
+            removeButtons();
             self.messages.resetStorage();
 
             next();
@@ -251,4 +265,4 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     };
 
     return Shop;
-})(Width, Height, add, Font, ScreenShaker, lclStorage, Event);
+})(Width, Height, add, Font, ScreenShaker, lclStorage, Event, showMenu);
