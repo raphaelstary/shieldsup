@@ -1,4 +1,5 @@
-var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event, showMenu) {
+var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event, showMenu, loadInteger,
+    checkAchievements, Math) {
     "use strict";
 
     function Shop(services) {
@@ -47,6 +48,10 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     var energyPrices = [100, 300, 900];
     var lifePrices = [200, 400, 1200];
     var luckPrices = [150, 350, 1000];
+
+    var NEW_RECORD = 'new_record';
+    var POST_GAME_KEY = 'post_game';
+    var GOLD = '#ffd700';
 
     Shop.prototype.show = function (next) {
         var self = this, totalStarsValue, starsValue, energyItem, lifeItem, luckItem, drawables = [];
@@ -103,13 +108,6 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             removeShopItem(luckItem);
         }
 
-        function loadInteger(key) {
-            var value = localStorage.getItem(key);
-            if (value == null)
-                return 0;
-            return parseInt(value);
-        }
-
         function createShopItem(yFn, descriptionKey, storageKey, prices) {
             var upgrades = loadInteger(storageKey);
             var price = prices[upgrades];
@@ -128,6 +126,7 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
 
                         removeShopItems();
                         createShopItems();
+                        checkForShopAchievement();
                     } else {
                         shaker.startSmallShake();
                     }
@@ -242,11 +241,53 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             self.messages.add(moreGamesButton.text, moreGamesButton.text.data, BUTTON_KEY, MORE_GAMES);
         }
 
+        var newAchievement, newAchievementHighlight;
+
+        function checkForShopAchievement() {
+            if (newAchievements)
+                return;
+
+            function getNewAchievementX() {
+                return achievementsButton.background.getEndX();
+            }
+
+            function getNewAchievementY() {
+                return achievementsButton.background.y;
+            }
+
+            var newAchievements = checkAchievements(0, 100, 1, 2);
+            if (newAchievements.length > 0) {
+                newAchievement = self.stage.drawText(getNewAchievementX, getNewAchievementY,
+                    self.messages.get(POST_GAME_KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,
+                    [achievementsButton.background], Math.PI / 8);
+                newAchievementHighlight = self.stage.drawText(getNewAchievementX, getNewAchievementY,
+                    self.messages.get(POST_GAME_KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
+                    [achievementsButton.background], Math.PI / 8);
+                self.stage.animateAlphaPattern(newAchievementHighlight, [
+                    {
+                        value: 1,
+                        duration: 30,
+                        easing: Transition.LINEAR
+                    }, {
+                        value: 0,
+                        duration: 30,
+                        easing: Transition.LINEAR
+                    }
+                ], true);
+                self.messages.add(newAchievement, newAchievement.data, POST_GAME_KEY, NEW_RECORD);
+                self.messages.add(newAchievementHighlight, newAchievementHighlight.data, POST_GAME_KEY, NEW_RECORD);
+            }
+        }
+
         function removeButtons() {
             self.buttons.remove(playButton);
             self.buttons.remove(achievementsButton);
             self.buttons.remove(settingsButton);
             self.buttons.remove(moreGamesButton);
+            if (newAchievement) {
+                self.stage.remove(newAchievement);
+                self.stage.remove(newAchievementHighlight);
+            }
         }
 
         var itIsOver = false;
@@ -265,4 +306,4 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     };
 
     return Shop;
-})(Width, Height, add, Font, ScreenShaker, lclStorage, Event, showMenu);
+})(Width, Height, add, Font, ScreenShaker, lclStorage, Event, showMenu, loadInteger, checkAchievements, Math);

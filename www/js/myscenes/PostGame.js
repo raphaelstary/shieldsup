@@ -1,4 +1,5 @@
-var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract, showMenu) {
+var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract, showMenu, parseInt,
+    checkAchievements, Math) {
     "use strict";
 
     function PostGame(services) {
@@ -31,6 +32,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
     var GOLD = '#ffd700';
+    var LIGHT_GREY = '#c4c4c4';
 
     var BUTTON_KEY = 'common_buttons';
     var RESUME = 'resume';
@@ -130,7 +132,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                 var distanceHighScoreWrapper = moveIn(bestDistanceValue + ' m', rightColFn, getHighScoreY, 35,
                     showButtons);
 
-                var playButton, achievementsButton, settingsButton, moreGamesButton, newDistance, newDistanceHighlight, newStars, newStarsHighlight;
+                var playButton, achievementsButton, settingsButton, moreGamesButton, newDistance, newDistanceHighlight, newStars, newStarsHighlight, newAchievement, newAchievementHighlight;
 
                 function showButtons() {
                     function getNewStarsX() {
@@ -233,6 +235,37 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     moreGamesButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 455),
                         self.messages.get(BUTTON_KEY, MORE_GAMES), showMoreGames, 3, false, getButtonWidth);
                     self.messages.add(moreGamesButton.text, moreGamesButton.text.data, BUTTON_KEY, MORE_GAMES);
+
+                    function getNewAchievementX() {
+                        return achievementsButton.background.getEndX();
+                    }
+
+                    function getNewAchievementY() {
+                        return achievementsButton.background.y;
+                    }
+
+                    var newAchievements = checkAchievements(0, 100, 1, 2);
+                    if (newAchievements.length > 0) {
+                        newAchievement = self.stage.drawText(getNewAchievementX, getNewAchievementY,
+                            self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,
+                            [achievementsButton.background], Math.PI / 8);
+                        newAchievementHighlight = self.stage.drawText(getNewAchievementX, getNewAchievementY,
+                            self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
+                            [achievementsButton.background], Math.PI / 8);
+                        self.stage.animateAlphaPattern(newAchievementHighlight, [
+                            {
+                                value: 1,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }, {
+                                value: 0,
+                                duration: 30,
+                                easing: Transition.LINEAR
+                            }
+                        ], true);
+                        self.messages.add(newAchievement, newAchievement.data, KEY, NEW_RECORD);
+                        self.messages.add(newAchievementHighlight, newAchievementHighlight.data, KEY, NEW_RECORD);
+                    }
                 }
 
                 function goToResume() {
@@ -276,6 +309,10 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                             self.stage.remove(newStars);
                             self.stage.remove(newStarsHighlight);
                         }
+                        if (newAchievement) {
+                            self.stage.remove(newAchievement);
+                            self.stage.remove(newAchievementHighlight);
+                        }
                         self.buttons.remove(playButton);
                         self.buttons.remove(achievementsButton);
                         self.buttons.remove(settingsButton);
@@ -289,4 +326,4 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     };
 
     return PostGame;
-})(lclStorage, Transition, Height, Width, add, Font, subtract, showMenu);
+})(lclStorage, Transition, Height, Width, add, Font, subtract, showMenu, parseInt, checkAchievements, Math);

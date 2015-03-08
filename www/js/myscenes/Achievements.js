@@ -1,4 +1,4 @@
-var Achievements = (function (Width, Height, Font, subtract, add, Math, localStorage) {
+var Achievements = (function (Width, Height, Font, subtract, add, Math, loadBoolean) {
     "use strict";
 
     function Achievements(services) {
@@ -51,10 +51,6 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math, localSto
         drawAchievement(Height.get(48, 36), STAR_GAZER, loadBoolean(STAR_GAZER));
         drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT, loadBoolean(FASTER_THAN_LIGHT));
 
-        function loadBoolean(key) {
-            return localStorage.getItem(key) == 'true';
-        }
-
         function drawAchievement(yFn, header, complete) {
             var achievement_1_bg = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(480, 60),
                 complete ? DARK_GOLD : VIOLET, true, undefined, 7);
@@ -87,4 +83,4 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math, localSto
     };
 
     return Achievements;
-})(Width, Height, Font, subtract, add, Math, lclStorage);
+})(Width, Height, Font, subtract, add, Math, loadBoolean);

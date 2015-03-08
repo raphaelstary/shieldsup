@@ -77,7 +77,7 @@
             "star_gazer": "Star Gazer",
             "star_gazer_description": "collect all stars in a complete run",
             "faster_than_light": "faster than light",
-            "faster_than_light_description": "complete the mission mode in 1 hour or less"
+            "faster_than_light_description": "complete all missions in 1 hour or less"
         },
         "pause_menu": {
             "missions": "missions",
@@ -169,7 +169,7 @@
             "star_gazer": "Sterngucker",
             "star_gazer_description": "Sammle alle Sterne bei einem vollst\u00C4ndigen flug",
             "faster_than_light": "Schneller als das Licht",
-            "faster_than_light_description": "Erledige den Missions Modus in 1 Stunde oder weniger"
+            "faster_than_light_description": "Erledige alle Missionen in 1 Stunde oder weniger"
         },
         "pause_menu": {
             "missions": "Missionen",
