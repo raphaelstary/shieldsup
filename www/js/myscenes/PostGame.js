@@ -44,10 +44,10 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     var THUNDER_ROLL = 'thunder_roll';
 
     PostGame.prototype.show = function (nextScene) {
-        var points = this.sceneStorage.points || 0;
-        delete this.sceneStorage.points;
-        var distance = this.sceneStorage.distanceValue || 0;
-        delete this.sceneStorage.distanceValue;
+        var gameStats = this.sceneStorage.gameStats;
+        var points = gameStats.points;
+        delete this.sceneStorage.gameStats;
+        var distance = gameStats.timePlayed;
 
         var self = this;
         var thunder = self.sounds.play(THUNDER_ROLL);

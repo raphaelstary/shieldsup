@@ -13,6 +13,9 @@ var PlayGame = (function ($) {
         this.events = services.events;
     }
 
+    var TOTAL_TIME = 'shields_up-total_time';
+    var TOTAL_STARTS = 'shields_up-total_starts';
+
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
 
@@ -27,22 +30,48 @@ var PlayGame = (function ($) {
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
         var distanceDrawable = this.sceneStorage.distance;
 
-        var distanceCounter = 0;
+        var gameStats = {
+            collectedStars: 0,
+            collectedStarsInARow: 0,
+            spawnedStars: 0,
+            destroyedStars: 0,
+            destroyedStarsInARow: 0,
+            completedWaves: 0,
+            perfectWaves: 0,
+            perfectWavesInARow: 0,
+            wavesWithoutLifeLost: 0,
+            wavesWithoutLifeLostInARow: 0,
+            livesLost: 0,
+            timePlayed: 0,
+            timeShieldsOn: 0,
+            timeShieldsOff: 0,
+            timeWithoutLifeLost: 0,
+            timeWithoutStarCollected: 0,
+            destroyedAsteroids: 0,
+            destroyedAsteroidsInARow: 0,
+            spawnedAsteroids: 0,
+            collectedAsteroids: 0,
+            collectedAsteroidsInARow: 0,
+            outOfEnergy: 0,
+            outOfEnergyInARow: 0,
+            points: 0
+        };
+
         var evenCounter = 0;
 
         var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
             if (self.sceneStorage.do30fps) {
                 if (evenCounter % 2 == 0) {
 
-                    distanceCounter++;
-                    distanceDrawable.data.msg = distanceCounter.toString() + ' m';
+                    gameStats.timePlayed++;
+                    distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
 
                     evenCounter = 0;
                 }
                 evenCounter++
             } else {
-                distanceCounter++;
-                distanceDrawable.data.msg = distanceCounter.toString() + ' m';
+                gameStats.timePlayed++;
+                distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
             }
         });
 
@@ -78,7 +107,7 @@ var PlayGame = (function ($) {
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.messages,
+        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.messages, gameStats,
             self.sceneStorage.do30fps);
         var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
@@ -89,11 +118,12 @@ var PlayGame = (function ($) {
 
         var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame, self.sceneStorage.do30fps);
+            shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
         var playerShieldsLevel = 1;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, self.sceneStorage.do30fps);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, gameStats,
+            self.sceneStorage.do30fps);
 
         var pushRelease;
         var padId;
@@ -191,12 +221,21 @@ var PlayGame = (function ($) {
             isPaused = false;
         }
 
+        var startTime = $.Date.now();
+        var totalStarts = $.loadInteger(TOTAL_STARTS);
+        $.localStorage.setItem(TOTAL_STARTS, ++totalStarts);
+
         var itIsOver = false;
 
         function endGame(points) {
             if (itIsOver)
                 return;
             itIsOver = true;
+
+            var totalTime = $.loadInteger(TOTAL_TIME);
+            var deltaPlayed = $.Date.now() - startTime;
+            $.localStorage.setItem(TOTAL_TIME, totalTime + deltaPlayed);
+            gameStats.points = points;
 
             function removeEverything() {
                 self.buttons.remove(pauseButton);
@@ -237,17 +276,16 @@ var PlayGame = (function ($) {
                     self.stage.remove(energyBarDrawable);
                 });
 
-            self.next(nextScene, points, distanceCounter);
+            self.next(nextScene, gameStats);
         }
     };
 
-    PlayGame.prototype.next = function (nextScene, points, distanceValue) {
+    PlayGame.prototype.next = function (nextScene, gameStats) {
         delete this.sceneStorage.shields;
         delete this.sceneStorage.energyBar;
         delete this.sceneStorage.lives;
 
-        this.sceneStorage.points = points;
-        this.sceneStorage.distanceValue = distanceValue;
+        this.sceneStorage.gameStats = gameStats;
 
         this.sounds.stop(this.sceneStorage.music);
 
@@ -268,5 +306,8 @@ var PlayGame = (function ($) {
     Math: Math,
     showMenu: showMenu,
     Event: Event,
-    Key: Key
+    Key: Key,
+    Date: Date,
+    loadInteger: loadInteger,
+    localStorage: lclStorage
 });

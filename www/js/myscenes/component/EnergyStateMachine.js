@@ -1,8 +1,8 @@
-var EnergyStateMachine = (function () {
+var EnergyStateMachine = (function (Date) {
     "use strict";
 
     function EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
-        energyBarView) {
+        energyBarView, gameStats) {
         this.stage = stage;
         this.world = world;
         this.shieldsDrawable = shieldsDrawable;
@@ -10,6 +10,9 @@ var EnergyStateMachine = (function () {
         this.shieldsDownSprite = shieldsDownSprite;
         this.sounds = sounds;
         this.energyBarView = energyBarView;
+        this.gameStats = gameStats;
+        this.timeStart = Date.now();
+        this.currentStreak = 0;
     }
 
     var SHIELDS_DOWN_SOUND = 'servo_movement_02';
@@ -22,7 +25,10 @@ var EnergyStateMachine = (function () {
 
         function turnShieldsOn() {
             self.sounds.play(SHIELDS_UP_SOUND);
+            var now = Date.now();
+            self.gameStats.timeShieldsOff += now - self.timeStart;
             self.world.shieldsOn = true;
+            self.timeStart = now;
             self.stage.animate(self.shieldsDrawable, self.shieldsUpSprite, function () {
                 self.shieldsDrawable.data = self.stage.getGraphic('shields');
                 self.__onSound = self.sounds.play(SHIELDS_ON_SOUND);
@@ -36,13 +42,21 @@ var EnergyStateMachine = (function () {
     EnergyStateMachine.prototype.energyEmpty = function () {
         this.__alarmSound = this.sounds.play(ALARM);
         this.__alarmOn = true;
+        this.gameStats.outOfEnergy++;
+        this.currentStreak++;
+        if (this.currentStreak > this.gameStats.outOfEnergyInARow) {
+            this.gameStats.outOfEnergyInARow = this.currentStreak;
+        }
         this.turnShieldsOff();
     };
 
     EnergyStateMachine.prototype.turnShieldsOff = function () {
         var self = this;
         //self.sounds.stop(self.__onSound);
+        var now = Date.now();
+        self.gameStats.timeShieldsOn += now - self.timeStart;
         this.world.shieldsOn = false;
+        self.timeStart = now;
         self.stage.animate(self.shieldsDrawable, self.shieldsDownSprite, function () {
             self.stage.hide(self.shieldsDrawable);
         });
@@ -55,8 +69,10 @@ var EnergyStateMachine = (function () {
         this.energyBarView.load();
         if (this.__alarmOn) {
             this.sounds.stop(this.__alarmSound);
+        } else {
+            this.currentStreak = 0;
         }
     };
 
     return EnergyStateMachine;
-})();
+})(Date);

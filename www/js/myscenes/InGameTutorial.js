@@ -75,18 +75,43 @@ var InGameTutorial = (function ($) {
         setupShaker();
         var trackedAsteroids = {};
         var trackedStars = {};
-
+        var gameStats = {
+            collectedStars: 0,
+            collectedStarsInARow: 0,
+            spawnedStars: 0,
+            destroyedStars: 0,
+            destroyedStarsInARow: 0,
+            completedWaves: 0,
+            perfectWaves: 0,
+            perfectWavesInARow: 0,
+            wavesWithoutLifeLost: 0,
+            wavesWithoutLifeLostInARow: 0,
+            livesLost: 0,
+            timePlayed: 0,
+            timeShieldsOn: 0,
+            timeShieldsOff: 0,
+            timeWithoutLifeLost: 0,
+            timeWithoutStarCollected: 0,
+            destroyedAsteroids: 0,
+            destroyedAsteroidsInARow: 0,
+            spawnedAsteroids: 0,
+            collectedAsteroids: 0,
+            collectedAsteroidsInARow: 0,
+            outOfEnergy: 0,
+            outOfEnergyInARow: 0,
+            points: 0
+        };
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
         var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame);
+            shieldsCollision, endGame, gameStats, do30fps);
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, do30fps);
+            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, gameStats, do30fps);
 
         registerPushRelease();
 

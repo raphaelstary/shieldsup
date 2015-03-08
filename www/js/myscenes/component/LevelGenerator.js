@@ -1,8 +1,9 @@
 var LevelGenerator = (function (range) {
     "use strict";
 
-    function LevelGenerator(drawHelper, is30fps) {
+    function LevelGenerator(drawHelper, gameStats, is30fps) {
         this.drawHelper = drawHelper;
+        this.gameStats = gameStats;
         this.is30fps = is30fps;
 
         this.levels = [
@@ -206,6 +207,9 @@ var LevelGenerator = (function (range) {
         ];
 
         this.initLevel(this.levels.shift());
+
+        this.perfectWavesInARow = 0;
+        this.wavesWithoutLifeLostInARow = 0;
     }
 
     LevelGenerator.prototype.initLevel = function (level) {
@@ -240,6 +244,14 @@ var LevelGenerator = (function (range) {
         this.groupCount = 0;
         this.maxGroup = 0;
         this.groupDiamond = false;
+
+        this.snapshot = {
+            collectedStars: this.gameStats.collectedStars,
+            spawnedStars: this.gameStats.spawnedStars,
+            destroyedAsteroids: this.gameStats.destroyedAsteroids,
+            spawnedAsteroids: this.gameStats.spawnedAsteroids,
+            livesLost: this.gameStats.livesLost
+        }
     };
 
     LevelGenerator.prototype.update = function () {
@@ -269,16 +281,20 @@ var LevelGenerator = (function (range) {
                 if (this.groupDiamond && this.diamondAtStart) {
                     this.groupDiamond = false;
                     this.drawHelper.drawRandomStar(asteroidSpeed);
+                    this.gameStats.spawnedStars++;
                 } else {
                     this.drawHelper.drawRandomAsteroid(asteroidSpeed);
+                    this.gameStats.spawnedAsteroids++;
                 }
             } else {
                 if (this.asteroidGroupIsOn && this.groupDiamond && !this.diamondAtStart &&
                     this.groupCount + 1 == this.maxGroup) {
                     this.groupDiamond = false;
                     this.drawHelper.drawRandomStar(asteroidSpeed);
+                    this.gameStats.spawnedStars++;
                 } else {
                     this.drawHelper.drawRandomAsteroid(asteroidSpeed);
+                    this.gameStats.spawnedAsteroids++;
                 }
             }
             this.obstaclesCount++;
@@ -292,12 +308,46 @@ var LevelGenerator = (function (range) {
 
         } else {
             this.drawHelper.drawRandomStar(this.level.starSpeed);
+            this.gameStats.spawnedStars++;
             this.obstaclesCount++;
             this.nextCount = this.level.pauseAfterStar + range(0, this.level.maxTimeToNextAfterStar);
         }
 
-        if (this.obstaclesCount >= this.level.maxObstacles)
+        if (this.obstaclesCount >= this.level.maxObstacles) {
+            this.gameStats.completedWaves++;
+
+            var spawnedStarsDelta = this.gameStats.spawnedStars - this.snapshot.spawnedStars;
+            var spawnedAsteroidsDelta = this.gameStats.spawnedAsteroids - this.snapshot.spawnedAsteroids;
+            var collectedStarsDelta = this.gameStats.collectedStars - this.snapshot.collectedStars;
+            var destroyedAsteroidsDelta = this.gameStats.destroyedAsteroids - this.snapshot.destroyedAsteroids;
+
+            var perfectWave = spawnedStarsDelta - collectedStarsDelta == 0 &&
+                spawnedAsteroidsDelta - destroyedAsteroidsDelta == 0;
+            if (perfectWave) {
+                this.gameStats.perfectWaves++;
+                this.perfectWavesInARow++;
+                if (this.perfectWavesInARow > this.gameStats.perfectWavesInARow) {
+                    this.gameStats.perfectWavesInARow = this.perfectWavesInARow;
+                }
+            } else {
+                this.perfectWavesInARow = 0;
+            }
+
+            var livesLostDelta = this.gameStats.livesLost - this.snapshot.livesLost;
+
+            var waveWithoutLifeLost = livesLostDelta == 0;
+            if (waveWithoutLifeLost) {
+                this.gameStats.wavesWithoutLifeLost++;
+                this.wavesWithoutLifeLostInARow++;
+                if (this.wavesWithoutLifeLostInARow > this.gameStats.wavesWithoutLifeLostInARow) {
+                    this.gameStats.wavesWithoutLifeLostInARow = this.wavesWithoutLifeLostInARow;
+                }
+            } else {
+                this.wavesWithoutLifeLostInARow = 0;
+            }
+
             this.initLevel(this.levels.shift());
+        }
     };
 
     return LevelGenerator;

@@ -15,9 +15,9 @@
         },
         "post_game": {
             "summary": "Summary",
-            "total_stars": "Total Stars",
+            "total_stars": "Total Points",
             "best": "Best",
-            "stars": "Stars",
+            "stars": "Points",
             "distance": "Distance",
             "new_record": "new"
         },
@@ -107,9 +107,9 @@
         },
         "post_game": {
             "summary": "\u00DCbersicht",
-            "total_stars": "Sterne Gesamt",
+            "total_stars": "Punkte Gesamt",
             "best": "Rekord",
-            "stars": "Sterne",
+            "stars": "Punkte",
             "distance": "Entfernung",
             "new_record": "neu"
         },
