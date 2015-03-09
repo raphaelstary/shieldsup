@@ -3,7 +3,7 @@ var checkFasterThanLight = (function (loadBoolean, localStorage, loadInteger) {
 
     var TOTAL_MISSIONS = 40;
     var GAME_KEY = 'shields_up-';
-    var MISSION_COMPLETE = GAME_KEY + 'mission_complete';
+    var MISSION_COMPLETE = GAME_KEY + 'mission_complete_count';
     var FASTER_THAN_LIGHT = GAME_KEY + 'achievement_faster_than_light';
     var TXT_FASTER_THAN_LIGHT = 'faster_than_light';
     var MAX_TIME = 60 * 60 * 1000; // 1h

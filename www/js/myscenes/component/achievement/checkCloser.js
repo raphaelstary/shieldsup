@@ -4,7 +4,7 @@ var checkCloser = (function (localStorage, loadBoolean, loadInteger) {
     var GAME_KEY = 'shields_up-';
     var CLOSER = GAME_KEY + 'achievement_closer';
     var TOTAL_MISSIONS = 40;
-    var MISSION_COMPLETE = GAME_KEY + 'mission_complete';
+    var MISSION_COMPLETE = GAME_KEY + 'mission_complete_count';
     var TXT_CLOSER = 'closer';
 
     function checkCloser(gameState) {
