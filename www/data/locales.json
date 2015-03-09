@@ -89,6 +89,10 @@
             "energy_description": "increase the energy of your shield generator",
             "life_description": "get an extra life",
             "luck_description": "increase the chance that stars & items appear"
+        },
+        "mission": {
+            "destroy_100_asteroids": "",
+            "destroy_50_asteroids_game": ""
         }
     },
     "de": {
@@ -181,6 +185,10 @@
             "energy_description": "erh\u00D6he die energie deines schildgenerators",
             "life_description": "erhalte ein extra leben",
             "luck_description": "erh\u00D6he die chance f\u00DCr sterne & extras"
+        },
+        "mission": {
+            "destroy_100_asteroids": "",
+            "destroy_50_asteroids_game": ""
         }
     }
 }
