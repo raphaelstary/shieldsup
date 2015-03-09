@@ -7,20 +7,30 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
         this.buttons = services.buttons;
         this.sceneStorage = services.sceneStorage;
         this.timer = services.timer;
+        this.mission = services.mission;
     }
 
     var FONT = 'GameFont';
     var WHITE = '#fff';
+    var MISSION_KEY = 'mission';
 
     NextQuests.prototype.show = function (next) {
         var self = this;
         var speed = this.sceneStorage.do30fps ? 45 : 90;
 
         var drawables = [];
-        drawables.push.apply(drawables, questIn(Height.get(48, 10), 'Reach 500 meters'));
-        drawables.push.apply(drawables,
-            questIn(Height.get(48, 18), 'Destroy 10 asteroids in one run without taking a hit', 10));
-        drawables.push.apply(drawables, questIn(Height.get(48, 26), 'Collect 10 stars in a row', 20, true));
+        var activeMissions = this.mission.getActiveMissions();
+
+        if (activeMissions.length > 0)
+            drawables.push.apply(drawables, questIn(Height.get(48, 10),
+                this.messages.get(MISSION_KEY, activeMissions[0].msgKey, undefined, activeMissions.length <= 1)));
+        if (activeMissions.length > 1)
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 18), this.messages.get(MISSION_KEY, activeMissions[1].msgKey), 10,
+                    activeMissions.length <= 2));
+        if (activeMissions.length > 2)
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 26), this.messages.get(MISSION_KEY, activeMissions[2].msgKey), 20, true));
 
         function questIn(yFn, name, delay, forceNext) {
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,

@@ -1,6 +1,6 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
     PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event,
-    TapManager, ShowMenuEvented, NextQuests, CompletedQuests, Shop) {
+    TapManager, ShowMenuEvented, NextQuests, CompletedQuests, Shop, MissionControl, Missions) {
     "use strict";
 
     var CLICK = 'computer_data_03';
@@ -24,6 +24,8 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         }, WHITE, VIOLET, Font._30, 3, WHITE, WHITE, Font._40, 2);
 
         sceneServices.sceneStorage.sfxOn = true;
+
+        sceneServices.mission = new MissionControl(new Missions());
 
         // custom game services END
         // todo remove debug
@@ -68,4 +70,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
     ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event, TapManager, ShowMenuEvented,
-    NextQuests, CompletedQuests, Shop);
+    NextQuests, CompletedQuests, Shop, MissionControl, Missions);

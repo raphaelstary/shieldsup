@@ -91,8 +91,8 @@
             "luck_description": "increase the chance that stars & items appear"
         },
         "mission": {
-            "destroy_100_asteroids": "",
-            "destroy_50_asteroids_game": ""
+            "destroy_100_asteroids": "Destroy 100 asteroids in total",
+            "destroy_50_asteroids_game": "Destroy 50 asteroids in one game"
         }
     },
     "de": {
@@ -187,8 +187,8 @@
             "luck_description": "erh\u00D6he die chance f\u00DCr sterne & extras"
         },
         "mission": {
-            "destroy_100_asteroids": "",
-            "destroy_50_asteroids_game": ""
+            "destroy_100_asteroids": "Zerst\u00D6re insgesamt 100 asteroiden",
+            "destroy_50_asteroids_game": "Zerst\u00D6re 50 asteroiden in einem spiel"
         }
     }
 }

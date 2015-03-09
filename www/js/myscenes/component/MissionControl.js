@@ -32,18 +32,22 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
     };
 
     MissionControl.prototype.__getCompleteMissions = function () {
-        return this.completeMisssions ? this.completeMissions : (this.completeMissions = (loadObject(COMPLETE) || []));
+        return this.completeMissions ? this.completeMissions : (this.completeMissions = (loadObject(COMPLETE) || []));
     };
 
     MissionControl.prototype.checkActiveMissions = function (gameStats) {
         var activeMissions = this.__getActiveMissions();
 
+        var returnInfo = [];
         var completeMissions = [];
         var updateActiveMissions = false;
         activeMissions.forEach(function (mission, index, missions) {
+            returnInfo.push(mission);
+            mission.success = false;
             var result = this.missions.check(mission, gameStats);
             if (result == 'success') {
-                completeMissions = mission.id;
+                completeMissions.push(mission.id);
+                mission.success = true;
                 missions.splice(index, 1);
                 updateActiveMissions = true;
             } else if (result == 'evolution') {
@@ -60,7 +64,7 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
             localStorage.setItem(COMPLETE_COUNT, loadInteger(COMPLETE_COUNT) + completeMissions.length);
         }
 
-        return completeMissions;
+        return returnInfo;
     };
 
     return MissionControl;

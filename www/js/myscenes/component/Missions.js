@@ -114,7 +114,12 @@ var Missions = (function () {
 
         } else if (missionEntity.allTime) {
             mission.count += actual;
-            return 'evolution';
+
+            if (expected <= mission.count) {
+                return 'success';
+            } else {
+                return 'evolution'
+            }
         }
 
         return 'failure';

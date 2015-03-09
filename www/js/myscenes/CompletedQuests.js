@@ -7,12 +7,14 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         this.buttons = services.buttons;
         this.sceneStorage = services.sceneStorage;
         this.timer = services.timer;
+        this.mission = services.mission;
     }
 
     var DONE = 'done';
     var MISSIONS = 'missions';
     var COMPLETE = 'complete';
     var SKIP = 'skip';
+    var MISSION_KEY = 'mission';
 
     var FONT = 'GameFont';
     var SPECIAL_FONT = 'SpecialGameFont';
@@ -36,11 +38,21 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         //var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
         //    '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
 
+        var missions = this.mission.checkActiveMissions(this.sceneStorage.gameStats);
+
         var drawables = [];
-        drawables.push.apply(drawables, questIn(Height.get(48, 10), 'Reach 500 meters', false));
-        drawables.push.apply(drawables,
-            questIn(Height.get(48, 18), 'Destroy 10 asteroids in one run without taking a hit', true, 10));
-        drawables.push.apply(drawables, questIn(Height.get(48, 26), 'Collect 10 stars in a row', true, 20, true));
+        if (missions.length > 0)
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 10), this.messages.get(MISSION_KEY, missions[0].msgKey), missions[0].success,
+                    undefined, missions.length <= 1));
+        if (missions.length > 1)
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 18), this.messages.get(MISSION_KEY, missions[1].msgKey), missions[1].success, 10,
+                    missions.length <= 2));
+        if (missions.length > 2)
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 26), this.messages.get(MISSION_KEY, missions[2].msgKey), missions[2].success, 20,
+                    true));
 
         function questIn(yFn, name, success, delay, forceNext) {
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,
@@ -63,6 +75,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         }
 
         var doOnce = true;
+
         function questOut(drawable, yFn, success, forceNext) {
             return function () {
                 var badge;
