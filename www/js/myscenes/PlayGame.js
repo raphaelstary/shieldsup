@@ -47,6 +47,7 @@ var PlayGame = (function ($) {
             timeShieldsOff: 0,
             timeWithoutLifeLost: 0,
             timeWithoutStarCollected: 0,
+            timeWithoutAlarm: 0,
             destroyedAsteroids: 0,
             destroyedAsteroidsInARow: 0,
             spawnedAsteroids: 0,

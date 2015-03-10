@@ -1,5 +1,5 @@
 var PostGame = (function (localStorage, Transition, Height, Width, add, Font, subtract, showMenu, parseInt,
-    checkAchievements, Math) {
+    checkAchievements, Math, loadInteger) {
     "use strict";
 
     function PostGame(services) {
@@ -16,6 +16,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     var STORAGE_BEST_STARS = GAME_KEY + 'best_stars';
     var STORAGE_BEST_DISTANCE = GAME_KEY + 'best_distance';
     var STORAGE_TOTAL_STARS = GAME_KEY + 'total_stars';
+    var STORAGE_MISSIONS_COMPLETE = GAME_KEY + 'mission_complete_count';
 
     var STARS = 'stars';
     var DISTANCE = 'distance';
@@ -56,8 +57,8 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
             speed /= 2;
 
         var quest_count_txt = self.stage.moveFreshText(Width.THREE_QUARTER, subtract(Height.get(48, 5), Height.FULL),
-            '2 / 40 ' + self.messages.get(PAUSE_KEY, COMPLETE), Font._60, FONT, WHITE, Width.THREE_QUARTER,
-            Height.get(48, 5), speed, Transition.EASE_OUT_ELASTIC, false, function () {
+            loadInteger(STORAGE_MISSIONS_COMPLETE) + ' / 40 ' + self.messages.get(PAUSE_KEY, COMPLETE), Font._60, FONT,
+            WHITE, Width.THREE_QUARTER, Height.get(48, 5), speed, Transition.EASE_OUT_ELASTIC, false, function () {
 
                 function moveIn(text, xFn, yFn, delay, callback) {
                     return self.stage.moveFreshTextLater(xFn, subtract(yFn, Height.FULL), text, Font._30, SPECIAL_FONT,
@@ -326,4 +327,5 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     };
 
     return PostGame;
-})(lclStorage, Transition, Height, Width, add, Font, subtract, showMenu, parseInt, checkAchievements, Math);
+})(lclStorage, Transition, Height, Width, add, Font, subtract, showMenu, parseInt, checkAchievements, Math,
+    loadInteger);

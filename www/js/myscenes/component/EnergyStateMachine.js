@@ -13,6 +13,8 @@ var EnergyStateMachine = (function (Date) {
         this.gameStats = gameStats;
         this.timeStart = Date.now();
         this.currentStreak = 0;
+        this.totalTimeStart = Date.now();
+        this.timeWithoutAlarm = 0;
     }
 
     var SHIELDS_DOWN_SOUND = 'servo_movement_02';
@@ -42,11 +44,20 @@ var EnergyStateMachine = (function (Date) {
     EnergyStateMachine.prototype.energyEmpty = function () {
         this.__alarmSound = this.sounds.play(ALARM);
         this.__alarmOn = true;
+
+        // stats
+        var now = Date.now();
+        this.timeWithoutAlarm = now - this.totalTimeStart;
+        this.totalTimeStart = now;
+        if (this.timeWithoutAlarm > this.gameStats.timeWithoutAlarm) {
+            this.gameStats.timeWithoutAlarm = this.timeWithoutAlarm;
+        }
         this.gameStats.outOfEnergy++;
         this.currentStreak++;
         if (this.currentStreak > this.gameStats.outOfEnergyInARow) {
             this.gameStats.outOfEnergyInARow = this.currentStreak;
         }
+
         this.turnShieldsOff();
     };
 
