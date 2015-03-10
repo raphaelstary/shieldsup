@@ -17,7 +17,7 @@ var Missions = (function () {
                 constraintValue: 5
             }, {
                 id: 2,
-                msgKey: 'reach_1000m_once',
+                msgKey: 'reach_1000_once',
                 allTime: false,
                 constraintKey: 'timePlayed',
                 constraintValue: 1000
@@ -47,7 +47,7 @@ var Missions = (function () {
                 constraintValue: 50
             }, {
                 id: 7,
-                msgKey: 'reach_10.000m_total',
+                msgKey: 'reach_10000_total',
                 allTime: true,
                 constraintKey: 'timePlayed',
                 constraintValue: 10000
@@ -65,13 +65,13 @@ var Missions = (function () {
                 constraintValue: 30
             }, {
                 id: 10,
-                msgKey: '3000m_with_shields_on_total',
+                msgKey: 'travel_3000_shields_on_total',
                 allTime: true,
                 constraintKey: 'timeShieldsOn',
                 constraintValue: 3000
             }, {
                 id: 11,
-                msgKey: '1_perfect_wave_once',
+                msgKey: '1_perfect_waves_once',
                 allTime: false,
                 constraintKey: 'perfectWaves',
                 constraintValue: 1
@@ -95,7 +95,7 @@ var Missions = (function () {
                 constraintValue: 500
             }, {
                 id: 15,
-                msgKey: '1500m_without_shields_once',
+                msgKey: '1500_without_shields_once',
                 allTime: false,
                 constraintKey: 'timeShieldsOff',
                 constraintValue: 1500
@@ -113,7 +113,7 @@ var Missions = (function () {
                 constraintValue: 20
             }, {
                 id: 18,
-                msgKey: 'reach_3000m_once',
+                msgKey: 'reach_3000_once',
                 allTime: false,
                 constraintKey: 'timePlayed',
                 constraintValue: 3000
@@ -143,7 +143,7 @@ var Missions = (function () {
                 constraintValue: 20
             }, {
                 id: 23,
-                msgKey: 'lose_2lives_once',
+                msgKey: 'lose_2_lives_once',
                 allTime: false,
                 constraintKey: 'livesLost',
                 constraintValue: 2
@@ -179,7 +179,7 @@ var Missions = (function () {
                 constraintValue: 20
             }, {
                 id: 29,
-                msgKey: 'lose_3lives_once',
+                msgKey: 'lose_3_lives_once',
                 allTime: false,
                 constraintKey: 'livesLost',
                 constraintValue: 3
@@ -227,7 +227,7 @@ var Missions = (function () {
                 constraintValue: 500
             }, {
                 id: 37,
-                msgKey: 'reach_5000_without_collecting_star_once',
+                msgKey: 'travel_5000_without_collecting_star_once',
                 allTime: false,
                 constraintKey: 'timeWithoutStarCollected',
                 constraintValue: 5000
