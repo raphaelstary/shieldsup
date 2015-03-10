@@ -13,6 +13,11 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
     MissionControl.prototype.getActiveMissions = function () {
         var activeMissions = this.__getActiveMissions();
 
+        for (var i = activeMissions.length - 1; i >= 0; i--) {
+            if (activeMissions[i].success)
+                activeMissions.splice(i, 1);
+        }
+
         if (activeMissions.length >= MAX_ACTIVE)
             return activeMissions;
 
@@ -28,27 +33,23 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
     };
 
     MissionControl.prototype.__getActiveMissions = function () {
-        return this.activeMissions ? this.activeMissions : (this.activeMissions = (loadObject(ACTIVE) || []));
+        return this.activeMissions ? this.activeMissions : this.activeMissions = loadObject(ACTIVE) || [];
     };
 
     MissionControl.prototype.__getCompleteMissions = function () {
-        return this.completeMissions ? this.completeMissions : (this.completeMissions = (loadObject(COMPLETE) || []));
+        return this.completeMissions ? this.completeMissions : this.completeMissions = loadObject(COMPLETE) || [];
     };
 
     MissionControl.prototype.checkActiveMissions = function (gameStats) {
         var activeMissions = this.__getActiveMissions();
 
-        var returnInfo = [];
         var completeMissions = [];
         var updateActiveMissions = false;
         activeMissions.forEach(function (mission, index, missions) {
-            returnInfo.push(mission);
-            mission.success = false;
             var result = this.missions.check(mission, gameStats);
             if (result == 'success') {
                 completeMissions.push(mission.id);
                 mission.success = true;
-                missions.splice(index, 1);
                 updateActiveMissions = true;
             } else if (result == 'evolution') {
                 updateActiveMissions = true;
@@ -60,11 +61,12 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
         }
         if (completeMissions.length > 0) {
             var allCompleteMissions = this.__getCompleteMissions();
-            saveObject(COMPLETE, allCompleteMissions.push.apply(allCompleteMissions, completeMissions));
+            allCompleteMissions.push.apply(allCompleteMissions, completeMissions);
+            saveObject(COMPLETE, allCompleteMissions);
             localStorage.setItem(COMPLETE_COUNT, loadInteger(COMPLETE_COUNT) + completeMissions.length);
         }
 
-        return returnInfo;
+        return activeMissions;
     };
 
     return MissionControl;

@@ -86,7 +86,8 @@ var Missions = (function () {
             nextMission = {
                 id: mission.id,
                 msgKey: mission.msgKey,
-                count: 0
+                count: 0,
+                success: false
             };
 
             return true;
