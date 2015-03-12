@@ -23,9 +23,15 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
     var DARK_GOLD = '#B8860B';
 
     CompletedQuests.prototype.show = function (next) {
-        var noQuestsCompleted = false;
-        if (noQuestsCompleted)
+        var missions = this.mission.checkActiveMissions(this.sceneStorage.gameStats);
+        var showScreen = missions.some(function (mission) {
+            return mission.success;
+        });
+
+        if (!showScreen) {
             next();
+            return;
+        }
 
         var self = this;
         var speed = this.sceneStorage.do30fps ? 30 : 60;
@@ -37,8 +43,6 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
 
         //var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
         //    '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
-
-        var missions = this.mission.checkActiveMissions(this.sceneStorage.gameStats);
 
         var drawables = [];
         if (missions.length > 0)

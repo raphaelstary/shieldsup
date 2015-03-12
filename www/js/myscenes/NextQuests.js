@@ -13,6 +13,8 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
     var FONT = 'GameFont';
     var WHITE = '#fff';
     var MISSION_KEY = 'mission';
+    var MISSIONS = 'missions';
+    var SPECIAL_FONT = 'SpecialGameFont';
 
     NextQuests.prototype.show = function (next) {
         var self = this;
@@ -20,6 +22,9 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
 
         var drawables = [];
         var activeMissions = this.mission.getActiveMissions();
+
+        var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
+            self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
         if (activeMissions.length > 0)
             drawables.push.apply(drawables, questIn(Height.get(48, 10),
@@ -74,6 +79,7 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
             if (itIsOver)
                 return;
             itIsOver = true;
+            self.stage.remove(quests_header);
             drawables = undefined;
             self.buttons.remove(skipButton);
             next();

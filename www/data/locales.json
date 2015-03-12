@@ -2,6 +2,7 @@
     "en": {
         "display_name": "English",
         "tutorial": {
+            "tutorial": "tutorial",
             "touch_and_hold": "touch & hold anywhere",
             "to_raise_shields": "to raise shields",
             "collect_stuff": "collect stars to score points",
@@ -93,17 +94,23 @@
         "mission": {
             "destroy_10_asteroids_once": "destroy 10 asteroids in a single run",
             "destroy_50_asteroids_once": "destroy 50 asteroids in a single run",
+
             "destroy_100_asteroids_total": "destroy a total of 100 asteroids",
             "destroy_500_asteroids_total": "destroy a total of 500 asteroids",
             "destroy_5000_asteroids_total": "destroy a total of 5000 asteroids",
+
             "destroy_200_asteroids_row": "destroy 200 asteroids in a row without getting hit",
+
             "collect_10_asteroids_total": "get hit by an asteroid a total of 10 times",
             "collect_15_asteroids_total": "get hit by an asteroid a total of 15 times",
+
             "collect_5_stars_once": "collect 5 stars in a single run",
             "collect_20_stars_once": "collect 20 stars in a single run",
+
             "collect_50_stars_total": "collect a total of 50 stars",
             "collect_150_stars_total": "collect a total of 150 stars",
             "collect_500_stars_total": "collect a total of 500 stars",
+
             "collect_20_stars_row": "collect 20 stars in a row without destroying one",
             "destroy_30_stars_total": "destroy a total of 30 stars",
             "destroy_20_stars_once": "destroy 20 stars in a single run",
@@ -117,7 +124,7 @@
             "10_perfect_waves_row": "collect every star & destroy every asteroid of 10 waves in a row",
             "out_of_energy_20_total": "empty your energy a total of 20 times",
             "out_of_energy_10_once": "empty your energy 10 times in a single run",
-            "out_of_energy_15_row": "empty your energy 15 times in a row when using your shields",
+            "out_of_energy_15_row": "empty your energy 15 times in a row",
             "1500_without_shields_once": "fly a total of 25 s without shields in a single run",
             "lose_2_lives_once": "lose 2 lives in a single run",
             "lose_3_lives_once": "lose 3 lives in a single run",
@@ -136,6 +143,7 @@
     "de": {
         "display_name": "Deutsch",
         "tutorial": {
+            "tutorial": "anleitung",
             "touch_and_hold": "touch & halten",
             "to_raise_shields": "um deine Schilde hochzufahren",
             "collect_stuff": "sammle Sterne um Punkte zu bekommen",
@@ -202,15 +210,15 @@
             "done": "Geschafft",
             "conqueror": "Bezwinger",
             "conqueror_description": "Fliege durch das gesamte Asteroidenfeld",
-            "shopping_queen": "shopping queen",
+            "shopping_queen": "kaufrausch",
             "shopping_queen_description": "Kaufe alles im Shop",
-            "closer": "Abschliesser",
+            "closer": "streber",
             "closer_description": "Erledige alle Missionen",
             "live_once": "Man lebt nur einmal",
             "live_once_description": "verliere kein leben bei einem vollst\u00C4ndigen flug",
             "star_gazer": "Sterngucker",
             "star_gazer_description": "Sammle alle Sterne bei einem vollst\u00C4ndigen flug",
-            "faster_than_light": "Schneller als das Licht",
+            "faster_than_light": "Lichtgeschwindigkeit",
             "faster_than_light_description": "Erledige alle Missionen in 1 Stunde oder weniger"
         },
         "pause_menu": {
@@ -251,7 +259,7 @@
             "10_perfect_waves_row": "sammle alle sterne & zerstoere alle asteroiden von 10 wellen in folge",
             "out_of_energy_20_total": "leere deine energie insgesamt 20 mal",
             "out_of_energy_10_once": "leere deine energie 10 mal in einem einzigen flug",
-            "out_of_energy_15_row": "leere deine energie 15 mal in folge beim verwenden der schilde",
+            "out_of_energy_15_row": "leere deine energie 15 mal in folge",
             "1500_without_shields_once": "fliege insgesamt 25 s ohne schilde in einem einzigen flug",
             "lose_2_lives_once": "verliere 2 leben in einem einzigen flug",
             "lose_3_lives_once": "verliere 3 leben in einem einzigen flug",

@@ -1,6 +1,6 @@
 var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen,
     PostGame, SceneManager, ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event,
-    TapManager, ShowMenuEvented, NextQuests, CompletedQuests, Shop, MissionControl, Missions) {
+    TapManager, ShowMenuEvented, NextQuests, CompletedQuests, Shop, MissionControl, Missions, GetReadyTutorial) {
     "use strict";
 
     var CLICK = 'computer_data_03';
@@ -29,7 +29,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         // custom game services END
         // todo remove debug
-        sceneServices.sounds.muteAll();
+        //sceneServices.sounds.muteAll();
 
         var goFullScreen = new GoFullScreen(sceneServices);
         var rotateDevice = new RotateDevice(sceneServices);
@@ -38,6 +38,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         var intro = new Intro(sceneServices);
         var preGame = new PreGame(sceneServices);
         var startingPosition = new StartingPosition(sceneServices);
+        var getReadyTutorial = new GetReadyTutorial(sceneServices);
         var inGameTutorial = new InGameTutorial(sceneServices);
         var nextQuests = new NextQuests(sceneServices);
         var getReady = new GetReady(sceneServices);
@@ -55,6 +56,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
         sceneManager.add(intro.show.bind(intro), true);
         sceneManager.add(preGame.show.bind(preGame), true);
         sceneManager.add(startingPosition.show.bind(startingPosition));
+        sceneManager.add(getReadyTutorial.show.bind(getReadyTutorial), true);
         sceneManager.add(inGameTutorial.show.bind(inGameTutorial), true);
         sceneManager.add(nextQuests.show.bind(nextQuests));
         sceneManager.add(getReady.show.bind(getReady));
@@ -70,4 +72,4 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
     return installMyScenes;
 })(Intro, PreGame, StartingPosition, InGameTutorial, GetReady, PlayGame, KillScreen, PostGame, SceneManager,
     ScreenShaker, ButtonFactory, Font, SplashScreen, GoFullScreen, RotateDevice, Event, TapManager, ShowMenuEvented,
-    NextQuests, CompletedQuests, Shop, MissionControl, Missions);
+    NextQuests, CompletedQuests, Shop, MissionControl, Missions, GetReadyTutorial);
