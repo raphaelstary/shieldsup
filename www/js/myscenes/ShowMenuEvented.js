@@ -9,6 +9,7 @@ var ShowMenuEvented = (function (Event, showMenu) {
         this.sceneStorage = services.sceneStorage;
         this.device = services.device;
         this.sounds = services.sounds;
+        this.missions = services.missions;
     }
 
     ShowMenuEvented.prototype.show = function (next) {
@@ -19,8 +20,8 @@ var ShowMenuEvented = (function (Event, showMenu) {
         }
 
         this.events.subscribe(Event.SHOW_MENU, function () {
-            showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds, resume);
+            showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device, self.sounds,
+                self.missions, resume);
         });
 
         next();

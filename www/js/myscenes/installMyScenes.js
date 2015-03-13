@@ -25,7 +25,7 @@ var installMyScenes = (function (Intro, PreGame, StartingPosition, InGameTutoria
 
         sceneServices.sceneStorage.sfxOn = true;
 
-        sceneServices.mission = new MissionControl(new Missions());
+        sceneServices.missions = new MissionControl(new Missions());
 
         // custom game services END
         // todo remove debug

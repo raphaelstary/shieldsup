@@ -7,7 +7,7 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
         this.buttons = services.buttons;
         this.sceneStorage = services.sceneStorage;
         this.timer = services.timer;
-        this.mission = services.mission;
+        this.missions = services.missions;
     }
 
     var FONT = 'GameFont';
@@ -21,14 +21,15 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
         var speed = this.sceneStorage.do30fps ? 45 : 90;
 
         var drawables = [];
-        var activeMissions = this.mission.getActiveMissions();
+        var activeMissions = this.missions.getActiveMissions();
 
         var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
             self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
         if (activeMissions.length > 0)
-            drawables.push.apply(drawables, questIn(Height.get(48, 10),
-                this.messages.get(MISSION_KEY, activeMissions[0].msgKey, undefined, activeMissions.length <= 1)));
+            drawables.push.apply(drawables,
+                questIn(Height.get(48, 10), this.messages.get(MISSION_KEY, activeMissions[0].msgKey), undefined,
+                    activeMissions.length <= 1));
         if (activeMissions.length > 1)
             drawables.push.apply(drawables,
                 questIn(Height.get(48, 18), this.messages.get(MISSION_KEY, activeMissions[1].msgKey), 10,

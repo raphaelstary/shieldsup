@@ -11,6 +11,7 @@ var InGameTutorial = (function ($) {
         this.buttons = services.buttons;
         this.events = services.events;
         this.device = services.device;
+        this.missions = services.missions;
     }
 
     var ASTEROID = 'asteroid_1';
@@ -54,7 +55,7 @@ var InGameTutorial = (function ($) {
             self.events.fireSync($.Event.PAUSE);
             self.sceneStorage.menuScene = 'pause_menu';
             $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds, resume);
+                self.sounds, self.missions, resume);
         }
 
         pauseButton.text.rotation = $.Math.PI / 2;
@@ -166,7 +167,7 @@ var InGameTutorial = (function ($) {
 
         function createTouchNHoldTxt() {
             var touch_txt = self.stage.drawText($.Width.TWO_THIRD, $.Height.THIRD,
-                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
+                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 6, undefined, $.Math.PI / 16, 1,
                 $.Width.TWO_THIRD, $.Height.get(20));
             self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
             function getX(width) {

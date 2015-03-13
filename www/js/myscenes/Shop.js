@@ -10,6 +10,7 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
         this.buttons = services.buttons;
         this.events = services.events;
         this.device = services.device;
+        this.missions = services.missions;
     }
 
     var GAME_KEY = 'shields_up-';
@@ -205,7 +206,7 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             function showSettingsScreen() {
                 self.events.fireSync(Event.PAUSE);
                 showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                    self.sounds, hideSettings)
+                    self.sounds, self.missions, hideSettings)
             }
 
             function hideSettings() {

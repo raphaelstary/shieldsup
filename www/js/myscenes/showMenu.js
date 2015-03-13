@@ -1,7 +1,7 @@
 var showMenu = (function (Menu) {
     "use strict";
 
-    return function (stage, buttons, messages, events, sceneStorage, device, sounds, nextCallback) {
+    return function (stage, buttons, messages, events, sceneStorage, device, sounds, missions, nextCallback) {
         var menu = new Menu({
             stage: stage,
             buttons: buttons,
@@ -9,7 +9,8 @@ var showMenu = (function (Menu) {
             events: events,
             sceneStorage: sceneStorage,
             device: device,
-            sounds: sounds
+            sounds: sounds,
+            missions: missions
         });
         menu.show(nextCallback);
     };

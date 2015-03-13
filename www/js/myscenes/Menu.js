@@ -9,6 +9,7 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
         this.sceneStorage = services.sceneStorage;
         this.device = services.device;
         this.sounds = services.sounds;
+        this.missions = services.missions;
     }
 
     var SubScenes = {
@@ -26,7 +27,7 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
             self.sceneStorage.menuSceneButtons.forEach(self.buttons.enable.bind(self.buttons));
         });
 
-        showMenu(this.sceneStorage.menuScene);
+        showMenu();
 
         function showMenu() {
 
@@ -88,7 +89,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
                 sceneStorage: self.sceneStorage,
                 sounds: self.sounds,
                 events: self.events,
-                device: self.device
+                device: self.device,
+                missions: self.missions
             });
             pauseMenu.show(hideMenu);
         }

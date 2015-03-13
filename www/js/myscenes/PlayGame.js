@@ -11,6 +11,7 @@ var PlayGame = (function ($) {
         this.messages = services.messages;
         this.device = services.device;
         this.events = services.events;
+        this.missions = services.missions;
     }
 
     var TOTAL_TIME = 'shields_up-total_time';
@@ -85,7 +86,7 @@ var PlayGame = (function ($) {
             self.events.fireSync($.Event.PAUSE);
             self.sceneStorage.menuScene = 'pause_menu';
             $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds, resume);
+                self.sounds, self.missions, resume);
         }
 
         pauseButton.text.rotation = $.Math.PI / 2;

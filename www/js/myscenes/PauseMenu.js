@@ -9,12 +9,13 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
         this.events = services.events;
         this.sounds = services.sounds;
         this.device = services.device;
+        this.missions = services.missions;
     }
 
     var KEY = 'pause_menu';
     var MISSIONS = 'missions';
     var COMPLETE = 'complete';
-
+    var MISSION_KEY = 'mission';
     var BUTTON_KEY = 'common_buttons';
     var ACHIEVEMENTS = 'achievements';
     var SETTINGS = 'settings';
@@ -29,22 +30,22 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
     PauseMenu.prototype.show = function (next) {
         var self = this;
         var drawables;
+        var translatedDrawables;
 
         constructPauseMenu();
 
         function destructPauseMenu() {
-            self.sceneStorage.menuSceneButtons.forEach(function (button) {
-                self.buttons.remove(button);
-            });
-            drawables.forEach(function (drawable) {
-                self.stage.remove(drawable);
-            });
+            self.sceneStorage.menuSceneButtons.forEach(self.buttons.remove.bind(self.buttons));
+            drawables.forEach(self.stage.remove.bind(self.stage));
             drawables = undefined;
             self.sceneStorage.menuSceneButtons = [];
+            translatedDrawables.forEach(self.messages.remove.bind(self.messages));
+            translatedDrawables = undefined;
         }
 
         function constructPauseMenu() {
             drawables = [];
+            translatedDrawables = [];
 
             var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5), self.messages.get(KEY, MISSIONS),
                 Font._30, SPECIAL_FONT, WHITE, 8);
@@ -54,16 +55,22 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
                 '2 / 40 ' + self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
             drawables.push(quest_count_txt);
 
-            showQuest(Height.get(48, 10), 'Reach 500 meters');
-            showQuest(Height.get(48, 17), 'Destroy 10 asteroids in one run without taking a hit');
-            showQuest(Height.get(48, 24), 'Collect 10 stars in a row');
+            var activeMissions = self.missions.getActiveMissions();
+            if (activeMissions.length > 0)
+                showQuest(Height.get(48, 10), activeMissions[0].msgKey);
+            if (activeMissions.length > 1)
+                showQuest(Height.get(48, 17), activeMissions[1].msgKey);
+            if (activeMissions.length > 2)
+                showQuest(Height.get(48, 24), activeMissions[2].msgKey);
 
-            function showQuest(yFn, text) {
+            function showQuest(yFn, msgKey) {
                 var background = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(48, 6), VIOLET,
                     true, undefined, 7);
-                var textDrawable = self.stage.drawText(Width.HALF, yFn, text, Font._40, FONT, LIGHT_GREY, 8, undefined,
-                    undefined, undefined, Width.get(10, 8), Height.get(25));
+                var textDrawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(MISSION_KEY, msgKey),
+                    Font._40, FONT, LIGHT_GREY, 8, undefined, undefined, undefined, Width.get(10, 8), Height.get(25));
                 drawables.push(background, textDrawable);
+                self.messages.add(textDrawable, textDrawable.data, MISSION_KEY, msgKey);
+                translatedDrawables.push(textDrawable);
             }
 
             var achievementsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 315),

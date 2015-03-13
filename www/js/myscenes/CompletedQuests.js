@@ -7,7 +7,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         this.buttons = services.buttons;
         this.sceneStorage = services.sceneStorage;
         this.timer = services.timer;
-        this.mission = services.mission;
+        this.missions = services.missions;
     }
 
     var DONE = 'done';
@@ -23,7 +23,7 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
     var DARK_GOLD = '#B8860B';
 
     CompletedQuests.prototype.show = function (next) {
-        var missions = this.mission.checkActiveMissions(this.sceneStorage.gameStats);
+        var missions = this.missions.checkActiveMissions(this.sceneStorage.gameStats);
         var showScreen = missions.some(function (mission) {
             return mission.success;
         });

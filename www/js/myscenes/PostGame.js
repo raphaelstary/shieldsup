@@ -10,6 +10,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
         this.buttons = services.buttons;
         this.events = services.events;
         this.device = services.device;
+        this.missions = services.missions;
     }
 
     var GAME_KEY = 'shields_up-';
@@ -202,7 +203,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     function showSettingsScreen() {
                         self.events.fireSync(Event.PAUSE);
                         showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                            self.sounds, hideSettings)
+                            self.sounds, self.missions, hideSettings)
                     }
 
                     function hideSettings() {

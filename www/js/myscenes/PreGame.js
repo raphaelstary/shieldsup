@@ -12,6 +12,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.events = services.events;
         this.device = services.device;
         this.shaker = services.shaker;
+        this.missions = services.missions;
     }
 
     var SHIP = 'ship';
@@ -124,7 +125,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
             function showSettingsScreen() {
                 self.events.fireSync(Event.PAUSE);
                 showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                    self.sounds, hideSettings)
+                    self.sounds, self.missions, hideSettings)
             }
 
             function hideSettings() {
