@@ -48,8 +48,8 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
     };
 
     SplashScreen.prototype.later = function (next) {
-        var ms = this.stage.drawText(Width.get(100, 90), Height.get(8), '0', Font._60, 'GameFont', 'white', 11);
-        var fps = this.stage.drawText(Width.get(100, 90), Height.get(7), '0', Font._60, 'GameFont', 'white', 11);
+        var ms = this.stage.drawText(Width.get(10), Height.get(15), '0', Font._60, 'GameFont', 'white', 11);
+        var fps = this.stage.drawText(Width.get(10), Height.get(12), '0', Font._60, 'GameFont', 'white', 11);
         var statsStart = this.events.subscribe(Event.TICK_START, Stats.start);
         var statsRender = this.events.subscribe(Event.TICK_DRAW, function () {
             ms.data.msg = Stats.getMs().toString() + " ms";

@@ -1,5 +1,5 @@
 var StartingPosition = (function (Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard,
-    EnergyBar, loadInteger) {
+    EnergyBar, loadInteger, Math) {
     "use strict";
 
     function StartingPosition(services) {
@@ -22,39 +22,48 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         if (this.sceneStorage.do30fps)
             speed /= 2;
 
+        var scaleFactor = 0.7;
+
         function lifeX(width) {
-            return calcScreenConst(width, 4);
+            return calcScreenConst(width, 10, 9);
         }
 
         function lifeStartX(width) {
             var x = lifeX(width);
-            return x - x * 2;
+            return x + x * 2;
         }
 
         function lifeTwoEndX(width) {
-            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE);
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor);
         }
 
         function lifeThreeEndX(width) {
-            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE) * 2;
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor * 2);
+        }
+
+        function lifeFourEndX(width) {
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor * 3);
         }
 
         var numberOfCallbacks = 0;
 
         function moveLifeLater(xFn, delay) {
             numberOfCallbacks++;
-            return self.stage.moveFreshLater(lifeStartX, Height.TOP_RASTER, PLAYER_LIFE, xFn, Height.TOP_RASTER, speed,
-                spacing, delay, false, goodToGo);
+            var yFn = Height.get(48, 5);
+            return self.stage.moveFreshLater(lifeStartX, yFn, PLAYER_LIFE, xFn, yFn, speed, spacing, delay, false,
+                goodToGo, undefined, undefined, undefined, undefined, undefined, scaleFactor);
         }
 
         var lifeWrapperDict = {};
         //noinspection FallThroughInSwitchStatementJS
         switch (loadInteger(SHOP_LIFE)) {
             case 3:
-                lifeWrapperDict[3] = moveLifeLater(lifeThreeEndX, 10);
+                lifeWrapperDict[4] = moveLifeLater(lifeFourEndX, 5);
             case 2:
-                lifeWrapperDict[2] = moveLifeLater(lifeTwoEndX, 15);
+                lifeWrapperDict[3] = moveLifeLater(lifeThreeEndX, 10);
             case 1:
+                lifeWrapperDict[2] = moveLifeLater(lifeTwoEndX, 15);
+            case 0:
                 lifeWrapperDict[1] = moveLifeLater(lifeX, 20);
         }
 
@@ -113,6 +122,8 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
                 lifeDrawablesDict[2] = lifeWrapperDict[2].drawable;
             if (lifeWrapperDict[3])
                 lifeDrawablesDict[3] = lifeWrapperDict[3].drawable;
+            if (lifeWrapperDict[4])
+                lifeDrawablesDict[4] = lifeWrapperDict[4].drawable;
 
             self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables,
                 distanceMeterWrapper.drawable);
@@ -131,4 +142,4 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard, EnergyBar, loadInteger);
+})(Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard, EnergyBar, loadInteger, Math);
