@@ -122,9 +122,9 @@ var PlayGame = (function ($) {
             shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
         var playerShieldsLevel = 1;
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, gameStats,
-            self.sceneStorage.do30fps);
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel,
+            gameStats, self.sceneStorage.do30fps);
 
         var pushRelease;
         var padId;

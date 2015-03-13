@@ -7,11 +7,11 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         return new LevelGenerator(obstaclesView, gameStats, is30fps);
     }
 
-    function createEnergyStateMachine(stage, sounds, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
+    function createEnergyStateMachine(stage, sounds, timer, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
         shieldsDownSprite, shieldsMaxEnergyLevel_OneToFour, gameStats, is30fps) {
         var energyBarView = new EnergyBarView(stage, energyBarDrawable, shieldsMaxEnergyLevel_OneToFour, is30fps);
         return new EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
-            energyBarView, gameStats);
+            energyBarView, gameStats, timer);
     }
 
     function createWorld(stage, sounds, timer, shaker, countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable,

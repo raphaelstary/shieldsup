@@ -111,8 +111,8 @@ var InGameTutorial = (function ($) {
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, gameStats, do30fps);
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, gameStats, do30fps);
 
         registerPushRelease();
 
@@ -173,9 +173,9 @@ var InGameTutorial = (function ($) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
-            var raise_txt = self.stage.drawText(Width.QUARTER, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
-                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD,
-                $.Height.get(25));
+            var raise_txt = self.stage.drawText(Width.QUARTER, $.Height.HALF,
+                self.messages.get(KEY, TO_RAISE_SHIELDS_MSG), $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1,
+                $.Width.THIRD, $.Height.get(25));
             self.messages.add(raise_txt, raise_txt.data, KEY, TO_RAISE_SHIELDS_MSG);
             return [touch_txt, raise_txt];
         }

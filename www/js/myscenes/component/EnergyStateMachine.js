@@ -2,7 +2,7 @@ var EnergyStateMachine = (function (Date) {
     "use strict";
 
     function EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
-        energyBarView, gameStats) {
+        energyBarView, gameStats, timer) {
         this.stage = stage;
         this.world = world;
         this.shieldsDrawable = shieldsDrawable;
@@ -15,6 +15,7 @@ var EnergyStateMachine = (function (Date) {
         this.currentStreak = 0;
         this.totalTimeStart = Date.now();
         this.timeWithoutAlarm = 0;
+        this.timer = timer;
     }
 
     var SHIELDS_DOWN_SOUND = 'servo_movement_02';
@@ -59,6 +60,7 @@ var EnergyStateMachine = (function (Date) {
         }
 
         this.turnShieldsOff();
+        this.timer.doLater(this.energyBarView.load.bind(this.energyBarView), 1);
     };
 
     EnergyStateMachine.prototype.turnShieldsOff = function () {
