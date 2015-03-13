@@ -32,7 +32,7 @@ var Missions = (function () {
                 msgKey: 'destroy_30_stars_total',
                 allTime: true,
                 constraintKey: 'destroyedStars',
-                constraintValue: 100
+                constraintValue: 30
             }, {
                 id: 5,
                 msgKey: 'collect_50_stars_total',
