@@ -267,12 +267,12 @@
             "5_waves_without_life_once": "fliege durch 5 wellen ohne ein leben zu verlieren in einem einzigen flug",
             "20_waves_without_life_total": "fliege durch insgesamt 20 wellen ohne ein leben zu verlieren",
             "5_waves_without_life_row": "verliere kein leben in 5 aufeinander folgenden wellen",
-            "travel_5000_without_out_of_energy_once": "",
-            "travel_5000_without_getting_hit_once": "",
-            "travel_5000_without_collecting_star_once": "",
-            "survive_50_waves_total": "",
-            "earn_500_points_once": "",
-            "earn_5000_points_total": ""
+            "travel_5000_without_out_of_energy_once": "lege 5000 m zurueck ohne, dass die energie leer wird",
+            "travel_5000_without_getting_hit_once": "lege 5000 m zurueck ohne getroffen zu werden",
+            "travel_5000_without_collecting_star_once": "lege 5000 m zurueck ohne einen stern zu sammeln",
+            "survive_50_waves_total": "ueberlebe insgesamt 50 wellen",
+            "earn_500_points_once": "erreiche 500 punkte in einem einzigen flug",
+            "earn_5000_points_total": "erreiche insgesamt 5000 punkte"
         }
     }
 }
