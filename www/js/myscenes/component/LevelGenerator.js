@@ -12,7 +12,7 @@ var LevelGenerator = (function (range) {
                 showMessage: false,
                 maxObstacles: 1,
 
-                timeToFirst: 30,
+                timeToFirst: 0,
                 percentageForAsteroid: 100,
 
                 asteroidSpeed: 240,
