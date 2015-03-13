@@ -11,7 +11,6 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
     var ENERGY_FULL = 'energy_full';
     var GAME_KEY = 'shields_up-';
     var SHOP_LIFE = GAME_KEY + 'shop_life';
-    var SHOP_ENERGY = GAME_KEY + 'shop_energy';
 
     StartingPosition.prototype.show = function (nextScene) {
         drawSharedGameStuff(this.stage, this.sceneStorage, this.sceneStorage.do30fps);

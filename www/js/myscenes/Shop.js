@@ -119,29 +119,32 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
 
             var line = drawLine(yFn, upgrades);
             var canBuy = true;
-            var button = self.buttons.createSecondaryButton(Width.get(32, 27), add(yFn, Height.get(48)),
-                price.toString(), function () {
-                    if (canBuy) {
-                        localStorage.setItem(storageKey, (++upgrades).toString());
-                        localStorage.setItem(TOTAL_STARS, totalStarsValue - price);
+            var button;
+            if (upgrades < 3) {
+                button = self.buttons.createSecondaryButton(Width.get(32, 27), add(yFn, Height.get(48)),
+                    price.toString(), function () {
+                        if (canBuy) {
+                            localStorage.setItem(storageKey, (++upgrades).toString());
+                            localStorage.setItem(TOTAL_STARS, totalStarsValue - price);
 
-                        removeShopItems();
-                        createShopItems();
-                        checkForShopAchievement();
-                    } else {
-                        shaker.startSmallShake();
-                    }
-                }, 3, true, buttonsWidth);
-            shaker.add(button.text);
-            shaker.add(button.background);
+                            removeShopItems();
+                            createShopItems();
+                            checkForShopAchievement();
+                        } else {
+                            shaker.startSmallShake();
+                        }
+                    }, 3, true, buttonsWidth);
+                shaker.add(button.text);
+                shaker.add(button.background);
+                if (price > totalStarsValue) {
+                    canBuy = false;
+                    button.text.data.color = DARK_GRAY;
+                }
+            }
+
             var description = drawDescription(add(yFn, Height.get(48, 2)), self.messages.get(KEY, descriptionKey));
             self.messages.add(description, description.data, KEY, descriptionKey);
             var background = drawBackGround(yFn);
-
-            if (price > totalStarsValue) {
-                canBuy = false;
-                button.text.data.color = DARK_GRAY;
-            }
 
             return {
                 shaker: shaker,
@@ -158,7 +161,8 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             self.events.unsubscribe(item.shakerResizeId);
             self.events.unsubscribe(item.shakerTickId);
             item.line.forEach(self.stage.remove.bind(self.stage));
-            self.buttons.remove(item.button);
+            if (item.button)
+                self.buttons.remove(item.button);
             self.messages.remove(item.description);
             self.stage.remove(item.description);
             self.stage.remove(item.background);

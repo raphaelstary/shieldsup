@@ -16,6 +16,7 @@ var PlayGame = (function ($) {
 
     var TOTAL_TIME = 'shields_up-total_time';
     var TOTAL_STARTS = 'shields_up-total_starts';
+    var SHOP_ENERGY = 'shields_up-shop_energy';
 
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
@@ -122,7 +123,7 @@ var PlayGame = (function ($) {
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
-        var playerShieldsLevel = 1;
+        var playerShieldsLevel = $.loadInteger(SHOP_ENERGY) + 1;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
             energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel,
             gameStats, self.sceneStorage.do30fps);
