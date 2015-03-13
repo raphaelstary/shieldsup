@@ -172,11 +172,11 @@ var GameWorld = (function (Object, Date) {
             this.gameStats.timeWithoutLifeLost = timeNoLifeLost;
         }
 
-        if (--this.lives > 0) {
+
             var self = this;
             var currentLife = this.lives;
             self.livesView.remove(currentLife);
-        
+        if (--this.lives > 0) {
             self.sounds.play(SHIP_HIT);
             self.shipHitView.hit();
         }
