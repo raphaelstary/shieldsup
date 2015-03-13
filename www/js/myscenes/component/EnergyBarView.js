@@ -61,6 +61,8 @@ var EnergyBarView = (function (Transition, Math) {
             } else {
                 position = this.stage.stage.animations.dict[this.drawable.id][0].time;
             }
+        } else if (this.lastAnimation == currentAnimation) {
+            return;
         }
 
         this.stage.stage.animations.remove(this.drawable);
