@@ -46,10 +46,10 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math, loadBool
 
         drawAchievement(Height.get(48, 8), CONQUEROR, loadBoolean(ACHIEVEMENT_CONQUEROR));
         drawAchievement(Height.get(48, 15), SHOPPING_QUEEN, loadBoolean(ACHIEVEMENT_SHOPPING_QUEEN));
-        drawAchievement(Height.get(48, 22), CLOSER, loadBoolean(CLOSER));
-        drawAchievement(Height.get(48, 29), LIVE_ONCE, loadBoolean(LIVE_ONCE));
-        drawAchievement(Height.get(48, 36), STAR_GAZER, loadBoolean(STAR_GAZER));
-        drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT, loadBoolean(FASTER_THAN_LIGHT));
+        drawAchievement(Height.get(48, 22), CLOSER, loadBoolean(ACHIEVEMENT_CLOSER));
+        drawAchievement(Height.get(48, 29), LIVE_ONCE, loadBoolean(ACHIEVEMENT_LIVE_ONCE));
+        drawAchievement(Height.get(48, 36), STAR_GAZER, loadBoolean(ACHIEVEMENT_STAR_GAZER));
+        drawAchievement(Height.get(48, 43), FASTER_THAN_LIGHT, loadBoolean(ACHIEVEMENT_FASTER_THAN_LIGHT));
 
         function drawAchievement(yFn, header, complete) {
             var achievement_1_bg = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(480, 60),
@@ -61,7 +61,7 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math, loadBool
             var achievement_1_header = self.stage.drawText(Width.HALF, subtract(yFn, Height.get(480, 15)),
                 self.messages.get(KEY, header), Font._40, SPECIAL_FONT, WHITE, 8);
             var achievement_1_text = self.stage.drawText(Width.HALF, add(yFn, Height.get(480, 10)),
-                self.messages.get(KEY, header + '_description'), Font._60, FONT, LIGHT_GREY, 8, undefined, undefined,
+                self.messages.get(KEY, header + '_descriKption'), Font._60, FONT, LIGHT_GREY, 8, undefined, undefined,
                 undefined, Width.get(10, 8), Height.get(30));
             drawables.push(achievement_1_bg, achievement_1_header, achievement_1_text);
         }
