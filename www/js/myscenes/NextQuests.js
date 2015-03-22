@@ -22,27 +22,28 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
 
         var drawables = [];
         var activeMissions = this.missions.getActiveMissions();
+        activeMissions.forEach(function (mission, index, missions) {
+            var delay = index > 0 ? index * 10 : undefined;
+            var forceNext = missions.length - 1 == index;
+            drawables.push.apply(drawables, questIn(Height.get(48, index * 8 + 10), mission, delay, forceNext));
+        });
 
         var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
             self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
-        if (activeMissions.length > 0)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 10), this.messages.get(MISSION_KEY, activeMissions[0].msgKey), undefined,
-                    activeMissions.length <= 1));
-        if (activeMissions.length > 1)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 18), this.messages.get(MISSION_KEY, activeMissions[1].msgKey), 10,
-                    activeMissions.length <= 2));
-        if (activeMissions.length > 2)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 26), this.messages.get(MISSION_KEY, activeMissions[2].msgKey), 20, true));
+        function questIn(yFn, mission, delay, forceNext) {
+            var returnList = [];
 
-        function questIn(yFn, name, delay, forceNext) {
+            var msg = self.messages.get(MISSION_KEY, mission.msgKey);
+            if (mission.allTime)
+                msg += ' ( ' + mission.count + ' / ' + mission.max + ' )';
+
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,
                 true, undefined, 4, 0.5);
-            var txt = self.stage.drawText(changeSign(Width.HALF), yFn, name, Font._40, FONT, WHITE, 5, undefined,
+            returnList.push(bg);
+            var txt = self.stage.drawText(changeSign(Width.HALF), yFn, msg, Font._40, FONT, WHITE, 5, undefined,
                 undefined, undefined, Width.get(10, 8), Height.get(80, 3));
+            returnList.push(txt);
 
             if (delay) {
                 self.stage.moveLater(bg, Width.HALF, yFn, speed, Transition.EASE_IN_SIN, false, questOut(bg, yFn),
@@ -55,7 +56,7 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
                     questOut(txt, yFn, forceNext));
             }
 
-            return [bg, txt];
+            return returnList;
         }
 
         function questOut(drawable, yFn, forceNext) {

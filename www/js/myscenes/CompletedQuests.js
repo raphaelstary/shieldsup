@@ -12,7 +12,6 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
 
     var DONE = 'done';
     var MISSIONS = 'missions';
-    var COMPLETE = 'complete';
     var SKIP = 'skip';
     var MISSION_KEY = 'mission';
 
@@ -41,41 +40,39 @@ var CompletedQuests = (function (Width, Height, changeSign, Font, Transition, ad
         var quests_header = self.stage.drawText(Width.THIRD, Height.get(48, 5),
             self.messages.get('pause_menu', MISSIONS), Font._30, SPECIAL_FONT, WHITE, 5);
 
-        //var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
-        //    '2 / 40 ' + self.messages.get('pause_menu', COMPLETE), Font._60, FONT, WHITE, 5);
-
         var drawables = [];
-        if (missions.length > 0)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 10), this.messages.get(MISSION_KEY, missions[0].msgKey), missions[0].success,
-                    undefined, missions.length <= 1));
-        if (missions.length > 1)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 18), this.messages.get(MISSION_KEY, missions[1].msgKey), missions[1].success, 10,
-                    missions.length <= 2));
-        if (missions.length > 2)
-            drawables.push.apply(drawables,
-                questIn(Height.get(48, 26), this.messages.get(MISSION_KEY, missions[2].msgKey), missions[2].success, 20,
-                    true));
+        missions.forEach(function (mission, index, missions) {
+            var delay = index > 0 ? index * 10 : undefined;
+            var forceNext = missions.length - 1 == index;
+            drawables.push.apply(drawables, questIn(Height.get(48, index * 8 + 10), mission, delay, forceNext));
+        });
 
-        function questIn(yFn, name, success, delay, forceNext) {
+        function questIn(yFn, mission, delay, forceNext) {
+            var returnList = [];
+            var msg = self.messages.get(MISSION_KEY, mission.msgKey);
+            if (mission.allTime)
+                msg += ' ( ' + mission.count + ' / ' + mission.max + ' )';
+
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,
                 true, undefined, 4, 0.5);
-            var txt = self.stage.drawText(changeSign(Width.HALF), yFn, name, Font._40, FONT, WHITE, 5, undefined,
+            returnList.push(bg);
+            var txt = self.stage.drawText(changeSign(Width.HALF), yFn, msg, Font._40, FONT, WHITE, 5, undefined,
                 undefined, undefined, Width.get(10, 8), Height.get(80, 3));
+            returnList.push(txt);
 
             if (delay) {
                 self.stage.moveLater(bg, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false,
-                    questOut(bg, yFn, success), undefined, delay);
+                    questOut(bg, yFn, mission.success), undefined, delay);
                 self.stage.moveLater(txt, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false,
                     questOut(txt, yFn, false, forceNext), undefined, delay);
             } else {
-                self.stage.move(bg, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false, questOut(bg, yFn, success));
+                self.stage.move(bg, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false,
+                    questOut(bg, yFn, mission.success));
                 self.stage.move(txt, Width.HALF, yFn, speed, Transition.EASE_IN_EXPO, false,
                     questOut(txt, yFn, false, forceNext));
             }
 
-            return [bg, txt];
+            return returnList;
         }
 
         var doOnce = true;

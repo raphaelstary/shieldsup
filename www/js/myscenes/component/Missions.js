@@ -267,7 +267,9 @@ var Missions = (function () {
                 id: mission.id,
                 msgKey: mission.msgKey,
                 count: 0,
-                success: false
+                success: false,
+                max: mission.constraintValue,
+                allTime: mission.allTime
             };
 
             return true;
