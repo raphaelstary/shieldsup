@@ -55,18 +55,19 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
                 '2 / 40 ' + self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
             drawables.push(quest_count_txt);
 
-            var activeMissions = self.missions.getActiveMissions();
-            if (activeMissions.length > 0)
-                showQuest(Height.get(48, 10), activeMissions[0].msgKey);
-            if (activeMissions.length > 1)
-                showQuest(Height.get(48, 17), activeMissions[1].msgKey);
-            if (activeMissions.length > 2)
-                showQuest(Height.get(48, 24), activeMissions[2].msgKey);
+            var activeMissions = self.missions.checkActiveMissions(self.sceneStorage.gameStats);
+            activeMissions.forEach(function (mission, index) {
+                showQuest(Height.get(48, index * 7 + 10), mission);
+            });
 
-            function showQuest(yFn, msgKey) {
+            function showQuest(yFn, mission) {
                 var background = self.stage.drawRectangle(Width.HALF, yFn, Width.get(10, 9), Height.get(48, 6), VIOLET,
                     true, undefined, 7);
-                var textDrawable = self.stage.drawText(Width.HALF, yFn, self.messages.get(MISSION_KEY, msgKey),
+                var msgKey = mission.msgKey;
+                var msg = self.messages.get(MISSION_KEY, msgKey);
+                if (mission.allTime)
+                    msg += ' ( ' + mission.count + ' / ' + mission.max + ' )';
+                var textDrawable = self.stage.drawText(Width.HALF, yFn, msg,
                     Font._40, FONT, LIGHT_GREY, 8, undefined, undefined, undefined, Width.get(10, 8), Height.get(25));
                 drawables.push(background, textDrawable);
                 self.messages.add(textDrawable, textDrawable.data, MISSION_KEY, msgKey);

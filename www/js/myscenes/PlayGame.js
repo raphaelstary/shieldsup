@@ -60,6 +60,8 @@ var PlayGame = (function ($) {
             points: 0
         };
 
+        this.sceneStorage.gameStats = gameStats;
+
         var evenCounter = 0;
 
         var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
@@ -287,6 +289,7 @@ var PlayGame = (function ($) {
         delete this.sceneStorage.shields;
         delete this.sceneStorage.energyBar;
         delete this.sceneStorage.lives;
+        delete this.sceneStorage.gameStats;
 
         this.sceneStorage.gameStats = gameStats;
 

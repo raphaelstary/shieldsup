@@ -103,6 +103,7 @@ var InGameTutorial = (function ($) {
             outOfEnergyInARow: 0,
             points: 0
         };
+        self.sceneStorage.gameStats = gameStats;
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
@@ -478,6 +479,7 @@ var InGameTutorial = (function ($) {
                 return;
             itIsOver = true;
             self.sounds.stop(backSound);
+            delete self.sceneStorage.gameStats;
             self.next(nextScene);
         }
 
