@@ -1,4 +1,4 @@
-var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
+var PauseMenu = (function (Settings, Achievements, Width, Height, Font, loadInteger) {
     "use strict";
 
     function PauseMenu(services) {
@@ -27,6 +27,10 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
     var LIGHT_GREY = '#c4c4c4';
     var VIOLET = '#3a2e3f';
 
+    var GAME_KEY = 'shields_up-';
+    var STORAGE_MISSIONS_COMPLETE = GAME_KEY + 'mission_complete_count';
+    var TOTAL_MISSIONS = 40;
+
     PauseMenu.prototype.show = function (next) {
         var self = this;
         var drawables;
@@ -52,7 +56,8 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
             drawables.push(quests_header);
 
             var quest_count_txt = self.stage.drawText(Width.THREE_QUARTER, Height.get(48, 5),
-                '2 / 40 ' + self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
+                loadInteger(STORAGE_MISSIONS_COMPLETE) + ' / ' + TOTAL_MISSIONS + ' ' +
+                self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
             drawables.push(quest_count_txt);
 
             var activeMissions = self.missions.checkActiveMissions(self.sceneStorage.gameStats);
@@ -66,9 +71,10 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
                 var msgKey = mission.msgKey;
                 var msg = self.messages.get(MISSION_KEY, msgKey);
                 if (mission.allTime)
-                    msg += ' ( ' + mission.count + ' / ' + mission.max + ' )';
-                var textDrawable = self.stage.drawText(Width.HALF, yFn, msg,
-                    Font._40, FONT, LIGHT_GREY, 8, undefined, undefined, undefined, Width.get(10, 8), Height.get(25));
+                    msg += '\u00A0' + ' (\u00A0' + mission.count + '\u00A0/\u00A0' + mission.max + '\u00A0)';
+
+                var textDrawable = self.stage.drawText(Width.HALF, yFn, msg, Font._40, FONT, LIGHT_GREY, 8, undefined,
+                    undefined, undefined, Width.get(10, 8), Height.get(25));
                 drawables.push(background, textDrawable);
                 self.messages.add(textDrawable, textDrawable.data, MISSION_KEY, msgKey);
                 translatedDrawables.push(textDrawable);
@@ -126,4 +132,4 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font) {
     };
 
     return PauseMenu;
-})(Settings, Achievements, Width, Height, Font);
+})(Settings, Achievements, Width, Height, Font, loadInteger);

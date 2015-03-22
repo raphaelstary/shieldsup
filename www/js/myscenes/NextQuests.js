@@ -36,7 +36,7 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
 
             var msg = self.messages.get(MISSION_KEY, mission.msgKey);
             if (mission.allTime)
-                msg += ' ( ' + mission.count + ' / ' + mission.max + ' )';
+                msg += '\u00A0' + ' (\u00A0' + mission.count + '\u00A0/\u00A0' + mission.max + '\u00A0)';
 
             var bg = self.stage.drawRectangle(changeSign(Width.HALF), yFn, Width.get(10, 9), Height.get(480, 60), WHITE,
                 true, undefined, 4, 0.5);

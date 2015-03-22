@@ -34,7 +34,6 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     var SPECIAL_FONT = 'SpecialGameFont';
     var WHITE = '#fff';
     var GOLD = '#ffd700';
-    var LIGHT_GREY = '#c4c4c4';
 
     var BUTTON_KEY = 'common_buttons';
     var RESUME = 'resume';
@@ -44,6 +43,8 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
     var DOOR_AIR_LOCK_CLOSING = 'door_air_lock_closing';
     var THUNDER_ROLL = 'thunder_roll';
+
+    var TOTAL_MISSIONS = 40;
 
     PostGame.prototype.show = function (nextScene) {
         var gameStats = this.sceneStorage.gameStats;
@@ -58,8 +59,9 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
             speed /= 2;
 
         var quest_count_txt = self.stage.moveFreshText(Width.THREE_QUARTER, subtract(Height.get(48, 5), Height.FULL),
-            loadInteger(STORAGE_MISSIONS_COMPLETE) + ' / 40 ' + self.messages.get(PAUSE_KEY, COMPLETE), Font._60, FONT,
-            WHITE, Width.THREE_QUARTER, Height.get(48, 5), speed, Transition.EASE_OUT_ELASTIC, false, function () {
+            loadInteger(STORAGE_MISSIONS_COMPLETE) + ' / ' + TOTAL_MISSIONS + ' ' +
+            self.messages.get(PAUSE_KEY, COMPLETE), Font._60, FONT, WHITE, Width.THREE_QUARTER, Height.get(48, 5),
+            speed, Transition.EASE_OUT_ELASTIC, false, function () {
 
                 function moveIn(text, xFn, yFn, delay, callback) {
                     return self.stage.moveFreshTextLater(xFn, subtract(yFn, Height.FULL), text, Font._30, SPECIAL_FONT,
@@ -270,59 +272,94 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     }
                 }
 
+                var itIsOver = false;
+
                 function goToResume() {
-                    var outSpeed = 30;
-                    if (self.sceneStorage.do30fps)
-                        outSpeed /= 2;
-                    function moveOut(drawable, xFn, yFn, delay, callback) {
-                        self.stage.moveLater(drawable, xFn, add(yFn, Height.FULL), outSpeed, Transition.EASE_IN_EXPO,
-                            false, function () {
-                                self.stage.remove(drawable);
-                            }, undefined, delay, callback);
+                    //var outSpeed = 30;
+                    //if (self.sceneStorage.do30fps)
+                    //    outSpeed /= 2;
+                    //function moveOut(drawable, xFn, yFn, delay, callback) {
+                    //    self.stage.moveLater(drawable, xFn, add(yFn, Height.FULL), outSpeed, Transition.EASE_IN_EXPO,
+                    //        false, function () {
+                    //            self.stage.remove(drawable);
+                    //        }, undefined, delay, callback);
+                    //}
+
+
+                    //moveOut(quest_count_txt.drawable, Width.THREE_QUARTER, Height.get(48, 5), 35, function () {
+                    if (itIsOver)
+                        return;
+                    itIsOver = true;
+
+                    self.sounds.stop(thunder);
+                    self.sounds.play(DOOR_AIR_LOCK_CLOSING);
+                    //self.sounds.stop(coins);
+
+                    // no fancy remove
+                    if (newDistance) {
+                        self.stage.remove(newDistance);
+                        self.stage.remove(newDistanceHighlight);
                     }
+                    if (newStars) {
+                        self.stage.remove(newStars);
+                        self.stage.remove(newStarsHighlight);
+                    }
+                    if (newAchievement) {
+                        self.stage.remove(newAchievement);
+                        self.stage.remove(newAchievementHighlight);
+                    }
+                    self.buttons.remove(playButton);
+                    self.buttons.remove(achievementsButton);
+                    self.buttons.remove(settingsButton);
+                    self.buttons.remove(moreGamesButton);
 
-                    var itIsOver = false;
-                    moveOut(quest_count_txt.drawable, Width.THREE_QUARTER, Height.get(48, 5), 35, function () {
-                        if (itIsOver)
-                            return;
-                        itIsOver = true;
-
-                        self.sounds.stop(thunder);
-                        self.sounds.play(DOOR_AIR_LOCK_CLOSING);
-                        //self.sounds.stop(coins);
-                        nextScene();
-                    });
-                    moveOut(quests_header.drawable, Width.THIRD, Height.get(48, 5), 33);
-
-                    moveOut(totalStarsWrapper.drawable, Width.HALF, Height.get(48, 9), 30);
-                    moveOut(totalStarsDigitWrapper.drawable, Width.HALF, Height.get(48, 12), 25);
-
-                    moveOut(distanceScoreWrapper.drawable, rightColFn, Height.THIRD, 18);
-                    moveOut(distanceScoreDigitsWrapper.drawable, rightColFn, getNewScoreY, 12);
-                    moveOut(distanceBestWrapper.drawable, rightColFn, Height.HALF, 7);
-                    moveOut(distanceHighScoreWrapper.drawable, rightColFn, getHighScoreY, 3);
-
-                    moveOut(goldHighScoreWrapper.drawable, leftColFn, getHighScoreY, 5, function () {
-                        if (newDistance) {
-                            self.stage.remove(newDistance);
-                            self.stage.remove(newDistanceHighlight);
-                        }
-                        if (newStars) {
-                            self.stage.remove(newStars);
-                            self.stage.remove(newStarsHighlight);
-                        }
-                        if (newAchievement) {
-                            self.stage.remove(newAchievement);
-                            self.stage.remove(newAchievementHighlight);
-                        }
-                        self.buttons.remove(playButton);
-                        self.buttons.remove(achievementsButton);
-                        self.buttons.remove(settingsButton);
-                        self.buttons.remove(moreGamesButton);
-                    });
-                    moveOut(goldBestWrapper.drawable, leftColFn, Height.HALF, 10);
-                    moveOut(goldScoreDigitsWrapper.drawable, leftColFn, getNewScoreY, 15);
-                    moveOut(goldScoreWrapper.drawable, leftColFn, Height.THIRD, 20);
+                    [
+                        quest_count_txt.drawable,
+                        quests_header.drawable,
+                        totalStarsWrapper.drawable,
+                        totalStarsDigitWrapper.drawable,
+                        distanceScoreWrapper.drawable,
+                        distanceScoreDigitsWrapper.drawable,
+                        distanceBestWrapper.drawable,
+                        distanceHighScoreWrapper.drawable,
+                        goldHighScoreWrapper.drawable,
+                        goldBestWrapper.drawable,
+                        goldScoreDigitsWrapper.drawable,
+                        goldScoreWrapper.drawable
+                    ].forEach(self.stage.remove.bind(self.stage));
+                    nextScene();
+                    //});
+                    //moveOut(quests_header.drawable, Width.THIRD, Height.get(48, 5), 33);
+                    //
+                    //moveOut(totalStarsWrapper.drawable, Width.HALF, Height.get(48, 9), 30);
+                    //moveOut(totalStarsDigitWrapper.drawable, Width.HALF, Height.get(48, 12), 25);
+                    //
+                    //moveOut(distanceScoreWrapper.drawable, rightColFn, Height.THIRD, 18);
+                    //moveOut(distanceScoreDigitsWrapper.drawable, rightColFn, getNewScoreY, 12);
+                    //moveOut(distanceBestWrapper.drawable, rightColFn, Height.HALF, 7);
+                    //moveOut(distanceHighScoreWrapper.drawable, rightColFn, getHighScoreY, 3);
+                    //
+                    //moveOut(goldHighScoreWrapper.drawable, leftColFn, getHighScoreY, 5, function () {
+                    //    if (newDistance) {
+                    //        self.stage.remove(newDistance);
+                    //        self.stage.remove(newDistanceHighlight);
+                    //    }
+                    //    if (newStars) {
+                    //        self.stage.remove(newStars);
+                    //        self.stage.remove(newStarsHighlight);
+                    //    }
+                    //    if (newAchievement) {
+                    //        self.stage.remove(newAchievement);
+                    //        self.stage.remove(newAchievementHighlight);
+                    //    }
+                    //    self.buttons.remove(playButton);
+                    //    self.buttons.remove(achievementsButton);
+                    //    self.buttons.remove(settingsButton);
+                    //    self.buttons.remove(moreGamesButton);
+                    //});
+                    //moveOut(goldBestWrapper.drawable, leftColFn, Height.HALF, 10);
+                    //moveOut(goldScoreDigitsWrapper.drawable, leftColFn, getNewScoreY, 15);
+                    //moveOut(goldScoreWrapper.drawable, leftColFn, Height.THIRD, 20);
                 }
             });
     };
