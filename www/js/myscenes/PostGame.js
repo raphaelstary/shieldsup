@@ -11,6 +11,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
         this.events = services.events;
         this.device = services.device;
         this.missions = services.missions;
+        this.timer = services.timer;
     }
 
     var GAME_KEY = 'shields_up-';
@@ -286,49 +287,50 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     //}
 
 
-                    //moveOut(quest_count_txt.drawable, Width.THREE_QUARTER, Height.get(48, 5), 35, function () {
-                    if (itIsOver)
-                        return;
-                    itIsOver = true;
+                    //moveOut(quest_count_txt.drawable, Width.THREE_QUARTER, Height.get(48, 5), 35,
+                    self.timer.doLater(function () {
+                        if (itIsOver)
+                            return;
+                        itIsOver = true;
 
-                    self.sounds.stop(thunder);
-                    self.sounds.play(DOOR_AIR_LOCK_CLOSING);
-                    //self.sounds.stop(coins);
+                        self.sounds.stop(thunder);
+                        self.sounds.play(DOOR_AIR_LOCK_CLOSING);
+                        //self.sounds.stop(coins);
 
-                    // no fancy remove
-                    if (newDistance) {
-                        self.stage.remove(newDistance);
-                        self.stage.remove(newDistanceHighlight);
-                    }
-                    if (newStars) {
-                        self.stage.remove(newStars);
-                        self.stage.remove(newStarsHighlight);
-                    }
-                    if (newAchievement) {
-                        self.stage.remove(newAchievement);
-                        self.stage.remove(newAchievementHighlight);
-                    }
-                    self.buttons.remove(playButton);
-                    self.buttons.remove(achievementsButton);
-                    self.buttons.remove(settingsButton);
-                    self.buttons.remove(moreGamesButton);
+                        // no fancy remove
+                        if (newDistance) {
+                            self.stage.remove(newDistance);
+                            self.stage.remove(newDistanceHighlight);
+                        }
+                        if (newStars) {
+                            self.stage.remove(newStars);
+                            self.stage.remove(newStarsHighlight);
+                        }
+                        if (newAchievement) {
+                            self.stage.remove(newAchievement);
+                            self.stage.remove(newAchievementHighlight);
+                        }
+                        self.buttons.remove(playButton);
+                        self.buttons.remove(achievementsButton);
+                        self.buttons.remove(settingsButton);
+                        self.buttons.remove(moreGamesButton);
 
-                    [
-                        quest_count_txt.drawable,
-                        quests_header.drawable,
-                        totalStarsWrapper.drawable,
-                        totalStarsDigitWrapper.drawable,
-                        distanceScoreWrapper.drawable,
-                        distanceScoreDigitsWrapper.drawable,
-                        distanceBestWrapper.drawable,
-                        distanceHighScoreWrapper.drawable,
-                        goldHighScoreWrapper.drawable,
-                        goldBestWrapper.drawable,
-                        goldScoreDigitsWrapper.drawable,
-                        goldScoreWrapper.drawable
-                    ].forEach(self.stage.remove.bind(self.stage));
-                    nextScene();
-                    //});
+                        [
+                            quest_count_txt.drawable,
+                            quests_header.drawable,
+                            totalStarsWrapper.drawable,
+                            totalStarsDigitWrapper.drawable,
+                            distanceScoreWrapper.drawable,
+                            distanceScoreDigitsWrapper.drawable,
+                            distanceBestWrapper.drawable,
+                            distanceHighScoreWrapper.drawable,
+                            goldHighScoreWrapper.drawable,
+                            goldBestWrapper.drawable,
+                            goldScoreDigitsWrapper.drawable,
+                            goldScoreWrapper.drawable
+                        ].forEach(self.stage.remove.bind(self.stage));
+                        nextScene();
+                    }, 30);
                     //moveOut(quests_header.drawable, Width.THIRD, Height.get(48, 5), 33);
                     //
                     //moveOut(totalStarsWrapper.drawable, Width.HALF, Height.get(48, 9), 30);
