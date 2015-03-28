@@ -61,7 +61,7 @@ var Achievements = (function (Width, Height, Font, subtract, add, Math, loadBool
             var achievement_1_header = self.stage.drawText(Width.HALF, subtract(yFn, Height.get(480, 15)),
                 self.messages.get(KEY, header), Font._40, SPECIAL_FONT, WHITE, 8);
             var achievement_1_text = self.stage.drawText(Width.HALF, add(yFn, Height.get(480, 10)),
-                self.messages.get(KEY, header + '_descriKption'), Font._60, FONT, LIGHT_GREY, 8, undefined, undefined,
+                self.messages.get(KEY, header + '_description'), Font._60, FONT, LIGHT_GREY, 8, undefined, undefined,
                 undefined, Width.get(10, 8), Height.get(30));
             drawables.push(achievement_1_bg, achievement_1_header, achievement_1_text);
         }
