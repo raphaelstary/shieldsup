@@ -9,7 +9,6 @@ body {
     height: 100%;
     -ms-touch-action: none;
     touch-action: none;
-    background-color: #3a2e3f;
 }
 
 canvas {
