@@ -1,4 +1,4 @@
-var EnergyStateMachine = (function (Date) {
+var EnergyStateMachine = (function () {
     "use strict";
 
     function EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
@@ -11,10 +11,7 @@ var EnergyStateMachine = (function (Date) {
         this.sounds = sounds;
         this.energyBarView = energyBarView;
         this.gameStats = gameStats;
-        this.timeStart = Date.now();
         this.currentStreak = 0;
-        this.totalTimeStart = Date.now();
-        this.timeWithoutAlarm = 0;
         this.timer = timer;
     }
 
@@ -28,10 +25,7 @@ var EnergyStateMachine = (function (Date) {
 
         function turnShieldsOn() {
             self.sounds.play(SHIELDS_UP_SOUND);
-            var now = Date.now();
-            self.gameStats.timeShieldsOff += now - self.timeStart;
             self.world.shieldsOn = true;
-            self.timeStart = now;
             self.stage.animate(self.shieldsDrawable, self.shieldsUpSprite, function () {
                 self.shieldsDrawable.data = self.stage.getGraphic('shields');
                 self.__onSound = self.sounds.play(SHIELDS_ON_SOUND);
@@ -47,12 +41,6 @@ var EnergyStateMachine = (function (Date) {
         this.__alarmOn = true;
 
         // stats
-        var now = Date.now();
-        this.timeWithoutAlarm = now - this.totalTimeStart;
-        this.totalTimeStart = now;
-        if (this.timeWithoutAlarm > this.gameStats.timeWithoutAlarm) {
-            this.gameStats.timeWithoutAlarm = this.timeWithoutAlarm;
-        }
         this.gameStats.outOfEnergy++;
         this.currentStreak++;
         if (this.currentStreak > this.gameStats.outOfEnergyInARow) {
@@ -66,10 +54,7 @@ var EnergyStateMachine = (function (Date) {
     EnergyStateMachine.prototype.turnShieldsOff = function () {
         var self = this;
         //self.sounds.stop(self.__onSound);
-        var now = Date.now();
-        self.gameStats.timeShieldsOn += now - self.timeStart;
         this.world.shieldsOn = false;
-        self.timeStart = now;
         self.stage.animate(self.shieldsDrawable, self.shieldsDownSprite, function () {
             self.stage.hide(self.shieldsDrawable);
         });
@@ -88,4 +73,4 @@ var EnergyStateMachine = (function (Date) {
     };
 
     return EnergyStateMachine;
-})(Date);
+})();

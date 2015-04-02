@@ -1,4 +1,4 @@
-var GameWorld = (function (Object, Date) {
+var GameWorld = (function (Object) {
     "use strict";
 
     var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
@@ -8,8 +8,8 @@ var GameWorld = (function (Object, Date) {
     var COLLECT_STAR = 'kids_cheering';
 
     function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
-        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame, sounds,
-        shipHitView, shieldsHitView, livesView, gameStats) {
+                       shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame, sounds,
+                       shipHitView, shieldsHitView, livesView, gameStats) {
         this.stage = stage;
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
@@ -45,8 +45,6 @@ var GameWorld = (function (Object, Date) {
         this.collectedAsteroidsInARow = 0;
         this.destroyedStarsInARow = 0;
         this.collectedStarsInARow = 0;
-        this.startTimeNoLifeLost = Date.now();
-        this.startTimeNoStarCollected = Date.now();
     }
 
     GameWorld.prototype.reset = function () {
@@ -134,12 +132,6 @@ var GameWorld = (function (Object, Date) {
                 if (this.collectedStarsInARow > this.gameStats.collectedStarsInARow) {
                     this.gameStats.collectedStarsInARow = this.collectedStarsInARow;
                 }
-                var now = Date.now();
-                var timeNoStarCollected = now - this.startTimeNoStarCollected;
-                this.startTimeNoStarCollected = now;
-                if (timeNoStarCollected > this.gameStats.timeWithoutStarCollected) {
-                    this.gameStats.timeWithoutStarCollected = timeNoStarCollected;
-                }
 
                 this.sounds.play(COLLECT_STAR);
                 this.collectAnimator.collectStar();
@@ -165,20 +157,12 @@ var GameWorld = (function (Object, Date) {
             this.gameStats.collectedAsteroidsInARow = this.collectedAsteroidsInARow;
         }
         this.gameStats.livesLost++;
-        var now = Date.now();
-        var timeNoLifeLost = now - this.startTimeNoLifeLost;
-        this.startTimeNoLifeLost = now;
-        if (timeNoLifeLost > this.gameStats.timeWithoutLifeLost) {
-            this.gameStats.timeWithoutLifeLost = timeNoLifeLost;
-        }
 
-
-            var self = this;
-            var currentLife = this.lives;
-            self.livesView.remove(currentLife);
+        var currentLife = this.lives;
+        this.livesView.remove(currentLife);
         if (--this.lives > 0) {
-            self.sounds.play(SHIP_HIT);
-            self.shipHitView.hit();
+            this.sounds.play(SHIP_HIT);
+            this.shipHitView.hit();
         }
     };
 
@@ -187,4 +171,4 @@ var GameWorld = (function (Object, Date) {
     }
 
     return GameWorld;
-})(Object, Date);
+})(Object);

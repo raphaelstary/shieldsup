@@ -61,22 +61,82 @@ var PlayGame = (function ($) {
         };
 
         this.sceneStorage.gameStats = gameStats;
+        var lostLife = false;
+        var lostLifeTime = 0;
+        var lifeLostListener = this.events.subscribe($.Event.LIFE_LOST, function () {
+            lostLife = true;
+        });
+        var alarm = false;
+        var alarmTime = 0;
+        var alarmListener = this.events.subscribe($.Event.ALARM, function () {
+            alarm = true;
+        });
+        var starCollected = false;
+        var starCollectedTime = 0;
+        var starCollectedListener = this.events.subscribe($.Event.STAR_COLLECTED, function () {
+            starCollected = true;
+        });
 
         var evenCounter = 0;
+
+        function distanceTimeTick() {
+            gameStats.timePlayed++;
+            if (world.shieldsOn) {
+                gameStats.timeShieldsOn++;
+            } else {
+                gameStats.timeShieldsOff++
+            }
+            if (lostLife) {
+                lostLife = false;
+                if (lostLifeTime > gameStats.timeWithoutLifeLost) {
+                    gameStats.timeWithoutLifeLost = lostLifeTime;
+                }
+                lostLifeTime = 0;
+            } else {
+                lostLifeTime++;
+            }
+            if (alarm) {
+                alarm = false;
+                if (alarmTime > gameStats.timeWithoutAlarm) {
+                    gameStats.timeWithoutAlarm = alarmTime;
+                }
+                alarmTime = 0;
+            } else {
+                alarmTime++;
+            }
+            if (starCollected) {
+                starCollected = false;
+                if (starCollectedTime > gameStats.timeWithoutStarCollected) {
+                    gameStats.timeWithoutStarCollected = starCollectedTime;
+                }
+                starCollectedTime = 0;
+            } else {
+                starCollectedTime++;
+            }
+            distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
+        }
+
+        function updateTimes() {
+            if (lostLifeTime > gameStats.timeWithoutLifeLost) {
+                gameStats.timeWithoutLifeLost = lostLifeTime;
+            }
+            if (alarmTime > gameStats.timeWithoutAlarm) {
+                gameStats.timeWithoutAlarm = alarmTime;
+            }
+            if (starCollectedTime > gameStats.timeWithoutStarCollected) {
+                gameStats.timeWithoutStarCollected = starCollectedTime;
+            }
+        }
 
         var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
             if (self.sceneStorage.do30fps) {
                 if (evenCounter % 2 == 0) {
-
-                    gameStats.timePlayed++;
-                    distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
-
+                    distanceTimeTick();
                     evenCounter = 0;
                 }
                 evenCounter++
             } else {
-                gameStats.timePlayed++;
-                distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
+                distanceTimeTick();
             }
         });
 
@@ -85,6 +145,7 @@ var PlayGame = (function ($) {
             3);
 
         function doThePause() {
+            updateTimes();
             pause();
             self.events.fireSync($.Event.PAUSE);
             self.sceneStorage.menuScene = 'pause_menu';
@@ -272,6 +333,9 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(showRotation);
                 self.events.unsubscribe(hideRotation);
                 self.events.unsubscribe(distanceMeter);
+                self.events.unsubscribe(alarmListener);
+                self.events.unsubscribe(lifeLostListener);
+                self.events.unsubscribe(starCollectedListener);
             }
 
             removeEverything();
@@ -281,6 +345,7 @@ var PlayGame = (function ($) {
                     self.stage.remove(energyBarDrawable);
                 });
 
+            updateTimes();
             self.next(nextScene, gameStats);
         }
     };
