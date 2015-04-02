@@ -153,10 +153,10 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                     if (newDistanceRecord) {
                         newDistance = self.stage.drawText(getNewDistanceX, getNewScoreY,
                             self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,
-                            [distanceScoreDigitsWrapper]);
+                            [distanceScoreDigitsWrapper.drawable]);
                         newDistanceHighlight = self.stage.drawText(getNewDistanceX, getNewScoreY,
                             self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
-                            [distanceScoreDigitsWrapper]);
+                            [distanceScoreDigitsWrapper.drawable]);
                         self.stage.animateAlphaPattern(newDistanceHighlight, [
                             {
                                 value: 1,
@@ -174,10 +174,10 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
 
                     if (newStarsRecord) {
                         newStars = self.stage.drawText(getNewStarsX, getNewScoreY, self.messages.get(KEY, NEW_RECORD),
-                            Font._30, SPECIAL_FONT, GOLD, 3, [goldScoreDigitsWrapper]);
+                            Font._30, SPECIAL_FONT, GOLD, 3, [goldScoreDigitsWrapper.drawable]);
                         newStarsHighlight = self.stage.drawText(getNewStarsX, getNewScoreY,
                             self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, WHITE, 4,
-                            [goldScoreDigitsWrapper]);
+                            [goldScoreDigitsWrapper.drawable]);
                         self.stage.animateAlphaPattern(newStarsHighlight, [
                             {
                                 value: 1,
