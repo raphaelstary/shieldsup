@@ -114,7 +114,7 @@ var InGameTutorial = (function ($) {
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
-            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, gameStats, do30fps);
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 6, gameStats, do30fps);
 
         registerPushRelease();
 
