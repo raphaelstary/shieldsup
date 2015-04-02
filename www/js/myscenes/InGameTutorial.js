@@ -168,7 +168,7 @@ var InGameTutorial = (function ($) {
 
         function createTouchNHoldTxt() {
             var touch_txt = self.stage.drawText($.Width.TWO_THIRD, $.Height.THIRD,
-                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 6, undefined, $.Math.PI / 16, 1,
+                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 5, undefined, $.Math.PI / 16, 1,
                 $.Width.TWO_THIRD, $.Height.get(20));
             self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
             function getX(width) {
