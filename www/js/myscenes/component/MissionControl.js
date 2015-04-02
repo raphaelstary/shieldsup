@@ -23,8 +23,16 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
 
         var completeMissions = this.__getCompleteMissions();
 
-        while (activeMissions.length < 3) {
-            activeMissions.push(this.missions.getNext(activeMissions, completeMissions));
+        var nrOfMissionsYouWant = 0;
+        if (activeMissions.length == 0) {
+            nrOfMissionsYouWant = 3;
+        } else if (activeMissions.length < 3) {
+            nrOfMissionsYouWant = activeMissions.length - 3;
+        }
+        for (; nrOfMissionsYouWant > 0; nrOfMissionsYouWant--) {
+            var possibleNxtMission = this.missions.getNext(activeMissions, completeMissions);
+            if (possibleNxtMission)
+                activeMissions.push(possibleNxtMission);
         }
 
         saveObject(ACTIVE, activeMissions);

@@ -22,6 +22,11 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
 
         var drawables = [];
         var activeMissions = this.missions.getActiveMissions();
+        if (activeMissions.length == 0) {
+            nextScene();
+            return;
+        }
+
         activeMissions.forEach(function (mission, index, missions) {
             var delay = index > 0 ? index * 10 : undefined;
             var forceNext = missions.length - 1 == index;
@@ -81,9 +86,11 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
             if (itIsOver)
                 return;
             itIsOver = true;
-            self.stage.remove(quests_header);
+            if (quests_header)
+                self.stage.remove(quests_header);
             drawables = undefined;
-            self.buttons.remove(skipButton);
+            if (skipButton)
+                self.buttons.remove(skipButton);
             next();
         }
 
