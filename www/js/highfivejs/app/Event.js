@@ -26,5 +26,9 @@ var Event = {
     SHOW_ROTATE_DEVICE: 'show_rotate_device',
     RESUME_MENU: 'resume_menu',
     SHOW_MENU: 'show_menu',
-    RESUME_AFTER_MENU: 'resume_after_menu'
+    RESUME_AFTER_MENU: 'resume_after_menu',
+
+    STAR_COLLECTED: 'star_collected',
+    ALARM: 'alarm',
+    LIFE_LOST: 'life_lost'
 };

@@ -1,9 +1,10 @@
-var EnergyStateMachine = (function () {
+var EnergyStateMachine = (function (Event) {
     "use strict";
 
-    function EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
+    function EnergyStateMachine(stage, events, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
         energyBarView, gameStats, timer) {
         this.stage = stage;
+        this.events = events;
         this.world = world;
         this.shieldsDrawable = shieldsDrawable;
         this.shieldsUpSprite = shieldsUpSprite;
@@ -49,6 +50,7 @@ var EnergyStateMachine = (function () {
 
         this.turnShieldsOff();
         this.timer.doLater(this.energyBarView.load.bind(this.energyBarView), 1);
+        this.events.fireSync(Event.ALARM);
     };
 
     EnergyStateMachine.prototype.turnShieldsOff = function () {
@@ -73,4 +75,4 @@ var EnergyStateMachine = (function () {
     };
 
     return EnergyStateMachine;
-})();
+})(Event);

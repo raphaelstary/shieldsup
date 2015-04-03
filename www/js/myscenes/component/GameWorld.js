@@ -1,4 +1,4 @@
-var GameWorld = (function (Object) {
+var GameWorld = (function (Object, Event) {
     "use strict";
 
     var OBJECT_DESTROYED = 'object_destroyed/object_destroyed';
@@ -7,10 +7,11 @@ var GameWorld = (function (Object) {
     var STAR_EXPLOSION = 'booming_reverse_01';
     var COLLECT_STAR = 'kids_cheering';
 
-    function GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
+    function GameWorld(stage, events, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
                        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame, sounds,
                        shipHitView, shieldsHitView, livesView, gameStats) {
         this.stage = stage;
+        this.events = events;
         this.trackedAsteroids = trackedAsteroids;
         this.trackedStars = trackedStars;
 
@@ -143,6 +144,7 @@ var GameWorld = (function (Object) {
                 this.stage.remove(star);
                 this.stage.remove(highlight);
                 delete this.trackedStars[key];
+                this.events.fireSync(Event.STAR_COLLECTED);
                 // return;
             }
         }, this);
@@ -164,6 +166,7 @@ var GameWorld = (function (Object) {
             this.sounds.play(SHIP_HIT);
             this.shipHitView.hit();
         }
+        this.events.fireSync(Event.LIFE_LOST);
     };
 
     function needPreciseCollisionDetection(stationaryObject, movingObstacle) {
@@ -171,4 +174,4 @@ var GameWorld = (function (Object) {
     }
 
     return GameWorld;
-})(Object);
+})(Object, Event);

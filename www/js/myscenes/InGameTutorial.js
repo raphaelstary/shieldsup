@@ -107,13 +107,13 @@ var InGameTutorial = (function ($) {
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
-        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame, gameStats, do30fps);
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
             energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 6, gameStats, do30fps);
 
         registerPushRelease();

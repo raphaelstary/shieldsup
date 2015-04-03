@@ -7,14 +7,14 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         return new LevelGenerator(obstaclesView, gameStats, is30fps);
     }
 
-    function createEnergyStateMachine(stage, sounds, timer, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
+    function createEnergyStateMachine(stage, events, sounds, timer, energyBarDrawable, world, shieldsDrawable, shieldsUpSprite,
         shieldsDownSprite, shieldsMaxEnergyLevel_OneToFour, gameStats, is30fps) {
         var energyBarView = new EnergyBarView(stage, energyBarDrawable, shieldsMaxEnergyLevel_OneToFour, is30fps);
-        return new EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
+        return new EnergyStateMachine(stage, events, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
             energyBarView, gameStats, timer);
     }
 
-    function createWorld(stage, sounds, timer, shaker, countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable,
+    function createWorld(stage, events, sounds, timer, shaker, countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable,
         trackedAsteroids, trackedStars, shipCollision, shieldsCollision, endGame, gameStats, is30fps) {
         var scoreDisplay = new Odometer(new OdometerView(stage, countDrawables, shaker, is30fps));
         var collectAnimator = new CollectView(stage, shipDrawable, shaker, is30fps);
@@ -22,7 +22,7 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         var hullHitView = new ShipHitView(stage, shipDrawable, timer, shaker, is30fps);
         var livesView = new LivesView(stage, lifeDrawablesDict, shaker, is30fps);
         var shieldsHitView = new ShieldsHitView(stage, shieldsDrawable, timer, shaker, is30fps);
-        return new GameWorld(stage, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
+        return new GameWorld(stage, events, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
             shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker,
             Object.keys(lifeDrawablesDict).length, endGame, sounds, hullHitView, shieldsHitView, livesView, gameStats);
     }

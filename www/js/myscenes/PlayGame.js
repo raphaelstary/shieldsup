@@ -182,12 +182,12 @@ var PlayGame = (function ($) {
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
 
 
-        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
             shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
         var playerShieldsLevel = $.loadInteger(SHOP_ENERGY) + 1;
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, self.timer,
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
             energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel,
             gameStats, self.sceneStorage.do30fps);
 
