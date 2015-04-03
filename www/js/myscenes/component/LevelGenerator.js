@@ -203,6 +203,17 @@ var LevelGenerator = (function (range) {
                 starSpeed: 40,
                 pauseAfterStar: 50,
                 maxTimeToNextAfterStar: 100
+            },
+            {
+                id: 'last+1',
+                showMessage: true,
+                messageNr: "it's over now",
+                maxObstacles: 0,
+
+                timeToFirst: 270,
+                percentageForAsteroid: 100,
+
+                asteroidSpeed: 120
             }
         ];
 
@@ -210,6 +221,8 @@ var LevelGenerator = (function (range) {
 
         this.perfectWavesInARow = 0;
         this.wavesWithoutLifeLostInARow = 0;
+        this.lastWaveIsOver = false;
+        this.lastWaveIsRealWave = false;
     }
 
     LevelGenerator.prototype.initLevel = function (level) {
@@ -244,19 +257,55 @@ var LevelGenerator = (function (range) {
         this.groupCount = 0;
         this.maxGroup = 0;
         this.groupDiamond = false;
-
-        this.snapshot = {
-            collectedStars: this.gameStats.collectedStars,
-            spawnedStars: this.gameStats.spawnedStars,
-            destroyedAsteroids: this.gameStats.destroyedAsteroids,
-            spawnedAsteroids: this.gameStats.spawnedAsteroids,
-            livesLost: this.gameStats.livesLost
-        }
     };
 
     LevelGenerator.prototype.update = function () {
         if (++this.counter <= this.nextCount)
             return;
+
+        if (this.lastWaveIsOver) {
+            this.lastWaveIsOver = false;
+            if (this.lastWaveIsRealWave) {
+                this.gameStats.completedWaves++;
+
+                var spawnedStarsDelta = this.gameStats.spawnedStars - this.snapshot.spawnedStars;
+                var spawnedAsteroidsDelta = this.gameStats.spawnedAsteroids - this.snapshot.spawnedAsteroids;
+                var collectedStarsDelta = this.gameStats.collectedStars - this.snapshot.collectedStars;
+                var destroyedAsteroidsDelta = this.gameStats.destroyedAsteroids - this.snapshot.destroyedAsteroids;
+
+                var perfectWave = spawnedStarsDelta - collectedStarsDelta == 0 &&
+                    spawnedAsteroidsDelta - destroyedAsteroidsDelta == 0;
+                if (perfectWave) {
+                    this.gameStats.perfectWaves++;
+                    this.perfectWavesInARow++;
+                    if (this.perfectWavesInARow > this.gameStats.perfectWavesInARow) {
+                        this.gameStats.perfectWavesInARow = this.perfectWavesInARow;
+                    }
+                } else {
+                    this.perfectWavesInARow = 0;
+                }
+
+                var livesLostDelta = this.gameStats.livesLost - this.snapshot.livesLost;
+
+                var waveWithoutLifeLost = livesLostDelta == 0;
+                if (waveWithoutLifeLost) {
+                    this.gameStats.wavesWithoutLifeLost++;
+                    this.wavesWithoutLifeLostInARow++;
+                    if (this.wavesWithoutLifeLostInARow > this.gameStats.wavesWithoutLifeLostInARow) {
+                        this.gameStats.wavesWithoutLifeLostInARow = this.wavesWithoutLifeLostInARow;
+                    }
+                } else {
+                    this.wavesWithoutLifeLostInARow = 0;
+                }
+            }
+            this.snapshot = {
+                collectedStars: this.gameStats.collectedStars,
+                spawnedStars: this.gameStats.spawnedStars,
+                destroyedAsteroids: this.gameStats.destroyedAsteroids,
+                spawnedAsteroids: this.gameStats.spawnedAsteroids,
+                livesLost: this.gameStats.livesLost
+            }
+        }
 
         this.counter = 0;
 
@@ -314,37 +363,8 @@ var LevelGenerator = (function (range) {
         }
 
         if (this.obstaclesCount >= this.level.maxObstacles) {
-            this.gameStats.completedWaves++;
-
-            var spawnedStarsDelta = this.gameStats.spawnedStars - this.snapshot.spawnedStars;
-            var spawnedAsteroidsDelta = this.gameStats.spawnedAsteroids - this.snapshot.spawnedAsteroids;
-            var collectedStarsDelta = this.gameStats.collectedStars - this.snapshot.collectedStars;
-            var destroyedAsteroidsDelta = this.gameStats.destroyedAsteroids - this.snapshot.destroyedAsteroids;
-
-            var perfectWave = spawnedStarsDelta - collectedStarsDelta == 0 &&
-                spawnedAsteroidsDelta - destroyedAsteroidsDelta == 0;
-            if (perfectWave) {
-                this.gameStats.perfectWaves++;
-                this.perfectWavesInARow++;
-                if (this.perfectWavesInARow > this.gameStats.perfectWavesInARow) {
-                    this.gameStats.perfectWavesInARow = this.perfectWavesInARow;
-                }
-            } else {
-                this.perfectWavesInARow = 0;
-            }
-
-            var livesLostDelta = this.gameStats.livesLost - this.snapshot.livesLost;
-
-            var waveWithoutLifeLost = livesLostDelta == 0;
-            if (waveWithoutLifeLost) {
-                this.gameStats.wavesWithoutLifeLost++;
-                this.wavesWithoutLifeLostInARow++;
-                if (this.wavesWithoutLifeLostInARow > this.gameStats.wavesWithoutLifeLostInARow) {
-                    this.gameStats.wavesWithoutLifeLostInARow = this.wavesWithoutLifeLostInARow;
-                }
-            } else {
-                this.wavesWithoutLifeLostInARow = 0;
-            }
+            this.lastWaveIsOver = true;
+            this.lastWaveIsRealWave = this.level.showMessage;
 
             this.initLevel(this.levels.shift());
         }
