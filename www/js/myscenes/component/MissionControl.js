@@ -1,4 +1,4 @@
-var MissionControl = (function (localStorage, loadInteger, loadObject, saveObject) {
+var MissionControl = (function (localStorage, loadInteger, loadObject, saveObject, concatenateProperties) {
     "use strict";
 
     function MissionControl(missions) {
@@ -49,11 +49,28 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
     };
 
     MissionControl.prototype.checkActiveMissions = function (gameStats) {
+        return this.__check(gameStats, true);
+    };
+
+    MissionControl.prototype.softCheck = function (gameStats) {
+        return this.__check(gameStats, false);
+    };
+
+    MissionControl.prototype.__check = function (gameStats, persistFlag) {
         var activeMissions = this.__getActiveMissions();
+        if (!persistFlag) {
+            var arrayCopy = [];
+            activeMissions.forEach(function (mission) {
+                var objectCopy = {};
+                concatenateProperties(mission, objectCopy);
+                arrayCopy.push(objectCopy);
+            });
+            activeMissions = arrayCopy;
+        }
 
         var completeMissions = [];
         var updateActiveMissions = false;
-        activeMissions.forEach(function (mission, index, missions) {
+        activeMissions.forEach(function (mission) {
             var result = this.missions.check(mission, gameStats);
             if (result == 'success') {
                 completeMissions.push(mission.id);
@@ -64,18 +81,20 @@ var MissionControl = (function (localStorage, loadInteger, loadObject, saveObjec
             }
         }, this);
 
-        if (updateActiveMissions) {
-            saveObject(ACTIVE, activeMissions);
-        }
-        if (completeMissions.length > 0) {
-            var allCompleteMissions = this.__getCompleteMissions();
-            allCompleteMissions.push.apply(allCompleteMissions, completeMissions);
-            saveObject(COMPLETE, allCompleteMissions);
-            localStorage.setItem(COMPLETE_COUNT, loadInteger(COMPLETE_COUNT) + completeMissions.length);
+        if (persistFlag) {
+            if (updateActiveMissions) {
+                saveObject(ACTIVE, activeMissions);
+            }
+            if (completeMissions.length > 0) {
+                var allCompleteMissions = this.__getCompleteMissions();
+                allCompleteMissions.push.apply(allCompleteMissions, completeMissions);
+                saveObject(COMPLETE, allCompleteMissions);
+                localStorage.setItem(COMPLETE_COUNT, loadInteger(COMPLETE_COUNT) + completeMissions.length);
+            }
         }
 
         return activeMissions;
     };
 
     return MissionControl;
-})(lclStorage, loadInteger, loadObject, saveObject);
+})(lclStorage, loadInteger, loadObject, saveObject, concatenateProperties);

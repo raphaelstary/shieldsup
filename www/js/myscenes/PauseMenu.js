@@ -60,7 +60,7 @@ var PauseMenu = (function (Settings, Achievements, Width, Height, Font, loadInte
                 self.messages.get(KEY, COMPLETE), Font._60, FONT, LIGHT_GREY, 8);
             drawables.push(quest_count_txt);
 
-            var activeMissions = self.missions.checkActiveMissions(self.sceneStorage.gameStats);
+            var activeMissions = self.missions.softCheck(self.sceneStorage.gameStats);
             activeMissions.forEach(function (mission, index) {
                 showQuest(Height.get(48, index * 7 + 10), mission);
             });
