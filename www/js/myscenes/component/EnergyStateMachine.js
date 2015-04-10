@@ -68,6 +68,7 @@ var EnergyStateMachine = (function (Event) {
         }
         this.energyBarView.load();
         if (this.__alarmOn) {
+            this.__alarmOn = false;
             this.sounds.stop(this.__alarmSound);
         } else {
             this.currentStreak = 0;
