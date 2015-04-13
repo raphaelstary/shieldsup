@@ -1,4 +1,4 @@
-var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
+var drawSpeedStripes = (function (Width, Transition, calcScreenConst, Math) {
     "use strict";
 
     var SPEED = 'speed';
@@ -27,10 +27,11 @@ var drawSpeedStripes = (function (Width, Transition, calcScreenConst) {
             return height + topOffSet(stage);
         }
 
-        return stage.moveFreshLater(xFn, yStart, SPEED, xFn, yEnd, is30fps ? 15 : 30, Transition.LINEAR, delay, true,
+        var newDelay = is30fps ? Math.floor(delay / 2) : delay;
+        return stage.moveFreshLater(xFn, yStart, SPEED, xFn, yEnd, is30fps ? 15 : 30, Transition.LINEAR, newDelay, true,
             undefined, undefined, undefined, 1);
     }
 
     return showSpeedStripes;
 
-})(Width, Transition, calcScreenConst);
+})(Width, Transition, calcScreenConst, Math);
