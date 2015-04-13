@@ -17,6 +17,7 @@ var PlayGame = (function ($) {
     var TOTAL_TIME = 'shields_up-total_time';
     var TOTAL_STARTS = 'shields_up-total_starts';
     var SHOP_ENERGY = 'shields_up-shop_energy';
+    var SHOP_LUCK = 'shields_up-shop_luck';
 
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
@@ -177,8 +178,9 @@ var PlayGame = (function ($) {
             endGame(world.points);
         }
 
+        var luckLevel = $.loadInteger(SHOP_LUCK);
         var level = $.PlayFactory.createLevel(self.stage, allLevelsComplete, trackedAsteroids, trackedStars,
-            self.messages, gameStats, self.sceneStorage.do30fps);
+            self.messages, gameStats, luckLevel, self.sceneStorage.do30fps);
         var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);

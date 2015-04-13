@@ -1,11 +1,13 @@
 var LevelGenerator = (function (range) {
     "use strict";
 
-    function LevelGenerator(drawHelper, nextFn, gameStats, is30fps) {
+    function LevelGenerator(drawHelper, nextFn, gameStats, luckLevel, is30fps) {
         this.drawHelper = drawHelper;
         this.nextFn = nextFn;
         this.gameStats = gameStats;
+        this.luckLevel = luckLevel;
         this.is30fps = is30fps;
+        var luckPenalty = 15 - this.luckLevel * 5;
         this.idCounter = 0;
         this.levels = [
             {
@@ -45,7 +47,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 asteroidSpeed: 150 + 30,
                 pauseAfterAsteroid: 45,
@@ -61,7 +63,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 120 + 30,
                 pauseAfterAsteroid: 30,
@@ -77,7 +79,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 minAsteroidSpeed: 120 + 30,
                 maxAsteroidSpeed: 180 + 30,
@@ -94,7 +96,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 minAsteroidSpeed: 150 + 30,
                 maxAsteroidSpeed: 210 + 30,
@@ -111,7 +113,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 180 + 30,
                 pauseAfterAsteroid: 60,
@@ -153,7 +155,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 asteroidSpeed: 150,
                 pauseAfterAsteroid: 45,
@@ -169,7 +171,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 120,
                 pauseAfterAsteroid: 30,
@@ -185,7 +187,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 minAsteroidSpeed: 120,
                 maxAsteroidSpeed: 180,
@@ -202,7 +204,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 minAsteroidSpeed: 150,
                 maxAsteroidSpeed: 210,
@@ -219,7 +221,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 180,
                 pauseAfterAsteroid: 60,
@@ -261,7 +263,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 90,
                 pauseAfterAsteroid: 30,
@@ -277,7 +279,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 25,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 asteroidSpeed: 120,
                 pauseAfterAsteroid: 15,
@@ -293,7 +295,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 minAsteroidSpeed: 90,
                 maxAsteroidSpeed: 150,
@@ -310,7 +312,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 minAsteroidSpeed: 90,
                 maxAsteroidSpeed: 150,
@@ -327,7 +329,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 40,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 150,
                 pauseAfterAsteroid: 60,
@@ -369,7 +371,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 90 - 30,
                 pauseAfterAsteroid: 30,
@@ -385,7 +387,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 25,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 asteroidSpeed: 120 - 30,
                 pauseAfterAsteroid: 15,
@@ -401,7 +403,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 minAsteroidSpeed: 90 - 30,
                 maxAsteroidSpeed: 150 - 30,
@@ -418,7 +420,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 20,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 70,
+                percentageForAsteroid: 70 + luckPenalty,
 
                 minAsteroidSpeed: 90 - 30,
                 maxAsteroidSpeed: 150 - 30,
@@ -435,7 +437,7 @@ var LevelGenerator = (function (range) {
                 maxObstacles: 40,
 
                 timeToFirst: 240,
-                percentageForAsteroid: 80,
+                percentageForAsteroid: 80 + luckPenalty,
 
                 asteroidSpeed: 150 - 30,
                 pauseAfterAsteroid: 60,
