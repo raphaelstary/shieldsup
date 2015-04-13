@@ -89,7 +89,7 @@
             "luck": "luck",
             "energy_description": "increase the energy of your shield generator",
             "life_description": "get an extra life",
-            "luck_description": "increase the chance that stars & items appear"
+            "luck_description": "increase the chance that stars appear"
         },
         "mission": {
             "destroy_10_asteroids_once": "destroy 10 asteroids in a single run",
@@ -230,7 +230,7 @@
             "luck": "gl\u00DCck",
             "energy_description": "erh\u00D6he die energie deines schildgenerators",
             "life_description": "erhalte ein extra leben",
-            "luck_description": "erh\u00D6he die chance f\u00DCr sterne & extras"
+            "luck_description": "erh\u00D6he die chance f\u00DCr sterne"
         },
         "mission": {
             "destroy_10_asteroids_once": "zerst\u00D6re 10 asteroiden in einem einzigen flug",
