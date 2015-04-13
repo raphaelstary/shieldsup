@@ -3,7 +3,7 @@ var checkConqueror = (function (localStorage, loadBoolean) {
 
     var ACHIEVEMENT_CONQUEROR = 'shields_up-achievement_conqueror';
     var TXT_CONQUEROR = 'conqueror';
-    var TOTAL_WAVES = 10;
+    var TOTAL_WAVES = 28;
 
     function checkConqueror(gameState) {
         if (loadBoolean(ACHIEVEMENT_CONQUEROR))

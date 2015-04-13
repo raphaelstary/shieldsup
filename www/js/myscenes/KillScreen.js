@@ -12,6 +12,7 @@ var KillScreen = (function () {
     var SHIP_HIT = 'slamming_metal_lid';
     var STAR_EXPLOSION = 'booming_reverse_01';
     var ASTEROID_EXPLOSION = 'booming_rumble';
+    var TOTAL_WAVES = 28;
 
     KillScreen.prototype.show = function (nextScene) {
         var speedStripes = this.sceneStorage.speedStripes;
@@ -29,6 +30,12 @@ var KillScreen = (function () {
         speedStripes.forEach(function (speedStripeWrapper) {
             self.stage.remove(speedStripeWrapper.drawable);
         });
+
+        if (this.sceneStorage.gameStats.completedWaves >= TOTAL_WAVES) {
+            // do smth special
+            nextScene();
+            return;
+        }
 
         var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 10, false);
         self.stage.remove(fire.left);

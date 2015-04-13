@@ -1,7 +1,7 @@
 var checkStarGazer = (function (loadBoolean, localStorage) {
     "use strict";
 
-    var TOTAL_WAVES = 10;
+    var TOTAL_WAVES = 28;
     var STAR_GAZER = 'shields_up-achievement_star_gazer';
     var TXT_STAR_GAZER = 'star_gazer';
 

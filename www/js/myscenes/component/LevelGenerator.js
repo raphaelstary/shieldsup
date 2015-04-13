@@ -1,8 +1,9 @@
 var LevelGenerator = (function (range) {
     "use strict";
 
-    function LevelGenerator(drawHelper, gameStats, is30fps) {
+    function LevelGenerator(drawHelper, nextFn, gameStats, is30fps) {
         this.drawHelper = drawHelper;
+        this.nextFn = nextFn;
         this.gameStats = gameStats;
         this.is30fps = is30fps;
         this.idCounter = 0;
@@ -494,7 +495,7 @@ var LevelGenerator = (function (range) {
                 maxTimeToNextAfterStar: 90
             },
             {
-                id: 'last',
+                id: 27, //last
                 showMessage: true,
                 messageNr: ++this.idCounter,
                 maxObstacles: 50,
@@ -509,17 +510,6 @@ var LevelGenerator = (function (range) {
                 starSpeed: 40,
                 pauseAfterStar: 50,
                 maxTimeToNextAfterStar: 100
-            },
-            {
-                id: 'last+1',
-                showMessage: true,
-                messageNr: "it's over now",
-                maxObstacles: 0,
-
-                timeToFirst: 270,
-                percentageForAsteroid: 100,
-
-                asteroidSpeed: 120
             }
         ];
 
@@ -671,8 +661,11 @@ var LevelGenerator = (function (range) {
         if (this.obstaclesCount >= this.level.maxObstacles) {
             this.lastWaveIsOver = true;
             this.lastWaveIsRealWave = this.level.showMessage;
-
-            this.initLevel(this.levels.shift());
+            if (this.levels.length == 0) {
+                this.nextFn();
+            } else {
+                this.initLevel(this.levels.shift());
+            }
         }
     };
 

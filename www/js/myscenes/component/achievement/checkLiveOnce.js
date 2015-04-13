@@ -3,7 +3,7 @@ var checkLiveOnce = (function (loadBoolean, lclStorage) {
 
     var LIVE_ONCE = 'shields_up-achievement_live_once';
     var TXT_LIVE_ONCE = 'live_once';
-    var TOTAL_WAVES = 10;
+    var TOTAL_WAVES = 28;
 
     function checkLiveOnce(gameState) {
         if (loadBoolean(LIVE_ONCE))
