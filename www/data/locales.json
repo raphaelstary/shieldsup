@@ -37,7 +37,8 @@
             "on": "on",
             "off": "off",
             "credits": "credits",
-            "reset_game": "reset game"
+            "reset_game": "reset game",
+            "sure_reset": "sure? reset the game"
         },
         "go_full_screen": {
             "exit_full_screen": "exit full screen?",
@@ -178,7 +179,8 @@
             "on": "An",
             "off": "Aus",
             "credits": "Credits",
-            "reset_game": "Spiel zur\u00DCcksetzen"
+            "reset_game": "Spiel zur\u00DCcksetzen",
+            "sure_reset": "Spiel wirklich zur\u00DCcksetzen?"
         },
         "go_full_screen": {
             "exit_full_screen": "Fullscreen beenden?",

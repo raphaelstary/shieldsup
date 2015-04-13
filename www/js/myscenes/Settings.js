@@ -1,4 +1,4 @@
-var Settings = (function (Width, Height, changeSign, Transition, Event, Credits) {
+var Settings = (function (Width, Height, changeSign, Transition, Event, Credits, localStorage, document) {
     "use strict";
 
     function Settings(services) {
@@ -21,6 +21,7 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
     var OFF = 'off';
     var CREDITS = 'credits';
     var RESET_GAME = 'reset_game';
+    var SURE_RESET = 'sure_reset';
 
     var FONT = 'GameFont';
     var WHITE = '#fff';
@@ -190,6 +191,21 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
                 return button;
             }
 
+            var forSure = false;
+
+            function resetGameData() {
+                if (forSure) {
+                    localStorage.clear();
+                    forSure = false;
+                    document.location.reload(true);
+                } else {
+                    forSure = true;
+                    resetButton(resetGameButton);
+                    resetGameButton.text.data.msg = self.messages.get(KEY, SURE_RESET);
+                    self.messages.add(resetGameButton.text, resetGameButton.text.data, KEY, SURE_RESET);
+                }
+            }
+
             var resetGameButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(20, 13),
                 self.messages.get(KEY, RESET_GAME), resetGameData, 7);
             self.messages.add(resetGameButton.text, resetGameButton.text.data, KEY, RESET_GAME);
@@ -220,10 +236,6 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
             creditsScreen.show(createSettingsPage);
         }
 
-        function resetGameData() {
-
-        }
-
         function changeLanguage(languageCode) {
             self.messages.setLanguage(languageCode);
             self.device.forceResize();
@@ -238,4 +250,4 @@ var Settings = (function (Width, Height, changeSign, Transition, Event, Credits)
     };
 
     return Settings;
-})(Width, Height, changeSign, Transition, Event, Credits);
+})(Width, Height, changeSign, Transition, Event, Credits, lclStorage, document);
