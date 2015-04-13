@@ -49,7 +49,9 @@
             "rotate_device": "please, rotate device"
         },
         "game": {
-            "get_ready": "get ready"
+            "get_ready": "get ready",
+            "congrats": "Congratulations",
+            "waves_complete": "you mastered all waves"
         },
         "splash_screen": {
             "start": "start"
@@ -191,7 +193,9 @@
             "rotate_device": "Bitte, GER\u00C4T drehen"
         },
         "game": {
-            "get_ready": "los geht's"
+            "get_ready": "los geht's",
+            "congrats": "Gratullation",
+            "waves_complete": "Du hast alle Wellen gemeistert!"
         },
         "splash_screen": {
             "start": "start"
