@@ -130,7 +130,7 @@ var PlayGame = (function ($) {
         }
 
         var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
-            if (self.sceneStorage.do30fps) {
+            if (!self.sceneStorage.do30fps) {
                 if (evenCounter % 2 == 0) {
                     distanceTimeTick();
                     evenCounter = 0;
