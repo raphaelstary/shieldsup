@@ -62,7 +62,7 @@ var Missions = (function () {
                 msgKey: 'collect_20_stars_once',
                 allTime: false,
                 constraintKey: 'collectedStars',
-                constraintValue: 30
+                constraintValue: 20
             }, {
                 id: 10,
                 msgKey: 'travel_3000_shields_on_total',
@@ -244,7 +244,7 @@ var Missions = (function () {
                 constraintKey: 'points',
                 constraintValue: 5000
             }
-        ]
+        ];
     }
 
     Missions.prototype.getNext = function (activeMissions, completeMissions) {
@@ -293,6 +293,7 @@ var Missions = (function () {
         var expected = missionEntity.constraintValue;
         var actual = gameStats[missionEntity.constraintKey];
         if (expected <= actual) {
+            mission.count += actual;
             return 'success';
 
         } else if (missionEntity.allTime) {
