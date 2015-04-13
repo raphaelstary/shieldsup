@@ -2,12 +2,12 @@ var checkAchievements = (function (checkConqueror, checkShoppingQueen, checkClos
     checkFasterThanLight) {
     "use strict";
 
-    function checkAchievements(collectedStars, availableStars, completedWaves, livesLost) {
+    function checkAchievements(gameStats) {
         var gameState = {
-            collectedStars: collectedStars,
-            availableStars: availableStars,
-            completedWaves: completedWaves,
-            livesLost: livesLost,
+            collectedStars: gameStats.collectedStars,
+            availableStars: gameStats.spawnedStars,
+            completedWaves: gameStats.completedWaves,
+            livesLost: gameStats.livesLost,
             completedAchievements: []
         };
 

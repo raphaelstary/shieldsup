@@ -31,28 +31,35 @@ var KillScreen = (function () {
             self.stage.remove(speedStripeWrapper.drawable);
         });
 
+        self.stage.remove(fire.left);
+        self.stage.remove(fire.right);
+
         if (this.sceneStorage.gameStats.completedWaves >= TOTAL_WAVES) {
+            commonRemove();
             // do smth special
+
             nextScene();
             return;
         }
 
-        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 10, false);
-        self.stage.remove(fire.left);
-        self.stage.remove(fire.right);
         self.sounds.play(SHIP_HIT);
         self.sounds.play(STAR_EXPLOSION);
         self.sounds.play(ASTEROID_EXPLOSION);
         self.sounds.play(SHIP_EXPLOSION);
+
+        var explosionSprite = self.stage.getSprite(FINAL_EXPLOSION, 10, false);
         self.stage.animate(shipDrawable, explosionSprite, function () {
+            commonRemove();
+            nextScene();
+        });
+
+        function commonRemove() {
             self.stage.remove(shipDrawable);
             countDrawables.forEach(function (count) {
                 self.stage.remove(count);
             });
             self.stage.remove(distanceDrawable);
-
-            nextScene();
-        });
+        }
     };
 
     return KillScreen;

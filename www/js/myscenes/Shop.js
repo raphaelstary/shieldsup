@@ -260,7 +260,7 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
                 return achievementsButton.background.y;
             }
 
-            var newAchievements = checkAchievements(0, 100, 1, 2);
+            var newAchievements = checkAchievements(self.sceneStorage.gameStats);
             if (newAchievements.length > 0) {
                 newAchievement = self.stage.drawText(getNewAchievementX, getNewAchievementY,
                     self.messages.get(POST_GAME_KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,

@@ -249,7 +249,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
                         return achievementsButton.background.y;
                     }
 
-                    var newAchievements = checkAchievements(0, 100, 1, 2);
+                    var newAchievements = checkAchievements(gameStats);
                     if (newAchievements.length > 0) {
                         newAchievement = self.stage.drawText(getNewAchievementX, getNewAchievementY,
                             self.messages.get(KEY, NEW_RECORD), Font._30, SPECIAL_FONT, GOLD, 3,
