@@ -113,7 +113,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
                 easing: Transition.LINEAR
             }
         ], true);
-        var coolDownTime = 60 * 2;
+        var coolDownTime = 60 * 6;
         this.timer.doLater(function () {
             checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
             self.stage.remove(loading);
