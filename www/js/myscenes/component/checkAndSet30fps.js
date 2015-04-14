@@ -9,9 +9,6 @@ var checkAndSet30fps = (function (Math) {
         sceneStorage.msTotal = 0;
         sceneStorage.msCount = 0;
 
-        console.log('fps mean: ' + fpsMean);
-        console.log('ms mean: ' + msMean);
-
         sceneStorage.lowPerformance = msMean > 15;
         if (fpsMean < 40) {
             sceneStorage.do30fps = true;
