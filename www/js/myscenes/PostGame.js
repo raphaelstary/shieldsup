@@ -50,7 +50,7 @@ var PostGame = (function (localStorage, Transition, Height, Width, add, Font, su
     PostGame.prototype.show = function (nextScene) {
         var gameStats = this.sceneStorage.gameStats;
         var points = gameStats.points;
-        delete this.sceneStorage.gameStats;
+
         var distance = gameStats.timePlayed;
 
         var self = this;
