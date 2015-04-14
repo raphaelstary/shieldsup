@@ -30,10 +30,10 @@ var GoFullScreen = (function (Event, Width, Height, installOneTimeTap, isHit) {
             if (self.sceneStorage.fsUserRequest) {
                 self.sceneStorage.fsUserRequest = false;
                 rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, GO_FS), Font._15,
-                    FONT, WHITE, 11);
+                    FONT, WHITE, 11, undefined, undefined, undefined, Width.FULL, Height.get(15));
             } else {
                 rotateText = self.stage.drawText(Width.HALF, Height.QUARTER, self.messages.get(KEY, FS_REQUEST),
-                    Font._15, FONT, WHITE, 11);
+                    Font._15, FONT, WHITE, 11, undefined, undefined, undefined, Width.FULL, Height.get(10));
             }
 
             goFsBtn = self.buttons.createPrimaryButton(Width.HALF, Height.HALF, self.messages.get(KEY, GO_FS),

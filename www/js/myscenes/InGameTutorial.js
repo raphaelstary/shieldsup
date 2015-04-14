@@ -11,6 +11,7 @@ var InGameTutorial = (function ($) {
         this.buttons = services.buttons;
         this.events = services.events;
         this.device = services.device;
+        this.missions = services.missions;
     }
 
     var ASTEROID = 'asteroid_1';
@@ -42,17 +43,20 @@ var InGameTutorial = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
-
-        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
+        var backSound;
+        if (!self.sceneStorage.lowPerformance)
+            backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
+            3);
 
         function doThePause() {
             pause();
             self.events.fireSync($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds, resume);
+            self.sceneStorage.menuScene = 'pause_menu';
+            $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                self.sounds, self.missions, resume);
         }
 
         pauseButton.text.rotation = $.Math.PI / 2;
@@ -61,35 +65,58 @@ var InGameTutorial = (function ($) {
 
         function setupShaker() {
             [
-                pauseButton.text,
-                shipDrawable,
-                shieldsDrawable,
-                energyBarDrawable,
-                fireDict.left,
-                fireDict.right
+                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
             //countDrawables.forEach(self.shaker.add.bind(self.shaker));
-            speedStripes.forEach(function (wrapper) {
-                self.shaker.add(wrapper.drawable);
-            });
+            if (speedStripes)
+                speedStripes.forEach(function (wrapper) {
+                    self.shaker.add(wrapper.drawable);
+                });
             $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
         setupShaker();
         var trackedAsteroids = {};
         var trackedStars = {};
-
+        var gameStats = {
+            collectedStars: 0,
+            collectedStarsInARow: 0,
+            spawnedStars: 0,
+            destroyedStars: 0,
+            destroyedStarsInARow: 0,
+            completedWaves: 0,
+            perfectWaves: 0,
+            perfectWavesInARow: 0,
+            wavesWithoutLifeLost: 0,
+            wavesWithoutLifeLostInARow: 0,
+            livesLost: 0,
+            timePlayed: 0,
+            timeShieldsOn: 0,
+            timeShieldsOff: 0,
+            timeWithoutLifeLost: 0,
+            timeWithoutStarCollected: 0,
+            timeWithoutAlarm: 0,
+            destroyedAsteroids: 0,
+            destroyedAsteroidsInARow: 0,
+            spawnedAsteroids: 0,
+            collectedAsteroids: 0,
+            collectedAsteroidsInARow: 0,
+            outOfEnergy: 0,
+            outOfEnergyInARow: 0,
+            points: 0
+        };
+        self.sceneStorage.gameStats = gameStats;
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
-        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame);
+            shieldsCollision, endGame, gameStats, do30fps, self.sceneStorage.lowPerformance);
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 4, do30fps);
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 6, gameStats, do30fps);
 
         registerPushRelease();
 
@@ -109,20 +136,13 @@ var InGameTutorial = (function ($) {
         }
 
         function createSkipStuff() {
-            function getY(height) {
-                return $.calcScreenConst(height, 20, 3);
-            }
-
-            function getX(width) {
-                return $.calcScreenConst(width, 8, 6);
-            }
-
-            return self.buttons.createSecondaryButton(getX, getY, self.messages.get(KEY, SKIP_MSG), function () {
-                self.timer.doLater(function () {
-                    removeEveryThing();
-                    endGame();
-                }, 60);
-            }, 3);
+            return self.buttons.createSecondaryButton($.Width.get(32, 24), $.Height.BOTTOM_RASTER,
+                self.messages.get(KEY, SKIP_MSG), function () {
+                    self.timer.doLater(function () {
+                        removeEveryThing();
+                        endGame();
+                    }, 60);
+                }, 3);
         }
 
         var skipButton = createSkipStuff();
@@ -149,21 +169,17 @@ var InGameTutorial = (function ($) {
         }
 
         function createTouchNHoldTxt() {
-            function get5() {
-                return 5;
-            }
-
-            var touch_txt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
-                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                $.Width.TWO_THIRD, $.add($.Height.get(30), get5));
+            var touch_txt = self.stage.drawText($.Width.TWO_THIRD, $.Height.THIRD,
+                self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 5, undefined, $.Math.PI / 16, 1,
+                $.Width.TWO_THIRD, $.Height.get(20));
             self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
             function getX(width) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
-            var raise_txt = self.stage.drawText(getX, $.Height.HALF, self.messages.get(KEY, TO_RAISE_SHIELDS_MSG),
-                $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1, $.Width.THIRD,
-                $.add($.Height.get(35), get5));
+            var raise_txt = self.stage.drawText(Width.QUARTER, $.Height.HALF,
+                self.messages.get(KEY, TO_RAISE_SHIELDS_MSG), $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1,
+                $.Width.THIRD, $.Height.get(25));
             self.messages.add(raise_txt, raise_txt.data, KEY, TO_RAISE_SHIELDS_MSG);
             return [touch_txt, raise_txt];
         }
@@ -307,7 +323,7 @@ var InGameTutorial = (function ($) {
             function createCollectTxt() {
                 var collectTxt = self.stage.drawText($.Width.THREE_QUARTER, $.Height.THIRD,
                     self.messages.get(KEY, COLLECT_STUFF_MSG), $.Font._30, FONT, WHITE, 3, undefined, $.Math.PI / 16, 1,
-                    $.Width.HALF, $.Height.get(30));
+                    $.Width.HALF, $.Height.get(20));
                 self.messages.add(collectTxt, collectTxt.data, KEY, COLLECT_STUFF_MSG);
                 return [collectTxt];
             }
@@ -427,11 +443,11 @@ var InGameTutorial = (function ($) {
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
                 if (!isPaused)
-                    self.sceneStorage.shouldShowSettings = true;
+                    self.sceneStorage.shouldShowMenu = true;
             } else {
                 self.timer.doLater(function () {
-                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
-                        self.sceneStorage.shouldShowSettings = false;
+                    if (self.sceneStorage.shouldShowMenu && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowMenu = false;
                         doThePause();
                     }
                 }, 2);
@@ -459,11 +475,14 @@ var InGameTutorial = (function ($) {
         }
 
         var itIsOver = false;
+
         function endGame() {
             if (itIsOver)
                 return;
             itIsOver = true;
-            self.sounds.stop(backSound);
+            if (backSound)
+                self.sounds.stop(backSound);
+            delete self.sceneStorage.gameStats;
             self.next(nextScene);
         }
 
@@ -497,7 +516,7 @@ var InGameTutorial = (function ($) {
     drawShields: drawShields,
     PlayFactory: PlayFactory,
     Event: Event,
-    showSettings: showSettings,
+    showMenu: showMenu,
     Key: Key,
     iterateEntries: iterateEntries
 });

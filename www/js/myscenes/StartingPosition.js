@@ -1,5 +1,5 @@
 var StartingPosition = (function (Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard,
-    EnergyBar) {
+    EnergyBar, loadInteger, Math) {
     "use strict";
 
     function StartingPosition(services) {
@@ -9,6 +9,8 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
 
     var PLAYER_LIFE = 'player_life';
     var ENERGY_FULL = 'energy_full';
+    var GAME_KEY = 'shields_up-';
+    var SHOP_LIFE = GAME_KEY + 'shop_life';
 
     StartingPosition.prototype.show = function (nextScene) {
         drawSharedGameStuff(this.stage, this.sceneStorage, this.sceneStorage.do30fps);
@@ -19,39 +21,49 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         if (this.sceneStorage.do30fps)
             speed /= 2;
 
+        var scaleFactor = 0.7;
+
         function lifeX(width) {
-            return calcScreenConst(width, 10);
+            return calcScreenConst(width, 10, 9);
         }
 
         function lifeStartX(width) {
             var x = lifeX(width);
-            return x - x * 2;
+            return x + x * 2;
         }
 
         function lifeTwoEndX(width) {
-            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE);
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor);
         }
 
         function lifeThreeEndX(width) {
-            return lifeX(width) + self.stage.getImageWidth(PLAYER_LIFE) * 2;
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor * 2);
+        }
+
+        function lifeFourEndX(width) {
+            return lifeX(width) - Math.floor(self.stage.getImageWidth(PLAYER_LIFE) * scaleFactor * 3);
         }
 
         var numberOfCallbacks = 0;
+
         function moveLifeLater(xFn, delay) {
             numberOfCallbacks++;
-            return self.stage.moveFreshLater(lifeStartX, Height.TOP_RASTER, PLAYER_LIFE, xFn, Height.TOP_RASTER, speed,
-                spacing, delay, false, goodToGo);
+            var yFn = Height.get(48, 5);
+            return self.stage.moveFreshLater(lifeStartX, yFn, PLAYER_LIFE, xFn, yFn, speed, spacing, delay, false,
+                goodToGo, undefined, undefined, undefined, undefined, undefined, scaleFactor);
         }
 
-        var lifeDrawablesDict = {};
+        var lifeWrapperDict = {};
         //noinspection FallThroughInSwitchStatementJS
-        switch (self.sceneStorage.userLives) {
+        switch (loadInteger(SHOP_LIFE)) {
             case 3:
-                lifeDrawablesDict[3] = moveLifeLater(lifeThreeEndX, 10);
+                lifeWrapperDict[4] = moveLifeLater(lifeFourEndX, 5);
             case 2:
-                lifeDrawablesDict[2] = moveLifeLater(lifeTwoEndX, 15);
+                lifeWrapperDict[3] = moveLifeLater(lifeThreeEndX, 10);
             case 1:
-                lifeDrawablesDict[1] = moveLifeLater(lifeX, 20);
+                lifeWrapperDict[2] = moveLifeLater(lifeTwoEndX, 15);
+            case 0:
+                lifeWrapperDict[1] = moveLifeLater(lifeX, 20);
         }
 
         function energyStartX(width) {
@@ -62,6 +74,11 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
         numberOfCallbacks++;
         var energyBarWrapper = self.stage.moveFresh(energyStartX, EnergyBar.getY, ENERGY_FULL, EnergyBar.getX,
             EnergyBar.getY, speed, spacing, false, goodToGo);
+
+        numberOfCallbacks++;
+        var distanceMeterWrapper = self.stage.moveFreshTextLater(changeSign(Width.HALF), Height.TOP_RASTER, '0 m',
+            Font._35, 'GameFont', '#fff', Width.HALF, Height.TOP_RASTER, speed, spacing, 10, false, goodToGo, undefined,
+            undefined, undefined, 0.5);
 
         function getScreenOffSet(width) {
             return calcScreenConst(width, 5);
@@ -92,20 +109,36 @@ var StartingPosition = (function (Transition, calcScreenConst, Height, drawShare
 
             var countDrawables = [
                 firstDigitWrapper.drawable,
-                secondDigitWrapper.drawable, thirdDigitWrapper.drawable, fourthDigitWrapper.drawable
+                secondDigitWrapper.drawable,
+                thirdDigitWrapper.drawable,
+                fourthDigitWrapper.drawable
             ];
 
-            self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables);
+            var lifeDrawablesDict = {};
+            if (lifeWrapperDict[1])
+                lifeDrawablesDict[1] = lifeWrapperDict[1].drawable;
+            if (lifeWrapperDict[2])
+                lifeDrawablesDict[2] = lifeWrapperDict[2].drawable;
+            if (lifeWrapperDict[3])
+                lifeDrawablesDict[3] = lifeWrapperDict[3].drawable;
+            if (lifeWrapperDict[4])
+                lifeDrawablesDict[4] = lifeWrapperDict[4].drawable;
+
+            self.next(nextScene, energyBarWrapper.drawable, lifeDrawablesDict, countDrawables,
+                distanceMeterWrapper.drawable);
         }
     };
 
-    StartingPosition.prototype.next = function (nextScene, energyBarDrawable, lifeDrawablesDict, countDrawables) {
+    StartingPosition.prototype.next = function (nextScene, energyBarDrawable, lifeDrawablesDict, countDrawables,
+        distanceDrawable) {
+
         this.sceneStorage.energyBar = energyBarDrawable;
         this.sceneStorage.lives = lifeDrawablesDict;
         this.sceneStorage.counts = countDrawables;
+        this.sceneStorage.distance = distanceDrawable;
 
         nextScene();
     };
 
     return StartingPosition;
-})(Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard, EnergyBar);
+})(Transition, calcScreenConst, Height, drawSharedGameStuff, add, Font, ScoreBoard, EnergyBar, loadInteger, Math);

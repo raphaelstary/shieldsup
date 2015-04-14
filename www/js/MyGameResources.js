@@ -1,12 +1,12 @@
 var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, URL,
-    document, width, height, userAgent, DeviceInfo) {
+    document, width, height, userAgent, DeviceInfo, window) {
     "use strict";
 
     var SPECIAL_FONT = 'SpecialGameFont';
     var FONT = 'GameFont';
     var LOGO_FONT = 'LogoFont';
 
-    var audioInfo, specialGameFont, gameFont, logoFont, locales, atlases = [], images = {};
+    var audioInfo, specialGameFont, gameFont, logoFont, locales, atlases = [], images = {}, moreGames;
 
     function registerFiles(resourceLoader) {
         audioInfo = resourceLoader.addJSON('data/audio.json');
@@ -14,6 +14,7 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         gameFont = resourceLoader.addFont('data/kenpixel.woff');
         logoFont = resourceLoader.addFont('data/dooodleista.woff');
         locales = resourceLoader.addJSON('data/locales.json');
+        moreGames = resourceLoader.addJSON('data/more_games.json');
 
         var isMobile = new DeviceInfo(userAgent, width, height, 1).isMobile;
 
@@ -42,6 +43,8 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         var sounds = new SoundSpriteManager();
         sounds.load(audioInfo);
 
+        window.moreGamesLink = moreGames.link;
+
         return {
             messages: new UniversalTranslator(locales),
             sounds: sounds,
@@ -54,4 +57,4 @@ var MyGameResources = (function (addFontToDOM, UniversalTranslator, SoundSpriteM
         process: processFiles
     };
 })(addFontToDOM, UniversalTranslator, SoundSpriteManager, AtlasResourceHelper, window.URL || window.webkitURL,
-    window.document, window.innerWidth, window.innerHeight, window.navigator.userAgent, DeviceInfo);
+    window.document, window.innerWidth, window.innerHeight, window.navigator.userAgent, DeviceInfo, window);

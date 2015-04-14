@@ -1,15 +1,19 @@
-var EnergyStateMachine = (function () {
+var EnergyStateMachine = (function (Event) {
     "use strict";
 
-    function EnergyStateMachine(stage, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
-        energyBarView) {
+    function EnergyStateMachine(stage, events, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, sounds,
+        energyBarView, gameStats, timer) {
         this.stage = stage;
+        this.events = events;
         this.world = world;
         this.shieldsDrawable = shieldsDrawable;
         this.shieldsUpSprite = shieldsUpSprite;
         this.shieldsDownSprite = shieldsDownSprite;
         this.sounds = sounds;
         this.energyBarView = energyBarView;
+        this.gameStats = gameStats;
+        this.currentStreak = 0;
+        this.timer = timer;
     }
 
     var SHIELDS_DOWN_SOUND = 'servo_movement_02';
@@ -36,7 +40,17 @@ var EnergyStateMachine = (function () {
     EnergyStateMachine.prototype.energyEmpty = function () {
         this.__alarmSound = this.sounds.play(ALARM);
         this.__alarmOn = true;
+
+        // stats
+        this.gameStats.outOfEnergy++;
+        this.currentStreak++;
+        if (this.currentStreak > this.gameStats.outOfEnergyInARow) {
+            this.gameStats.outOfEnergyInARow = this.currentStreak;
+        }
+
         this.turnShieldsOff();
+        this.timer.doLater(this.energyBarView.load.bind(this.energyBarView), 1);
+        this.events.fireSync(Event.ALARM);
     };
 
     EnergyStateMachine.prototype.turnShieldsOff = function () {
@@ -54,9 +68,12 @@ var EnergyStateMachine = (function () {
         }
         this.energyBarView.load();
         if (this.__alarmOn) {
+            this.__alarmOn = false;
             this.sounds.stop(this.__alarmSound);
+        } else {
+            this.currentStreak = 0;
         }
     };
 
     return EnergyStateMachine;
-})();
+})(Event);

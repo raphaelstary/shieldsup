@@ -41,21 +41,28 @@ var EnergyBarView = (function (Transition, Math) {
         this.lastTick = speed - 1;
         this.loadAnimation = this.stage.getAnimation(0, this.drawable.getWidth(), speed, Transition.LINEAR, false);
         this.drainAnimation = this.stage.getAnimation(this.drawable.getWidth(), 0, speed, Transition.LINEAR, false);
+        this.lastAnimation = '';
     }
 
     EnergyBarView.prototype.drain = function (callback) {
-        this.__animateMaskWidth(this.drainAnimation, callback);
+        this.__animateMaskWidth(this.drainAnimation, 'drain', callback);
     };
 
     EnergyBarView.prototype.load = function (callback) {
-        this.__animateMaskWidth(this.loadAnimation, callback);
+        this.__animateMaskWidth(this.loadAnimation, 'load', callback);
     };
 
-    EnergyBarView.prototype.__animateMaskWidth = function (animation, callback) {
+    EnergyBarView.prototype.__animateMaskWidth = function (animation, currentAnimation, callback) {
         var self = this;
         var position = 0;
-        if (this.stage.stage.animations.has(this.drawable)) {
-            position = this.lastTick - this.stage.stage.animations.dict[this.drawable.id][0].time;
+        if (this.stage.stage.animations.has(this.drawable) && this.stage.stage.animations.dict[this.drawable.id][0]) {
+            if (this.lastAnimation != currentAnimation) {
+                position = this.lastTick - this.stage.stage.animations.dict[this.drawable.id][0].time;
+            } else {
+                position = this.stage.stage.animations.dict[this.drawable.id][0].time;
+            }
+        } else if (this.lastAnimation == currentAnimation) {
+            return;
         }
 
         this.stage.stage.animations.remove(this.drawable);
@@ -66,6 +73,7 @@ var EnergyBarView = (function (Transition, Math) {
         this.stage.stage.animations.dict[this.drawable.id][0].time = position;
 
         this.drawable.mask.width = Transition.LINEAR(position, animation.start, animation.length, animation.duration);
+        this.lastAnimation = currentAnimation;
     };
 
     return EnergyBarView;

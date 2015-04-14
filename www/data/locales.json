@@ -1,24 +1,26 @@
 {
     "en": {
-      "display_name": "English",
+        "display_name": "English",
         "tutorial": {
+            "tutorial": "tutorial",
             "touch_and_hold": "touch & hold anywhere",
             "to_raise_shields": "to raise shields",
             "collect_stuff": "collect stars to score points",
-          "skip_tutorial": "skip >"
+            "skip_tutorial": "skip >"
         },
         "credits": {
             "a": "a",
             "game": "game",
             "by": "by",
-            "graphics": "graphics",
-          "back": "back"
+            "graphics": "graphics"
         },
-      "post_game": {
-        "game_over": "game over",
-            "score": "score",
-            "best": "best",
-            "play_again": "play again"
+        "post_game": {
+            "summary": "Summary",
+            "total_stars": "Total Points",
+            "best": "Best",
+            "stars": "Points",
+            "distance": "Distance",
+            "new_record": "new"
         },
         "pre_game": {
             "settings": "settings",
@@ -26,85 +28,257 @@
             "credits": "credits",
             "more_games": "more games"
         },
-      "settings": {
-        "ok": "ok",
-        "full_screen": "full screen",
-        "sound": "sound",
-        "no_sound": "sound not supported",
-        "language": "language",
-        "on": "on",
-        "off": "off"
-      },
-      "go_full_screen": {
-        "exit_full_screen": "exit full screen?",
-        "go_full_screen": "go full screen",
-        "cancel": "exit"
-      },
-      "rotate": {
-        "rotate_device": "please, rotate device"
-      },
-      "game": {
-        "get_ready": "get ready"
-      },
-      "splash_screen": {
-        "start": "start"
-      },
-      "obstacles_view": {
-        "wave": "wave"
-      }
+        "settings": {
+            "ok": "ok",
+            "full_screen": "full screen",
+            "sound": "sound",
+            "no_sound": "sound not supported",
+            "language": "language",
+            "on": "on",
+            "off": "off",
+            "credits": "credits",
+            "reset_game": "reset game",
+            "sure_reset": "sure? reset the game"
+        },
+        "go_full_screen": {
+            "exit_full_screen": "exit full screen?",
+            "go_full_screen": "go full screen",
+            "cancel": "exit"
+        },
+        "rotate": {
+            "rotate_device": "please, rotate device"
+        },
+        "game": {
+            "get_ready": "get ready",
+            "congrats": "Congratulations",
+            "waves_complete": "you mastered all waves"
+        },
+        "splash_screen": {
+            "start": "start"
+        },
+        "obstacles_view": {
+            "wave": "wave"
+        },
+        "common_buttons": {
+            "play": "play",
+            "achievements": "achievements",
+            "settings": "settings",
+            "more_games": "more games",
+            "back": "back",
+            "resume": "resume",
+            "skip": "skip >"
+        },
+        "achievements": {
+            "done": "done",
+            "conqueror": "conqueror",
+            "conqueror_description": "Make it through the asteroid field",
+            "shopping_queen": "shopping queen",
+            "shopping_queen_description": "Buy everything in the shop",
+            "closer": "Closer",
+            "closer_description": "complete all missions",
+            "live_once": "you only live once",
+            "live_once_description": "loose no life in a complete run through the asteroid field",
+            "star_gazer": "Star Gazer",
+            "star_gazer_description": "collect all stars in a complete run through the asteroid field",
+            "faster_than_light": "faster than light",
+            "faster_than_light_description": "complete all missions in 2 hours and 30 minutes or less"
+        },
+        "pause_menu": {
+            "missions": "missions",
+            "complete": "complete"
+        },
+        "shop": {
+            "shop": "shop",
+            "luck": "luck",
+            "energy_description": "increase the energy of your shield generator",
+            "life_description": "get an extra life",
+            "luck_description": "increase the chance that stars appear"
+        },
+        "mission": {
+            "destroy_10_asteroids_once": "destroy 10 asteroids in a single run",
+            "destroy_50_asteroids_once": "destroy 50 asteroids in a single run",
+
+            "destroy_100_asteroids_total": "destroy a total of 100 asteroids",
+            "destroy_500_asteroids_total": "destroy a total of 500 asteroids",
+            "destroy_1500_asteroids_total": "destroy a total of 1500 asteroids",
+
+            "destroy_200_asteroids_row": "destroy 200 asteroids in a row without getting hit",
+
+            "collect_10_asteroids_total": "get hit by an asteroid a total of 10 times",
+            "collect_15_asteroids_total": "get hit by an asteroid a total of 15 times",
+
+            "collect_5_stars_once": "collect 5 stars in a single run",
+            "collect_20_stars_once": "collect 20 stars in a single run",
+
+            "collect_50_stars_total": "collect a total of 50 stars",
+            "collect_150_stars_total": "collect a total of 150 stars",
+            "collect_200_stars_total": "collect a total of 200 stars",
+
+            "collect_20_stars_row": "collect 20 stars in a row without destroying one",
+            "destroy_30_stars_total": "destroy a total of 30 stars",
+            "destroy_20_stars_once": "destroy 20 stars in a single run",
+            "destroy_20_stars_row": "destroy 20 stars in a row without collecting one",
+            "reach_1000_once": "reach 1000 m",
+            "reach_3000_once": "reach 3000 m",
+            "reach_10000_total": "travel a total of 10 000 m",
+            "travel_3000_shields_on_total": "travel a total of 3000 m with your shields on",
+            "1_perfect_waves_once": "collect every star & destroy every asteroid of a wave",
+            "10_perfect_waves_total": "collect every star & destroy every asteroid in a total of 10 waves",
+            "5_perfect_waves_row": "collect every star & destroy every asteroid of 5 waves in a row",
+            "out_of_energy_20_total": "empty your energy a total of 20 times",
+            "out_of_energy_10_once": "empty your energy 10 times in a single run",
+            "out_of_energy_15_row": "empty your energy 15 times in a row",
+            "1500_without_shields_once": "fly 1500 m without shields in a single run",
+            "lose_2_lives_once": "lose 2 lives in a single run",
+            "lose_3_lives_once": "lose 3 lives in a single run",
+            "lose_4_lives_once": "lose 4 lives in a single run",
+            "5_waves_without_life_once": "master 5 waves without losing a life in a single run",
+            "20_waves_without_life_total": "master a total of 20 waves without losing a life",
+            "5_waves_without_life_row": "master 5 waves in a row without losing a life",
+            "travel_5000_without_out_of_energy_once": "cover a distance of 5000 m without running out of energy",
+            "travel_5000_without_getting_hit_once": "cover a distance of 5000 m without getting hit",
+            "travel_5000_without_collecting_star_once": "cover a distance of 5000 m without collecting a star",
+            "survive_50_waves_total": "survive a total of 50 waves",
+            "earn_500_points_once": "earn 500 points in a single run",
+            "earn_3000_points_total": "earn a total of 3000 points"
+        }
     },
     "de": {
-      "display_name": "Deutsch",
+        "display_name": "Deutsch",
         "tutorial": {
-          "touch_and_hold": "touch & halten",
-          "to_raise_shields": "um deine Schilde hochzufahren",
-          "collect_stuff": "sammle Sterne um Punkte zu bekommen",
-          "skip_tutorial": "weiter >"
+            "tutorial": "anleitung",
+            "touch_and_hold": "touch & halten",
+            "to_raise_shields": "um deine Schilde hochzufahren",
+            "collect_stuff": "sammle Sterne um Punkte zu bekommen",
+            "skip_tutorial": "weiter >"
         },
         "credits": {
-          "a": "ein",
-          "game": "Spiel",
-          "by": "von",
-          "graphics": "Grafiken",
-          "back": "zur\u00DCck"
+            "a": "ein",
+            "game": "Spiel",
+            "by": "von",
+            "graphics": "Grafiken"
         },
-      "post_game": {
-        "game_over": "spiel vorbei",
-        "score": "Punkte",
-        "best": "Rekord",
-        "play_again": "nochmal spielen!"
+        "post_game": {
+            "summary": "\u00DCbersicht",
+            "total_stars": "Punkte Gesamt",
+            "best": "Rekord",
+            "stars": "Punkte",
+            "distance": "Entfernung",
+            "new_record": "neu"
         },
         "pre_game": {
-          "settings": "Einstellungen",
-          "play": "Spielen !",
-          "credits": "Credits",
-          "more_games": "mehr Spiele"
+            "settings": "Einstellungen",
+            "play": "Spielen !",
+            "credits": "Credits",
+            "more_games": "mehr Spiele"
         },
-      "settings": {
-        "ok": "ok",
-        "full_screen": "Fullscreen",
-        "sound": "Ton",
-        "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
-        "language": "Sprache",
-        "on": "An",
-        "off": "Aus"
-      },
-      "go_full_screen": {
-        "exit_full_screen": "Fullscreen beenden?",
-        "go_full_screen": "Weiter in Fullscreen",
-        "cancel": "beenden"
-      },
-      "rotate": {
-        "rotate_device": "Bitte, GER\u00C4T drehen"
-      },
-      "game": {
-        "get_ready": "los geht's"
-      },
-      "splash_screen": {
-        "start": "start"
-      },
-      "obstacles_view": {
-        "wave": "Welle"
-      }
+        "settings": {
+            "ok": "ok",
+            "full_screen": "Fullscreen",
+            "sound": "Ton",
+            "no_sound": "Tonwiedergabe nicht unterst\u00DCtzt",
+            "language": "Sprache",
+            "on": "An",
+            "off": "Aus",
+            "credits": "Credits",
+            "reset_game": "Spiel zur\u00DCcksetzen",
+            "sure_reset": "Spiel wirklich zur\u00DCcksetzen?"
+        },
+        "go_full_screen": {
+            "exit_full_screen": "Fullscreen beenden?",
+            "go_full_screen": "Weiter in Fullscreen",
+            "cancel": "beenden"
+        },
+        "rotate": {
+            "rotate_device": "Bitte, GER\u00C4T drehen"
+        },
+        "game": {
+            "get_ready": "los geht's",
+            "congrats": "Gratullation",
+            "waves_complete": "Du hast alle Wellen gemeistert!"
+        },
+        "splash_screen": {
+            "start": "start"
+        },
+        "obstacles_view": {
+            "wave": "Welle"
+        },
+        "common_buttons": {
+            "play": "Spielen",
+            "achievements": "Troph\u00C4en",
+            "settings": "Einstellungen",
+            "more_games": "Mehr Spiele",
+            "back": "zur\u00DCck",
+            "resume": "weiter",
+            "skip": "weiter >"
+        },
+        "achievements": {
+            "done": "Geschafft",
+            "conqueror": "Bezwinger",
+            "conqueror_description": "Fliege durch das gesamte Asteroidenfeld",
+            "shopping_queen": "kaufrausch",
+            "shopping_queen_description": "Kaufe alles im Shop",
+            "closer": "streber",
+            "closer_description": "Erledige alle Missionen",
+            "live_once": "Man lebt nur einmal",
+            "live_once_description": "verliere kein leben bei einem flug durch das gesamte Asteroidenfeld",
+            "star_gazer": "Sterngucker",
+            "star_gazer_description": "Sammle alle Sterne bei einem flug durch das gesamte Asteroidenfeld",
+            "faster_than_light": "Lichtgeschwindigkeit",
+            "faster_than_light_description": "Erledige alle Missionen in 2 Stunde und 30 Minuten oder weniger"
+        },
+        "pause_menu": {
+            "missions": "Missionen",
+            "complete": "geschafft"
+        },
+        "shop": {
+            "shop": "shop",
+            "luck": "gl\u00DCck",
+            "energy_description": "erh\u00D6he die energie deines schildgenerators",
+            "life_description": "erhalte ein extra leben",
+            "luck_description": "erh\u00D6he die chance f\u00DCr sterne"
+        },
+        "mission": {
+            "destroy_10_asteroids_once": "zerst\u00D6re 10 asteroiden in einem einzigen flug",
+            "destroy_50_asteroids_once": "zerst\u00D6re 50 asteroiden in einem einzigen flug",
+            "destroy_100_asteroids_total": "zerst\u00D6re insgesamt 100 asteroiden",
+            "destroy_500_asteroids_total": "zerst\u00D6re insgesamt 500 asteroiden",
+            "destroy_1500_asteroids_total": "zerst\u00D6re insgesamt 1500 asteroiden",
+            "destroy_200_asteroids_row": "zerst\u00D6re 200 asteroiden in folge",
+            "collect_10_asteroids_total": "lass dich von insgesamt 10 asteroiden treffen",
+            "collect_15_asteroids_total": "lass dich von insgesamt 15 asteroiden treffen",
+            "collect_5_stars_once": "sammle 5 sterne in einem einzigen flug",
+            "collect_20_stars_once": "sammle 20 sterne in einem einzigen flug",
+            "collect_50_stars_total": "sammle insgesamt 50 sterne",
+            "collect_150_stars_total": "sammle insgesamt 150 sterne",
+            "collect_200_stars_total": "sammle insgesamt 200 sterne",
+            "collect_20_stars_row": "sammle 20 sterne in folge ohne einen zu zerst\u00D6ren",
+            "destroy_30_stars_total": "zerst\u00D6re insgesamt 30 sterne",
+            "destroy_20_stars_once": "zerst\u00D6re 20 sterne in einem einzigen flug",
+            "destroy_20_stars_row": "zerst\u00D6re 20 sterne in folge ohne einen einzusammeln",
+            "reach_1000_once": "erreiche 1000 m",
+            "reach_3000_once": "erreiche 3000 m",
+            "reach_10000_total": "fliege insgesamt 10 000 m",
+            "travel_3000_shields_on_total": "fliege 3000 m mit hochgefahrenen schilden",
+            "1_perfect_waves_once": "sammle alle sterne & zerst\u00D6re alle asteroiden einer welle",
+            "10_perfect_waves_total": "sammle alle sterne & zerst\u00D6re alle asteroiden von 10 wellen",
+            "5_perfect_waves_row": "sammle alle sterne & zerst\u00D6re alle asteroiden von 5 wellen in folge",
+            "out_of_energy_20_total": "leere deine energie insgesamt 20 mal",
+            "out_of_energy_10_once": "leere deine energie 10 mal in einem einzigen flug",
+            "out_of_energy_15_row": "leere deine energie 15 mal in folge",
+            "1500_without_shields_once": "fliege 1500 m ohne schilde in einem einzigen flug",
+            "lose_2_lives_once": "verliere 2 leben in einem einzigen flug",
+            "lose_3_lives_once": "verliere 3 leben in einem einzigen flug",
+            "lose_4_lives_once": "verliere 4 leben in einem einzigen flug",
+            "5_waves_without_life_once": "fliege durch 5 wellen ohne ein leben zu verlieren in einem flug",
+            "20_waves_without_life_total": "fliege durch insgesamt 20 wellen ohne ein leben zu verlieren",
+            "5_waves_without_life_row": "verliere kein leben in 5 aufeinander folgenden wellen",
+            "travel_5000_without_out_of_energy_once": "lege 5000 m zur\u00DCck ohne, dass die energie leer wird",
+            "travel_5000_without_getting_hit_once": "lege 5000 m zur\u00DCck ohne getroffen zu werden",
+            "travel_5000_without_collecting_star_once": "lege 5000 m zur\u00DCck ohne einen stern zu sammeln",
+            "survive_50_waves_total": "\u00DCberlebe insgesamt 50 wellen",
+            "earn_500_points_once": "erreiche 500 punkte in einem einzigen flug",
+            "earn_3000_points_total": "erreiche insgesamt 3000 punkte"
+        }
     }
 }

@@ -6,6 +6,7 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
         this.messages = services.messages;
         this.sounds = services.sounds;
         this.sceneStorage = services.sceneStorage;
+        this.timer = services.timer;
     }
 
     var KEY = 'game';
@@ -17,14 +18,15 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
 
     GetReady.prototype.show = function (nextScene) {
         var self = this;
-        this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.4);
+        if (!self.sceneStorage.lowPerformance)
+            this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.4);
         var speed = this.sceneStorage.do30fps ? 90 : 180;
+        this.timer.doLater(nextScene, speed / 2);
         var readyDrawable = self.stage.moveFreshText(changeSign(Width.FULL), Height.THIRD,
             self.messages.get(KEY, GET_READY), Font._15, FONT, LIGHT_GRAY, multiply(Width.FULL, 2), Height.THIRD, speed,
             Transition.EASE_OUT_IN_SIN, false, function () {
 
                 self.stage.remove(readyDrawable);
-                nextScene();
             }, undefined, 5).drawable;
     };
 

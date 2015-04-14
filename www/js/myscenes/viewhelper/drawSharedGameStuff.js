@@ -2,7 +2,7 @@ var drawSharedGameStuff = (function (Fire, drawShip, drawBackGround, drawSpeedSt
     "use strict";
 
     function drawSharedGameStuff(stage, sceneStorage, is30fps) {
-        if (!sceneStorage.speedStripes) {
+        if (!sceneStorage.lowPerformance && !sceneStorage.speedStripes) {
             sceneStorage.speedStripes = drawSpeedStripes(stage, 0, is30fps);
         }
         if (!sceneStorage.ship) {

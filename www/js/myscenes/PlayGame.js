@@ -11,7 +11,13 @@ var PlayGame = (function ($) {
         this.messages = services.messages;
         this.device = services.device;
         this.events = services.events;
+        this.missions = services.missions;
     }
+
+    var TOTAL_TIME = 'shields_up-total_time';
+    var TOTAL_STARTS = 'shields_up-total_starts';
+    var SHOP_ENERGY = 'shields_up-shop_energy';
+    var SHOP_LUCK = 'shields_up-shop_luck';
 
     PlayGame.prototype.show = function (nextScene) {
         var self = this;
@@ -25,16 +31,129 @@ var PlayGame = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
+        var distanceDrawable = this.sceneStorage.distance;
+
+        var gameStats = {
+            collectedStars: 0,
+            collectedStarsInARow: 0,
+            spawnedStars: 0,
+            destroyedStars: 0,
+            destroyedStarsInARow: 0,
+            completedWaves: 0,
+            perfectWaves: 0,
+            perfectWavesInARow: 0,
+            wavesWithoutLifeLost: 0,
+            wavesWithoutLifeLostInARow: 0,
+            livesLost: 0,
+            timePlayed: 0,
+            timeShieldsOn: 0,
+            timeShieldsOff: 0,
+            timeWithoutLifeLost: 0,
+            timeWithoutStarCollected: 0,
+            timeWithoutAlarm: 0,
+            destroyedAsteroids: 0,
+            destroyedAsteroidsInARow: 0,
+            spawnedAsteroids: 0,
+            collectedAsteroids: 0,
+            collectedAsteroidsInARow: 0,
+            outOfEnergy: 0,
+            outOfEnergyInARow: 0,
+            points: 0
+        };
+
+        this.sceneStorage.gameStats = gameStats;
+        var lostLife = false;
+        var lostLifeTime = 0;
+        var lifeLostListener = this.events.subscribe($.Event.LIFE_LOST, function () {
+            lostLife = true;
+        });
+        var alarm = false;
+        var alarmTime = 0;
+        var alarmListener = this.events.subscribe($.Event.ALARM, function () {
+            alarm = true;
+        });
+        var starCollected = false;
+        var starCollectedTime = 0;
+        var starCollectedListener = this.events.subscribe($.Event.STAR_COLLECTED, function () {
+            starCollected = true;
+        });
+
+        var evenCounter = 0;
+
+        function distanceTimeTick() {
+            gameStats.timePlayed++;
+            if (world.shieldsOn) {
+                gameStats.timeShieldsOn++;
+            } else {
+                gameStats.timeShieldsOff++
+            }
+            if (lostLife) {
+                lostLife = false;
+                if (lostLifeTime > gameStats.timeWithoutLifeLost) {
+                    gameStats.timeWithoutLifeLost = lostLifeTime;
+                }
+                lostLifeTime = 0;
+            } else {
+                lostLifeTime++;
+            }
+            if (alarm) {
+                alarm = false;
+                if (alarmTime > gameStats.timeWithoutAlarm) {
+                    gameStats.timeWithoutAlarm = alarmTime;
+                }
+                alarmTime = 0;
+            } else {
+                alarmTime++;
+            }
+            if (starCollected) {
+                starCollected = false;
+                if (starCollectedTime > gameStats.timeWithoutStarCollected) {
+                    gameStats.timeWithoutStarCollected = starCollectedTime;
+                }
+                starCollectedTime = 0;
+            } else {
+                starCollectedTime++;
+            }
+            distanceDrawable.data.msg = gameStats.timePlayed.toString() + ' m';
+        }
+
+        function updateTimes() {
+            if (lostLifeTime > gameStats.timeWithoutLifeLost) {
+                gameStats.timeWithoutLifeLost = lostLifeTime;
+            }
+            if (alarmTime > gameStats.timeWithoutAlarm) {
+                gameStats.timeWithoutAlarm = alarmTime;
+            }
+            if (starCollectedTime > gameStats.timeWithoutStarCollected) {
+                gameStats.timeWithoutStarCollected = starCollectedTime;
+            }
+        }
+
+        var distanceMeter = this.events.subscribe($.Event.TICK_MOVE, function () {
+            if (!self.sceneStorage.do30fps) {
+                if (evenCounter % 2 == 0) {
+                    distanceTimeTick();
+                    evenCounter = 0;
+                }
+                evenCounter++
+            } else {
+                distanceTimeTick();
+            }
+        });
 
         // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.HALF, $.Height.TOP_RASTER, ' = ', doThePause, 3);
+        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
+            3);
 
         function doThePause() {
+            updateTimes();
             pause();
             self.events.fireSync($.Event.PAUSE);
-            $.showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                self.sounds, resume);
+            self.sceneStorage.menuScene = 'pause_menu';
+            $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                self.sounds, self.missions, resume);
         }
+
         pauseButton.text.rotation = $.Math.PI / 2;
         pauseButton.text.scale = 2;
         self.stage.hide(pauseButton.background);
@@ -42,17 +161,12 @@ var PlayGame = (function ($) {
         function setupShaker() {
             var add = self.shaker.add.bind(self.shaker);
             [
-                pauseButton.text,
-                shipDrawable,
-                shieldsDrawable,
-                energyBarDrawable,
-                fireDict.left,
-                fireDict.right
+                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(add);
-            //countDrawables.forEach(add);
-            speedStripes.forEach(function (wrapper) {
-                self.shaker.add(wrapper.drawable);
-            });
+            if (speedStripes)
+                speedStripes.forEach(function (wrapper) {
+                    self.shaker.add(wrapper.drawable);
+                });
             $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
@@ -61,8 +175,13 @@ var PlayGame = (function ($) {
         var trackedAsteroids = {};
         var trackedStars = {};
 
-        var level = $.PlayFactory.createLevel(self.stage, trackedAsteroids, trackedStars, self.messages,
-            self.sceneStorage.do30fps);
+        function allLevelsComplete() {
+            endGame(world.points);
+        }
+
+        var luckLevel = $.loadInteger(SHOP_LUCK);
+        var level = $.PlayFactory.createLevel(self.stage, allLevelsComplete, trackedAsteroids, trackedStars,
+            self.messages, gameStats, luckLevel, self.sceneStorage.do30fps);
         var levelId = self.events.subscribe($.Event.TICK_MOVE, level.update.bind(level));
 
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
@@ -70,13 +189,14 @@ var PlayGame = (function ($) {
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
 
 
-        var world = $.PlayFactory.createWorld(self.stage, self.sounds, self.timer, self.shaker, countDrawables,
+        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame, self.sceneStorage.do30fps);
+            shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps, self.sceneStorage.lowPerformance);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
-        var playerShieldsLevel = 1;
-        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.sounds, energyBarDrawable, world,
-            shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel, self.sceneStorage.do30fps);
+        var playerShieldsLevel = $.loadInteger(SHOP_ENERGY) + 1;
+        var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, playerShieldsLevel,
+            gameStats, self.sceneStorage.do30fps);
 
         var pushRelease;
         var padId;
@@ -143,11 +263,11 @@ var PlayGame = (function ($) {
         var visible = self.events.subscribe($.Event.PAGE_VISIBILITY, function (hidden) {
             if (hidden) {
                 if (!isPaused)
-                    self.sceneStorage.shouldShowSettings = true;
+                    self.sceneStorage.shouldShowMenu = true;
             } else {
                 self.timer.doLater(function () {
-                    if (self.sceneStorage.shouldShowSettings && !goFs && !rotation) {
-                        self.sceneStorage.shouldShowSettings = false;
+                    if (self.sceneStorage.shouldShowMenu && !goFs && !rotation) {
+                        self.sceneStorage.shouldShowMenu = false;
                         doThePause();
                     }
                 }, 2);
@@ -174,11 +294,21 @@ var PlayGame = (function ($) {
             isPaused = false;
         }
 
+        var startTime = $.Date.now();
+        var totalStarts = $.loadInteger(TOTAL_STARTS);
+        $.localStorage.setItem(TOTAL_STARTS, ++totalStarts);
+
         var itIsOver = false;
+
         function endGame(points) {
             if (itIsOver)
                 return;
             itIsOver = true;
+
+            var totalTime = $.loadInteger(TOTAL_TIME);
+            var deltaPlayed = $.Date.now() - startTime;
+            $.localStorage.setItem(TOTAL_TIME, totalTime + deltaPlayed);
+            gameStats.points = points;
 
             function removeEverything() {
                 self.buttons.remove(pauseButton);
@@ -209,6 +339,10 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(hideGoFs);
                 self.events.unsubscribe(showRotation);
                 self.events.unsubscribe(hideRotation);
+                self.events.unsubscribe(distanceMeter);
+                self.events.unsubscribe(alarmListener);
+                self.events.unsubscribe(lifeLostListener);
+                self.events.unsubscribe(starCollectedListener);
             }
 
             removeEverything();
@@ -218,18 +352,20 @@ var PlayGame = (function ($) {
                     self.stage.remove(energyBarDrawable);
                 });
 
-            self.next(nextScene, points);
+            updateTimes();
+            self.next(nextScene, gameStats);
         }
     };
 
-    PlayGame.prototype.next = function (nextScene, points) {
+    PlayGame.prototype.next = function (nextScene, gameStats) {
         delete this.sceneStorage.shields;
         delete this.sceneStorage.energyBar;
         delete this.sceneStorage.lives;
+        delete this.sceneStorage.gameStats;
 
-        this.sceneStorage.points = points;
-
-        this.sounds.stop(this.sceneStorage.music);
+        this.sceneStorage.gameStats = gameStats;
+        if (this.sceneStorage.music)
+            this.sounds.stop(this.sceneStorage.music);
 
         nextScene();
     };
@@ -246,7 +382,10 @@ var PlayGame = (function ($) {
     changeSign: changeSign,
     Width: Width,
     Math: Math,
-    showSettings: showSettings,
+    showMenu: showMenu,
     Event: Event,
-    Key: Key
+    Key: Key,
+    Date: Date,
+    loadInteger: loadInteger,
+    localStorage: lclStorage
 });

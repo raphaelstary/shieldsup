@@ -1,5 +1,5 @@
-var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event,
-    checkAndSet30fps) {
+var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showMenu, Event,
+                         checkAndSet30fps) {
     "use strict";
 
     function PreGame(services) {
@@ -12,6 +12,7 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         this.events = services.events;
         this.device = services.device;
         this.shaker = services.shaker;
+        this.missions = services.missions;
     }
 
     var SHIP = 'ship';
@@ -19,13 +20,15 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     var SHIELDS = 'shields';
 
     var KEY = 'pre_game';
-    var CREDITS = 'credits';
     var PLAY = 'play';
-    var SETTINGS = 'settings';
     var SHIELDS_UP_SOUND = 'hydraulics_engaged';
     var SHIELDS_ON_SOUND = 'warp_engineering_05';
     var SHIP_ARRIVES = 'star_drive_engaged';
     var BACK_GROUND_MUSIC = 'space_log';
+    var BUTTON_KEY = 'common_buttons';
+    var SETTINGS = 'settings';
+    var ACHIEVEMENTS = 'achievements';
+    var MORE_GAMES = 'more_games';
 
     PreGame.prototype.show = function (nextScene) {
         var logoDrawable = this.sceneStorage.logo;
@@ -69,71 +72,69 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         self.stage.move(leftFireDrawable, getLeftFireX, getFireEndY, speed60, Transition.EASE_IN_QUAD, false, undefined,
             [shipDrawable]);
         self.stage.move(rightFireDrawable, getRightFireX, getFireEndY, speed60, Transition.EASE_IN_QUAD, false,
-            undefined,
-            [shipDrawable]);
+            undefined, [shipDrawable]);
 
-        var playButton, creditsButton, settingsButton;
+        var playButton, settingsButton, achievementsButton, moreGamesButton;
 
         function shipIsAtEndPosition() {
-            sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
+            if (!self.sceneStorage.lowPerformance)
+                sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
 
             function createButtons() {
-                playButton = self.buttons.createPrimaryButton(Width.HALF, Height.THREE_QUARTER,
-                    self.messages.get(KEY, PLAY), startPlaying, 3);
+                function getButtonWidth(width, height) {
+                    if (width < height) {
+                        return Width.HALF(width);
+                    }
+                    return Width.QUARTER(width);
+                }
+
+                playButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(480, 345),
+                    self.messages.get(KEY, PLAY), startPlaying, 3, false, getButtonWidth);
                 self.messages.add(playButton.text, playButton.text.data, KEY, PLAY);
 
                 shieldsDrawable.x = shipDrawable.x;
                 shieldsDrawable.y = shipDrawable.y;
                 shieldsAnimation();
 
-                creditsButton = self.buttons.createSecondaryButton(Width.THREE_QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, CREDITS), goToCreditsScreen, 3);
-                self.messages.add(creditsButton.text, creditsButton.text.data, KEY, CREDITS);
-                settingsButton = self.buttons.createSecondaryButton(Width.QUARTER, Height.get(50, 47),
-                    self.messages.get(KEY, SETTINGS), showSettingsScreen, 3);
-                self.messages.add(settingsButton.text, settingsButton.text.data, KEY, SETTINGS);
+                function goToSettings() {
+                    self.sceneStorage.menuScene = 'settings';
+                    showSettingsScreen();
+                }
+
+                function goToAchievements() {
+                    self.sceneStorage.menuScene = 'achievements';
+                    showSettingsScreen();
+                }
+
+                achievementsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 385),
+                    self.messages.get(BUTTON_KEY, ACHIEVEMENTS), goToAchievements, 3, false, getButtonWidth);
+                self.messages.add(achievementsButton.text, achievementsButton.text.data, BUTTON_KEY, ACHIEVEMENTS);
+
+                settingsButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 420),
+                    self.messages.get(BUTTON_KEY, SETTINGS), goToSettings, 3, false, getButtonWidth);
+                self.messages.add(settingsButton.text, settingsButton.text.data, BUTTON_KEY, SETTINGS);
+
+                moreGamesButton = self.buttons.createSecondaryButton(Width.HALF, Height.get(480, 455),
+                    self.messages.get(BUTTON_KEY, MORE_GAMES), showMoreGames, 3, false, getButtonWidth);
+                self.messages.add(moreGamesButton.text, moreGamesButton.text.data, BUTTON_KEY, MORE_GAMES);
+
+                function showMoreGames() {
+                    window.location.href = window.moreGamesLink;
+                }
             }
 
             function showSettingsScreen() {
                 self.events.fireSync(Event.PAUSE);
-                showSettings(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-                    self.sounds,
-                    hideSettings)
+                showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                    self.sounds, self.missions, hideSettings)
             }
 
             function hideSettings() {
                 settingsButton.used = false;
+                achievementsButton.used = false;
             }
 
             createButtons();
-            function goToCreditsScreen() {
-
-                var creditsScreen = new Credits({
-                    stage: self.stage,
-                    messages: self.messages,
-                    buttons: self.buttons
-                });
-
-                var stuff = [shipDrawable, leftFireDrawable, rightFireDrawable, logoDrawable, logoHighlightDrawable];
-                stuff.forEach(self.stage.hide.bind(self.stage));
-
-                function continuePreGame() {
-                    doTheShields = true;
-                    createButtons();
-                    stuff.forEach(self.stage.show.bind(self.stage));
-                    self.stage.animate(leftFireDrawable, leftFireWrapper.sprite);
-                    self.stage.animate(rightFireDrawable, rightFireWrapper.sprite);
-                }
-
-                doTheShields = false;
-                self.stage.hide(shieldsDrawable);
-
-                self.buttons.remove(playButton);
-                self.buttons.remove(creditsButton);
-                self.buttons.remove(settingsButton);
-
-                creditsScreen.show(continuePreGame);
-            }
         }
 
         function startPlaying() {
@@ -188,13 +189,15 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
         function endOfScreen() {
             checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
-
-            self.sceneStorage.speedStripes.forEach(function (speedStripeWrapper) {
-                self.stage.remove(speedStripeWrapper.drawable);
-            });
+            if (self.sceneStorage.speedStripes)
+                self.sceneStorage.speedStripes.forEach(function (speedStripeWrapper) {
+                    self.stage.remove(speedStripeWrapper.drawable);
+                });
             delete self.sceneStorage.speedStripes;
 
-            [playButton, creditsButton, settingsButton].forEach(self.buttons.remove.bind(self.buttons));
+            [
+                playButton, achievementsButton, settingsButton, moreGamesButton
+            ].forEach(self.buttons.remove.bind(self.buttons));
             // end event
             function getLogoY(height) {
                 return calcScreenConst(height, 32, 7) + height;
@@ -213,9 +216,9 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
             self.stage.move(shipDrawable, Width.HALF, Height._400, speed30, Transition.EASE_IN_EXPO, false,
                 function () {
-                // next scene
+                    // next scene
                     self.next(nextScene, shipDrawable, leftFireDrawable, rightFireDrawable, sounds);
-            });
+                });
             var getFireY = function (height) {
                 return Height._400(height) + Fire.getShipOffSet(shipDrawable);
             };
@@ -240,4 +243,4 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
     };
 
     return PreGame;
-})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showSettings, Event, checkAndSet30fps);
+})(Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showMenu, Event, checkAndSet30fps);

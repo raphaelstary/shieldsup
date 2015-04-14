@@ -3,8 +3,10 @@
 var WWW_BUILT = 'www-built',
     WWW = 'www',
     INDEX = 'index.html',
+    MANIFEST = 'manifest.json',
     GFX = 'gfx',
     DATA = 'data',
+    SFX = 'sfx',
     MIN_JS = 'min.js',
     MIN_CSS = 'min.css';
 
@@ -40,7 +42,11 @@ function buildTheProject() {
 
             cpdir(WWW + '/' + GFX, WWW_BUILT + '/' + GFX);
             cpdir(WWW + '/' + DATA, WWW_BUILT + '/' + DATA);
+            cpdir(WWW + '/' + SFX, WWW_BUILT + '/' + SFX);
 
+            minifyJSONFile(WWW, MANIFEST,
+                writeFile.bind(null, WWW_BUILT, MANIFEST)
+            );
         });
     });
 }
@@ -92,7 +98,10 @@ function writeFile(destPath, fileName, data) {
 
 function cpDirFiles(srcPath, destPath) {
     fs.readdir(srcPath, function (error, files) {
-        files.forEach(function (file) {
+        (files || []).forEach(function (file) {
+            if (file == 'raw' || file == 'Thumbs.db')
+                return;
+
             if (isJSON(file)) {
                 minifyJSONFile(srcPath, file,
                     writeFile.bind(null, destPath, file)
