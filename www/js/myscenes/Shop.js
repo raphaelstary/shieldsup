@@ -136,9 +136,10 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
                                 checkForShopAchievement();
                             }, 1);
                         } else {
+                            button.used = false;
                             shaker.startSmallShake();
                         }
-                    }, 3, true, buttonsWidth);
+                    }, 3, false, buttonsWidth);
                 shaker.add(button.text);
                 shaker.add(button.background);
                 if (price > totalStarsValue) {
