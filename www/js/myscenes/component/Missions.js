@@ -185,10 +185,10 @@ var Missions = (function () {
                 constraintValue: 3
             }, {
                 id: 30,
-                msgKey: '10_perfect_waves_row',
+                msgKey: '5_perfect_waves_row',
                 allTime: false,
                 constraintKey: 'perfectWavesInARow',
-                constraintValue: 10
+                constraintValue: 5
             }, {
                 id: 31,
                 msgKey: '5_waves_without_life_row',
@@ -197,10 +197,10 @@ var Missions = (function () {
                 constraintValue: 5
             }, {
                 id: 32,
-                msgKey: 'collect_500_stars_total',
+                msgKey: 'collect_200_stars_total',
                 allTime: true,
                 constraintKey: 'collectedStars',
-                constraintValue: 500
+                constraintValue: 200
             }, {
                 id: 33,
                 msgKey: 'survive_50_waves_total',
@@ -233,16 +233,16 @@ var Missions = (function () {
                 constraintValue: 5000
             }, {
                 id: 38,
-                msgKey: 'destroy_5000_asteroids_total',
+                msgKey: 'destroy_1500_asteroids_total',
                 allTime: true,
                 constraintKey: 'destroyedAsteroids',
-                constraintValue: 5000
+                constraintValue: 1500
             }, {
                 id: 39,
-                msgKey: 'earn_5000_points_total',
+                msgKey: 'earn_3000_points_total',
                 allTime: true,
                 constraintKey: 'points',
-                constraintValue: 5000
+                constraintValue: 3000
             }
         ];
     }

@@ -6,7 +6,7 @@ var checkFasterThanLight = (function (loadBoolean, localStorage, loadInteger) {
     var MISSION_COMPLETE = GAME_KEY + 'mission_complete_count';
     var FASTER_THAN_LIGHT = GAME_KEY + 'achievement_faster_than_light';
     var TXT_FASTER_THAN_LIGHT = 'faster_than_light';
-    var MAX_TIME = 60 * 60 * 1000; // 1h
+    var MAX_TIME = 60 * 60 * 1000 * 2.5; // 2h30
     var TOTAL_TIME = GAME_KEY + 'total_time';
 
     function checkFasterThanLight(gameState) {

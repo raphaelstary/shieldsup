@@ -81,7 +81,7 @@
             "star_gazer": "Star Gazer",
             "star_gazer_description": "collect all stars in a complete run through the asteroid field",
             "faster_than_light": "faster than light",
-            "faster_than_light_description": "complete all missions in 1 hour or less"
+            "faster_than_light_description": "complete all missions in 2 hours and 30 minutes or less"
         },
         "pause_menu": {
             "missions": "missions",
@@ -100,7 +100,7 @@
 
             "destroy_100_asteroids_total": "destroy a total of 100 asteroids",
             "destroy_500_asteroids_total": "destroy a total of 500 asteroids",
-            "destroy_5000_asteroids_total": "destroy a total of 5000 asteroids",
+            "destroy_1500_asteroids_total": "destroy a total of 1500 asteroids",
 
             "destroy_200_asteroids_row": "destroy 200 asteroids in a row without getting hit",
 
@@ -112,7 +112,7 @@
 
             "collect_50_stars_total": "collect a total of 50 stars",
             "collect_150_stars_total": "collect a total of 150 stars",
-            "collect_500_stars_total": "collect a total of 500 stars",
+            "collect_200_stars_total": "collect a total of 200 stars",
 
             "collect_20_stars_row": "collect 20 stars in a row without destroying one",
             "destroy_30_stars_total": "destroy a total of 30 stars",
@@ -124,7 +124,7 @@
             "travel_3000_shields_on_total": "travel a total of 3000 m with your shields on",
             "1_perfect_waves_once": "collect every star & destroy every asteroid of a wave",
             "10_perfect_waves_total": "collect every star & destroy every asteroid in a total of 10 waves",
-            "10_perfect_waves_row": "collect every star & destroy every asteroid of 10 waves in a row",
+            "5_perfect_waves_row": "collect every star & destroy every asteroid of 5 waves in a row",
             "out_of_energy_20_total": "empty your energy a total of 20 times",
             "out_of_energy_10_once": "empty your energy 10 times in a single run",
             "out_of_energy_15_row": "empty your energy 15 times in a row",
@@ -140,7 +140,7 @@
             "travel_5000_without_collecting_star_once": "cover a distance of 5000 m without collecting a star",
             "survive_50_waves_total": "survive a total of 50 waves",
             "earn_500_points_once": "earn 500 points in a single run",
-            "earn_5000_points_total": "earn a total of 5000 points"
+            "earn_3000_points_total": "earn a total of 3000 points"
         }
     },
     "de": {
@@ -225,7 +225,7 @@
             "star_gazer": "Sterngucker",
             "star_gazer_description": "Sammle alle Sterne bei einem flug durch das gesamte Asteroidenfeld",
             "faster_than_light": "Lichtgeschwindigkeit",
-            "faster_than_light_description": "Erledige alle Missionen in 1 Stunde oder weniger"
+            "faster_than_light_description": "Erledige alle Missionen in 2 Stunde und 30 Minuten oder weniger"
         },
         "pause_menu": {
             "missions": "Missionen",
@@ -243,7 +243,7 @@
             "destroy_50_asteroids_once": "zerst\u00D6re 50 asteroiden in einem einzigen flug",
             "destroy_100_asteroids_total": "zerst\u00D6re insgesamt 100 asteroiden",
             "destroy_500_asteroids_total": "zerst\u00D6re insgesamt 500 asteroiden",
-            "destroy_5000_asteroids_total": "zerst\u00D6re insgesamt 5000 asteroiden",
+            "destroy_1500_asteroids_total": "zerst\u00D6re insgesamt 1500 asteroiden",
             "destroy_200_asteroids_row": "zerst\u00D6re 200 asteroiden in folge ohne getroffen zu werden",
             "collect_10_asteroids_total": "lass dich von insgesamt 10 asteroiden treffen",
             "collect_15_asteroids_total": "lass dich von insgesamt 15 asteroiden treffen",
@@ -251,7 +251,7 @@
             "collect_20_stars_once": "sammle 20 sterne in einem einzigen flug",
             "collect_50_stars_total": "sammle insgesamt 50 sterne",
             "collect_150_stars_total": "sammle insgesamt 150 sterne",
-            "collect_500_stars_total": "sammle insgesamt 500 sterne",
+            "collect_200_stars_total": "sammle insgesamt 200 sterne",
             "collect_20_stars_row": "sammle 20 sterne in folge ohne einen zu zerst\u00D6ren",
             "destroy_30_stars_total": "zerst\u00D6re insgesamt 30 sterne",
             "destroy_20_stars_once": "zerst\u00D6re 20 sterne in einem einzigen flug",
@@ -262,7 +262,7 @@
             "travel_3000_shields_on_total": "fliege eine gesamt strecke von 3000 m mit hochgefahrenen schilden",
             "1_perfect_waves_once": "sammle alle sterne & zerst\u00D6re alle asteroiden einer welle",
             "10_perfect_waves_total": "sammle alle sterne & zerst\u00D6re alle asteroiden von insgesamt 10 wellen",
-            "10_perfect_waves_row": "sammle alle sterne & zerst\u00D6re alle asteroiden von 10 wellen in folge",
+            "5_perfect_waves_row": "sammle alle sterne & zerst\u00D6re alle asteroiden von 5 wellen in folge",
             "out_of_energy_20_total": "leere deine energie insgesamt 20 mal",
             "out_of_energy_10_once": "leere deine energie 10 mal in einem einzigen flug",
             "out_of_energy_15_row": "leere deine energie 15 mal in folge",
@@ -278,7 +278,7 @@
             "travel_5000_without_collecting_star_once": "lege 5000 m zur\u00DCck ohne einen stern zu sammeln",
             "survive_50_waves_total": "\u00DCberlebe insgesamt 50 wellen",
             "earn_500_points_once": "erreiche 500 punkte in einem einzigen flug",
-            "earn_5000_points_total": "erreiche insgesamt 5000 punkte"
+            "earn_3000_points_total": "erreiche insgesamt 3000 punkte"
         }
     }
 }

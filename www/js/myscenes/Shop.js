@@ -48,8 +48,8 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
     var MENU_SETTINGS = 'settings';
     var MENU_ACHIEVEMENTS = 'achievements';
 
-    var energyPrices = [100, 300, 900 * 2];
-    var lifePrices = [200, 400 * 2, 1200 * 2];
+    var energyPrices = [100, 300 * 2, 900 * 4];
+    var lifePrices = [200, 400 * 4, 1200 * 4];
     var luckPrices = [150, 350, 1000];
 
     var NEW_RECORD = 'new_record';
