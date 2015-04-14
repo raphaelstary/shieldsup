@@ -15,7 +15,7 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
     }
 
     function createWorld(stage, events, sounds, timer, shaker, countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable,
-        trackedAsteroids, trackedStars, shipCollision, shieldsCollision, endGame, gameStats, is30fps) {
+        trackedAsteroids, trackedStars, shipCollision, shieldsCollision, endGame, gameStats, is30fps, isLowPerf) {
         var scoreDisplay = new Odometer(new OdometerView(stage, countDrawables, shaker, is30fps));
         var collectAnimator = new CollectView(stage, shipDrawable, shaker, is30fps);
         var scoreAnimator = new ScoreView(stage, is30fps);
@@ -24,7 +24,7 @@ var PlayFactory = (function (ObstaclesView, LevelGenerator, EnergyBarView, Energ
         var shieldsHitView = new ShieldsHitView(stage, shieldsDrawable, timer, shaker, is30fps);
         return new GameWorld(stage, events, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
             shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, shaker,
-            Object.keys(lifeDrawablesDict).length, endGame, sounds, hullHitView, shieldsHitView, livesView, gameStats);
+            Object.keys(lifeDrawablesDict).length, endGame, sounds, hullHitView, shieldsHitView, livesView, gameStats, isLowPerf);
     }
 
     return {

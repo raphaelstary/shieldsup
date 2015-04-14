@@ -43,8 +43,9 @@ var InGameTutorial = (function ($) {
         var speedStripes = this.sceneStorage.speedStripes;
         var shieldsUpSprite = this.sceneStorage.shields.upSprite;
         var shieldsDownSprite = this.sceneStorage.shields.downSprite;
-
-        var backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
+        var backSound;
+        if (!self.sceneStorage.lowPerformance)
+            backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
         // simple pause button
         var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
@@ -67,9 +68,10 @@ var InGameTutorial = (function ($) {
                 pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
             //countDrawables.forEach(self.shaker.add.bind(self.shaker));
-            speedStripes.forEach(function (wrapper) {
-                self.shaker.add(wrapper.drawable);
-            });
+            if (speedStripes)
+                speedStripes.forEach(function (wrapper) {
+                    self.shaker.add(wrapper.drawable);
+                });
             $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
@@ -109,7 +111,7 @@ var InGameTutorial = (function ($) {
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
         var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame, gameStats, do30fps);
+            shieldsCollision, endGame, gameStats, do30fps, self.sceneStorage.lowPerformance);
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
@@ -478,7 +480,8 @@ var InGameTutorial = (function ($) {
             if (itIsOver)
                 return;
             itIsOver = true;
-            self.sounds.stop(backSound);
+            if (backSound)
+                self.sounds.stop(backSound);
             delete self.sceneStorage.gameStats;
             self.next(nextScene);
         }

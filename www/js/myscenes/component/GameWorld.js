@@ -9,7 +9,7 @@ var GameWorld = (function (Object, Event) {
 
     function GameWorld(stage, events, trackedAsteroids, trackedStars, scoreDisplay, collectAnimator, scoreAnimator,
                        shipCollision, shieldsCollision, shipDrawable, shieldsDrawable, screenShaker, initialLives, endGame, sounds,
-                       shipHitView, shieldsHitView, livesView, gameStats) {
+                       shipHitView, shieldsHitView, livesView, gameStats, isLowPerf) {
         this.stage = stage;
         this.events = events;
         this.trackedAsteroids = trackedAsteroids;
@@ -41,6 +41,7 @@ var GameWorld = (function (Object, Event) {
 
         this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
 
+        this.isLowPerf = isLowPerf;
         this.gameStats = gameStats;
         this.destroyedAsteroidsInARow = 0;
         this.collectedAsteroidsInARow = 0;
@@ -75,7 +76,8 @@ var GameWorld = (function (Object, Event) {
                         self.stage.remove(asteroid);
                     })
                 })(asteroid);
-                this.shaker.startSmallShake();
+                if (!this.isLowPerf)
+                    this.shaker.startSmallShake();
                 this.sounds.play(ASTEROID_EXPLOSION);
                 delete this.trackedAsteroids[key];
                 return;
@@ -86,7 +88,8 @@ var GameWorld = (function (Object, Event) {
                 delete this.trackedAsteroids[key];
 
                 this._shipGotHit();
-                this.shaker.startBigShake();
+                if (!this.isLowPerf)
+                    this.shaker.startBigShake();
 
                 if (this.lives <= 0) {
                     this.endGame(this.points);
@@ -135,7 +138,8 @@ var GameWorld = (function (Object, Event) {
                 }
 
                 this.sounds.play(COLLECT_STAR);
-                this.collectAnimator.collectStar();
+                if (!this.isLowPerf)
+                    this.collectAnimator.collectStar();
                 this.scoreAnimator.showScoredPoints(star.x, star.y);
                 var score = 10;
                 this.scoreDisplay.addScore(score);

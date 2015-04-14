@@ -163,9 +163,10 @@ var PlayGame = (function ($) {
             [
                 pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
             ].forEach(add);
-            speedStripes.forEach(function (wrapper) {
-                self.shaker.add(wrapper.drawable);
-            });
+            if (speedStripes)
+                speedStripes.forEach(function (wrapper) {
+                    self.shaker.add(wrapper.drawable);
+                });
             $.iterateEntries(lifeDrawablesDict, self.shaker.add, self.shaker);
         }
 
@@ -190,7 +191,7 @@ var PlayGame = (function ($) {
 
         var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
             shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps);
+            shieldsCollision, endGame, gameStats, self.sceneStorage.do30fps, self.sceneStorage.lowPerformance);
         var collisionId = self.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
         var playerShieldsLevel = $.loadInteger(SHOP_ENERGY) + 1;
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
@@ -363,8 +364,8 @@ var PlayGame = (function ($) {
         delete this.sceneStorage.gameStats;
 
         this.sceneStorage.gameStats = gameStats;
-
-        this.sounds.stop(this.sceneStorage.music);
+        if (this.sceneStorage.music)
+            this.sounds.stop(this.sceneStorage.music);
 
         nextScene();
     };

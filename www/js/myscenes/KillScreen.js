@@ -36,9 +36,10 @@ var KillScreen = (function (CollectView, Transition, multiply, changeSign, Heigh
         delete this.sceneStorage.distance;
 
         var self = this;
-        speedStripes.forEach(function (speedStripeWrapper) {
-            self.stage.remove(speedStripeWrapper.drawable);
-        });
+        if (speedStripes)
+            speedStripes.forEach(function (speedStripeWrapper) {
+                self.stage.remove(speedStripeWrapper.drawable);
+            });
 
         if (this.sceneStorage.gameStats.completedWaves >= TOTAL_WAVES) {
             var animator = new CollectView(self.stage, shipDrawable, self.shaker, self.sceneStorage.do30fps);

@@ -1,11 +1,19 @@
-var checkAndSet30fps = (function (Stats) {
+var checkAndSet30fps = (function (Math) {
     "use strict";
 
     function checkAndSet30fps(sceneStorage, stage, shaker) {
-        if (Stats.getFps() < 45) {
-            if (Stats.getMs() > 15) {
-                // no speed stripes, no shaker, no shine, maybe no highlight, maybe no background stars, maybe no music just sfx
-            }
+        var fpsMean = Math.round(sceneStorage.fpsTotal / sceneStorage.fpsCount);
+        var msMean = Math.round(sceneStorage.msTotal / sceneStorage.msCount);
+        sceneStorage.fpsTotal = 0;
+        sceneStorage.fpsCount = 0;
+        sceneStorage.msTotal = 0;
+        sceneStorage.msCount = 0;
+
+        console.log('fps mean: ' + fpsMean);
+        console.log('ms mean: ' + msMean);
+
+        sceneStorage.lowPerformance = msMean > 15;
+        if (fpsMean < 40) {
             sceneStorage.do30fps = true;
             stage.stage.spriteAnimations.set30fps();
             shaker.__init(true);
@@ -16,4 +24,4 @@ var checkAndSet30fps = (function (Stats) {
     }
 
     return checkAndSet30fps;
-})(Stats);
+})(Math);

@@ -1,5 +1,5 @@
 var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fire, drawShields, showMenu, Event,
-    checkAndSet30fps) {
+                         checkAndSet30fps) {
     "use strict";
 
     function PreGame(services) {
@@ -77,7 +77,8 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
         var playButton, settingsButton, achievementsButton, moreGamesButton;
 
         function shipIsAtEndPosition() {
-            sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
+            if (!self.sceneStorage.lowPerformance)
+                sounds.push(self.sounds.play(BACK_GROUND_MUSIC));
 
             function createButtons() {
                 function getButtonWidth(width, height) {
@@ -188,10 +189,10 @@ var PreGame = (function (Transition, Credits, calcScreenConst, Width, Height, Fi
 
         function endOfScreen() {
             checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
-
-            self.sceneStorage.speedStripes.forEach(function (speedStripeWrapper) {
-                self.stage.remove(speedStripeWrapper.drawable);
-            });
+            if (self.sceneStorage.speedStripes)
+                self.sceneStorage.speedStripes.forEach(function (speedStripeWrapper) {
+                    self.stage.remove(speedStripeWrapper.drawable);
+                });
             delete self.sceneStorage.speedStripes;
 
             [

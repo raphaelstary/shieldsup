@@ -1,5 +1,5 @@
 var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Event, showMenu, loadInteger,
-    checkAchievements, Math) {
+                      checkAchievements, Math, checkAndSet30fps) {
     "use strict";
 
     function Shop(services) {
@@ -12,6 +12,7 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
         this.device = services.device;
         this.missions = services.missions;
         this.timer = services.timer;
+        this.shaker = services.shaker;
     }
 
     var GAME_KEY = 'shields_up-';
@@ -309,10 +310,10 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             drawables.forEach(self.stage.remove.bind(self.stage));
             removeButtons();
             self.messages.resetStorage();
-
+            checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
             next();
         }
     };
 
     return Shop;
-})(Width, Height, add, Font, ScreenShaker, lclStorage, Event, showMenu, loadInteger, checkAchievements, Math);
+})(Width, Height, add, Font, ScreenShaker, lclStorage, Event, showMenu, loadInteger, checkAchievements, Math, checkAndSet30fps);

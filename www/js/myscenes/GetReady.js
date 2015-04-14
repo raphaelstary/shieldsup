@@ -18,7 +18,8 @@ var GetReady = (function (Transition, calcScreenConst, changeSign, Width, Height
 
     GetReady.prototype.show = function (nextScene) {
         var self = this;
-        this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.4);
+        if (!self.sceneStorage.lowPerformance)
+            this.sceneStorage.music = this.sounds.play(MUSIC, true, 0.4);
         var speed = this.sceneStorage.do30fps ? 90 : 180;
         this.timer.doLater(nextScene, speed / 2);
         var readyDrawable = self.stage.moveFreshText(changeSign(Width.FULL), Height.THIRD,

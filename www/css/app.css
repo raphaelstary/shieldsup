@@ -1,6 +1,7 @@
 html {
     height: 100%;
     overflow: hidden;
+    background-color: #3a2e3f;
 }
 
 body {
@@ -9,6 +10,7 @@ body {
     height: 100%;
     -ms-touch-action: none;
     touch-action: none;
+    background-color: #3a2e3f;
 }
 
 canvas {

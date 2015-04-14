@@ -42,7 +42,8 @@ var Intro = (function ($) {
     };
 
     Intro.prototype.__show = function (nextScene) {
-        this.sounds.play(NAME_FLY_BY);
+        if (!this.sceneStorage.lowPerformance)
+            this.sounds.play(NAME_FLY_BY);
         this.firstBg = $.drawBackGround(this.stage);
         this.speedos = [
             this.stage.drawFresh($.Width.QUARTER, $.zero, SPEED, Z_INDEX_SPEEDOS),
