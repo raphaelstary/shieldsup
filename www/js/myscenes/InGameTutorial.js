@@ -67,7 +67,6 @@ var InGameTutorial = (function ($) {
                 fireDict.left,
                 fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
-            //countDrawables.forEach(self.shaker.add.bind(self.shaker));
             if (speedStripes)
                 speedStripes.forEach(function (wrapper) {
                     self.shaker.add(wrapper.drawable);
@@ -109,14 +108,14 @@ var InGameTutorial = (function ($) {
         var shipCollision = self.stage.getCollisionDetector(shipDrawable);
         var anotherShieldsDrawable = $.drawShields(self.stage, shipDrawable).drawable;
         var shieldsCollision = self.stage.getCollisionDetector(anotherShieldsDrawable);
-        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker, countDrawables,
-            shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars, shipCollision,
-            shieldsCollision, endGame, gameStats, do30fps, self.sceneStorage.lowPerformance);
+        var world = $.PlayFactory.createWorld(self.stage, self.events, self.sounds, self.timer, self.shaker,
+            countDrawables, shipDrawable, lifeDrawablesDict, shieldsDrawable, trackedAsteroids, trackedStars,
+            shipCollision, shieldsCollision, endGame, gameStats, do30fps, self.sceneStorage.lowPerformance);
 
         var collisionTutorial = this.events.subscribe($.Event.TICK_COLLISION, world.checkCollisions.bind(world));
 
         var energyStates = $.PlayFactory.createEnergyStateMachine(self.stage, self.events, self.sounds, self.timer,
-            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 6, gameStats, do30fps);
+            energyBarDrawable, world, shieldsDrawable, shieldsUpSprite, shieldsDownSprite, 1, gameStats, do30fps);
 
         registerPushRelease();
 
@@ -169,7 +168,7 @@ var InGameTutorial = (function ($) {
         }
 
         function createTouchNHoldTxt() {
-            var touch_txt = self.stage.drawText($.Width.TWO_THIRD, $.Height.THIRD,
+            var touch_txt = self.stage.drawText($.Width.TWO_THIRD, $.Height.QUARTER,
                 self.messages.get(KEY, TOUCH_AND_HOLD_MSG), $.Font._30, FONT, WHITE, 5, undefined, $.Math.PI / 16, 1,
                 $.Width.TWO_THIRD, $.Height.get(20));
             self.messages.add(touch_txt, touch_txt.data, KEY, TOUCH_AND_HOLD_MSG);
@@ -177,7 +176,7 @@ var InGameTutorial = (function ($) {
                 return $.calcScreenConst(width, 16, 3);
             }
 
-            var raise_txt = self.stage.drawText(Width.QUARTER, $.Height.HALF,
+            var raise_txt = self.stage.drawText(Width.QUARTER, $.Height.THIRD,
                 self.messages.get(KEY, TO_RAISE_SHIELDS_MSG), $.Font._35, FONT, WHITE, 3, undefined, -$.Math.PI / 16, 1,
                 $.Width.THIRD, $.Height.get(25));
             self.messages.add(raise_txt, raise_txt.data, KEY, TO_RAISE_SHIELDS_MSG);
@@ -202,41 +201,48 @@ var InGameTutorial = (function ($) {
         var __4;
         var __2;
         var __1;
+        var heightAsteroid;
         var heightQuarter;
         var moveStuff;
+        var u = 48;
+        var v = 28;
         if (do30fps) {
             __4 = get__4(self.device.height) * 2;
             __2 = get__2(self.device.height) * 2;
             __1 = get__1(self.device.height) * 2;
+            heightAsteroid = $.Height.get(u, v)(self.device.height);
             heightQuarter = $.Height.QUARTER(self.device.height);
 
             moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
                 __4 = get__4(event.height) * 2;
                 __2 = get__2(event.height) * 2;
                 __1 = get__1(event.height) * 2;
+                heightAsteroid = $.Height.get(u, v)(event.height);
                 heightQuarter = $.Height.QUARTER(event.height);
             });
         } else {
             __4 = get__4(self.device.height);
             __2 = get__2(self.device.height);
             __1 = get__1(self.device.height);
+            heightAsteroid = $.Height.get(u, v)(self.device.height);
             heightQuarter = $.Height.QUARTER(self.device.height);
 
             moveStuff = self.events.subscribe($.Event.RESIZE, function (event) {
                 __4 = get__4(event.height);
                 __2 = get__2(event.height);
                 __1 = get__1(event.height);
+                heightAsteroid = $.Height.get(u, v)(event.height);
                 heightQuarter = $.Height.QUARTER(event.height);
             });
         }
         function moveMyFirstAsteroids() {
             if (asteroidShutDown)
                 return;
-            if (asteroid.y < heightQuarter) {
+            if (asteroid.y < heightAsteroid) {
                 asteroid.y += __4 + __2;
             } else if (world.shieldsOn) {
                 asteroid.y += __2 + __1;
-            } else if (asteroid.y > heightQuarter) {
+            } else if (asteroid.y > heightAsteroid) {
                 asteroid.y -= __4;
             }
             if (!self.stage.has(asteroid)) {
