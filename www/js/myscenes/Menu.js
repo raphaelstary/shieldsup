@@ -1,4 +1,4 @@
-var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu) {
+var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial) {
     "use strict";
 
     function Menu(services) {
@@ -15,7 +15,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
     var SubScenes = {
         ACHIEVEMENTS: 'achievements',
         SETTINGS: 'settings',
-        PAUSE_MENU: 'pause_menu'
+        PAUSE_MENU: 'pause_menu',
+        ENERGY_TUTORIAL: 'energy_tutorial'
     };
 
     Menu.prototype.show = function (next) {
@@ -40,6 +41,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
                 callback = showSettings;
             } else if (self.sceneStorage.menuScene == SubScenes.PAUSE_MENU) {
                 callback = showPauseMenu;
+            } else if (self.sceneStorage.menuScene == SubScenes.ENERGY_TUTORIAL) {
+                callback = showEnergyTutorial;
             }
             self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, callback);
         }
@@ -94,7 +97,17 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
             });
             pauseMenu.show(hideMenu);
         }
+
+        function showEnergyTutorial() {
+            var energyTut = new EnergyTutorial({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                sceneStorage: self.sceneStorage
+            });
+            energyTut.show(hideMenu);
+        }
     };
 
     return Menu;
-})(Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu);
+})(Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial);

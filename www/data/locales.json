@@ -141,6 +141,10 @@
             "survive_50_waves_total": "survive a total of 50 waves",
             "earn_500_points_once": "earn 500 points in a single run",
             "earn_3000_points_total": "earn a total of 3000 points"
+        },
+        "energy_tutorial": {
+            "consume_txt": "warning! you are out of energy. your shields consume energy. when the energy is empty your shields go off.",
+            "energy_bar": "energy bar"
         }
     },
     "de": {
@@ -279,6 +283,10 @@
             "survive_50_waves_total": "\u00DCberlebe insgesamt 50 wellen",
             "earn_500_points_once": "erreiche 500 punkte in einem einzigen flug",
             "earn_3000_points_total": "erreiche insgesamt 3000 punkte"
+        },
+        "energy_tutorial": {
+            "consume_txt": "Achtung! Deine Energie ist leer. Deine Schilde verbrauchen Energie. Wenn die Energie leer ist gehen deine Schilde aus.",
+            "energy_bar": "Energieleiste"
         }
     }
 }

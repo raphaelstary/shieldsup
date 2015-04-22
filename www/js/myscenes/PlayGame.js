@@ -141,6 +141,19 @@ var PlayGame = (function ($) {
             }
         });
 
+        var forTheFirstTime = true;
+        var outOfEnergy = this.events.subscribe($.Event.OUT_OF_ENERGY, function () {
+            if (forTheFirstTime && !self.sceneStorage.showedEnergyTutorial) {
+                self.sceneStorage.showedEnergyTutorial = true;
+                forTheFirstTime = false;
+                self.sceneStorage.menuScene = 'energy_tutorial';
+                pause();
+                self.events.fireSync($.Event.PAUSE);
+                $.showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
+                    self.sounds, self.missions, resume);
+            }
+        });
+
         var pauseButton = $.drawPauseButton(this.buttons, doThePause);
 
         function doThePause() {
@@ -341,6 +354,7 @@ var PlayGame = (function ($) {
                 self.events.unsubscribe(alarmListener);
                 self.events.unsubscribe(lifeLostListener);
                 self.events.unsubscribe(starCollectedListener);
+                self.events.unsubscribe(outOfEnergy);
             }
 
             removeEverything();

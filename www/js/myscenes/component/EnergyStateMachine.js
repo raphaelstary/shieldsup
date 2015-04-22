@@ -43,6 +43,7 @@ var EnergyStateMachine = (function (Event) {
 
         // stats
         this.gameStats.outOfEnergy++;
+        this.events.fire(Event.OUT_OF_ENERGY);
         this.currentStreak++;
         if (this.currentStreak > this.gameStats.outOfEnergyInARow) {
             this.gameStats.outOfEnergyInARow = this.currentStreak;

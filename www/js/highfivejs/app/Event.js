@@ -30,5 +30,6 @@ var Event = {
 
     STAR_COLLECTED: 'star_collected',
     ALARM: 'alarm',
-    LIFE_LOST: 'life_lost'
+    LIFE_LOST: 'life_lost',
+    OUT_OF_ENERGY: 'out_of_energy'
 };
