@@ -16,7 +16,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
         ACHIEVEMENTS: 'achievements',
         SETTINGS: 'settings',
         PAUSE_MENU: 'pause_menu',
-        ENERGY_TUTORIAL: 'energy_tutorial'
+        ENERGY_TUTORIAL: 'energy_tutorial',
+        SHOP_TUTORIAL: 'shop_tutorial'
     };
 
     Menu.prototype.show = function (next) {
@@ -43,6 +44,8 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
                 callback = showPauseMenu;
             } else if (self.sceneStorage.menuScene == SubScenes.ENERGY_TUTORIAL) {
                 callback = showEnergyTutorial;
+            } else if (self.sceneStorage.menuScene == SubScenes.SHOP_TUTORIAL) {
+                callback = showShopTutorial;
             }
             self.stage.move(backBlur, Width.HALF, Height.HALF, 15, Transition.EASE_IN_EXPO, false, callback);
         }
@@ -106,6 +109,16 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
                 sceneStorage: self.sceneStorage
             });
             energyTut.show(hideMenu);
+        }
+
+        function showShopTutorial() {
+            var shopTut = new ShopTutorial({
+                stage: self.stage,
+                buttons: self.buttons,
+                messages: self.messages,
+                sceneStorage: self.sceneStorage
+            });
+            shopTut.show(hideMenu);
         }
     };
 

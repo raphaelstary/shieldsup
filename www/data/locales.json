@@ -145,6 +145,9 @@
         "energy_tutorial": {
             "consume_txt": "warning! you are out of energy. your shields consume energy. when the energy is empty your shields go off.",
             "energy_bar": "energy bar"
+        },
+        "shop_tutorial": {
+            "shop_txt": "Welcome to the shop. You can upgrade your ship."
         }
     },
     "de": {
@@ -287,6 +290,9 @@
         "energy_tutorial": {
             "consume_txt": "Achtung! Deine Energie ist leer. Deine Schilde verbrauchen Energie. Wenn die Energie leer ist gehen deine Schilde aus.",
             "energy_bar": "Energieleiste"
+        },
+        "shop_tutorial": {
+            "shop_txt": "Willkommen im Shop. Hier kannst du dein Schiff upgraden."
         }
     }
 }
