@@ -52,9 +52,19 @@ var NextQuests = (function (Width, Height, changeSign, Font, Transition, add) {
 
             if (delay) {
                 self.stage.moveLater(bg, Width.HALF, yFn, speed, Transition.EASE_IN_SIN, false, questOut(bg, yFn),
-                    undefined, delay);
+                    undefined, delay, function () {
+                        self.timer.doLater(function () {
+                            if (itIsOver)
+                                self.stage.remove(bg);
+                        }, 1);
+                    });
                 self.stage.moveLater(txt, Width.HALF, yFn, speed, Transition.EASE_IN_SIN, false,
-                    questOut(txt, yFn, forceNext), undefined, delay);
+                    questOut(txt, yFn, forceNext), undefined, delay, function () {
+                        self.timer.doLater(function () {
+                            if (itIsOver)
+                                self.stage.remove(txt);
+                        }, 1);
+                    });
             } else {
                 self.stage.move(bg, Width.HALF, yFn, speed, Transition.EASE_IN_SIN, false, questOut(bg, yFn));
                 self.stage.move(txt, Width.HALF, yFn, speed, Transition.EASE_IN_SIN, false,
