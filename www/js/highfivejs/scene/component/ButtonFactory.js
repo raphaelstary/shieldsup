@@ -1,4 +1,4 @@
-var ButtonFactory = (function (Math) {
+var ButtonFactory = (function (Math, Width) {
     "use strict";
 
     function ButtonFactory(stage, input, timer, font, playSoundCallback, primaryColor, primaryTextColor,
@@ -19,7 +19,8 @@ var ButtonFactory = (function (Math) {
         this.secondaryWidthFactor = secondaryWidthFactor;
     }
 
-    ButtonFactory.prototype.createPrimaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn) {
+    ButtonFactory.prototype.createPrimaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn,
+        heightFn) {
         function pressPrimaryButton(text, background) {
             background.alpha = 1;
         }
@@ -30,10 +31,12 @@ var ButtonFactory = (function (Math) {
 
         return this.__createButton(xFn, yFn, msg, this.primaryTextSize, this.primaryColor, this.primaryTextColor, 1,
             callback, true, undefined, this.primaryWidthFactor, pressPrimaryButton, resetPrimaryButton, zIndex,
-            multiSubmit, widthFn);
+            multiSubmit, widthFn, heightFn);
     };
 
-    ButtonFactory.prototype.createSecondaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn) {
+    ButtonFactory.prototype.createSecondaryButton = function (xFn, yFn, msg, callback, zIndex, multiSubmit, widthFn,
+        heightFn) {
+
         function pressSecondaryButton(text, background) {
             text.alpha = 1;
             background.data.filled = true;
@@ -47,11 +50,13 @@ var ButtonFactory = (function (Math) {
         return this.__createButton(xFn, yFn, msg, this.secondaryTextSize, this.secondaryColor, this.secondaryTextColor,
             0.5, callback, false, function () {
                 return 1;
-            }, this.secondaryWidthFactor, pressSecondaryButton, resetSecondaryButton, zIndex, multiSubmit, widthFn);
+            }, this.secondaryWidthFactor, pressSecondaryButton, resetSecondaryButton, zIndex, multiSubmit, widthFn,
+            heightFn);
     };
 
     ButtonFactory.prototype.__createButton = function (xFn, yFn, msg, txtSizeFn, color, textColor, textAlpha, callback,
-        backgroundFilled, lineWidthFn, widthMultiplier, pressButton, resetButton, zIndex, multiSubmit, widthFn) {
+        backgroundFilled, lineWidthFn, widthMultiplier, pressButton, resetButton, zIndex, multiSubmit, widthFn,
+        heightFn) {
 
         var isMultiSubmitOn = multiSubmit !== undefined ? multiSubmit : false;
 
@@ -68,8 +73,9 @@ var ButtonFactory = (function (Math) {
             return Math.floor(textDrawable.getHeight() * 2.5);
         }
 
-        var backgroundWrapper = this.stage.drawRectangleWithInput(xFn, yFn, widthFn ? widthFn : getWidth, getHeight,
-            color, backgroundFilled, lineWidthFn, zIndex, 0.5, undefined, undefined, [textDrawable]);
+        var backgroundWrapper = this.stage.drawRectangleWithInput(xFn, yFn, widthFn ? widthFn : getWidth,
+            heightFn ? heightFn : getHeight, color, backgroundFilled, lineWidthFn, zIndex, 0.5, undefined, undefined,
+            [textDrawable]);
 
         var touchable = backgroundWrapper.input;
         var backgroundDrawable = backgroundWrapper.drawable;
@@ -126,4 +132,4 @@ var ButtonFactory = (function (Math) {
     };
 
     return ButtonFactory;
-})(Math);
+})(Math, Width);
