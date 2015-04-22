@@ -47,9 +47,7 @@ var InGameTutorial = (function ($) {
         if (!self.sceneStorage.lowPerformance)
             backSound = this.sounds.play(BACK_GROUND_MUSIC, true, 0.4);
 
-        // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
-            3);
+        var pauseButton = $.drawPauseButton(this.buttons, doThePause);
 
         function doThePause() {
             pause();
@@ -59,13 +57,15 @@ var InGameTutorial = (function ($) {
                 self.sounds, self.missions, resume);
         }
 
-        pauseButton.text.rotation = $.Math.PI / 2;
-        pauseButton.text.scale = 2;
-        self.stage.hide(pauseButton.background);
-
         function setupShaker() {
             [
-                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
+                pauseButton.text,
+                pauseButton.background,
+                shipDrawable,
+                shieldsDrawable,
+                energyBarDrawable,
+                fireDict.left,
+                fireDict.right
             ].forEach(self.shaker.add.bind(self.shaker));
             //countDrawables.forEach(self.shaker.add.bind(self.shaker));
             if (speedStripes)
@@ -489,12 +489,10 @@ var InGameTutorial = (function ($) {
         var isPaused = false;
 
         function pause() {
-            self.stage.hide(pauseButton.text);
             isPaused = true;
         }
 
         function resume() {
-            self.stage.show(pauseButton.text);
             pauseButton.used = false;
             isPaused = false;
         }
@@ -518,5 +516,6 @@ var InGameTutorial = (function ($) {
     Event: Event,
     showMenu: showMenu,
     Key: Key,
-    iterateEntries: iterateEntries
+    iterateEntries: iterateEntries,
+    drawPauseButton: drawPauseButton
 });

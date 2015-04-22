@@ -141,9 +141,7 @@ var PlayGame = (function ($) {
             }
         });
 
-        // simple pause button
-        var pauseButton = this.buttons.createSecondaryButton($.Width.get(10), $.Height.TOP_RASTER, ' = ', doThePause,
-            3);
+        var pauseButton = $.drawPauseButton(this.buttons, doThePause);
 
         function doThePause() {
             updateTimes();
@@ -154,14 +152,16 @@ var PlayGame = (function ($) {
                 self.sounds, self.missions, resume);
         }
 
-        pauseButton.text.rotation = $.Math.PI / 2;
-        pauseButton.text.scale = 2;
-        self.stage.hide(pauseButton.background);
-
         function setupShaker() {
             var add = self.shaker.add.bind(self.shaker);
             [
-                pauseButton.text, shipDrawable, shieldsDrawable, energyBarDrawable, fireDict.left, fireDict.right
+                pauseButton.text,
+                pauseButton.background,
+                shipDrawable,
+                shieldsDrawable,
+                energyBarDrawable,
+                fireDict.left,
+                fireDict.right
             ].forEach(add);
             if (speedStripes)
                 speedStripes.forEach(function (wrapper) {
@@ -284,12 +284,10 @@ var PlayGame = (function ($) {
         var isPaused = false;
 
         function pause() {
-            self.stage.hide(pauseButton.text);
             isPaused = true;
         }
 
         function resume() {
-            self.stage.show(pauseButton.text);
             pauseButton.used = false;
             isPaused = false;
         }
@@ -387,5 +385,6 @@ var PlayGame = (function ($) {
     Key: Key,
     Date: Date,
     loadInteger: loadInteger,
-    localStorage: lclStorage
+    localStorage: lclStorage,
+    drawPauseButton: drawPauseButton
 });
