@@ -23,6 +23,7 @@ var SimpleLoadingScreen = (function (Math) {
 
     SimpleLoadingScreen.prototype.showProgress = function () {
         if (this.progressCounter <= this.parts) {
+            this.screenCtx.fillStyle = 'white';
             this.screenCtx.fillRect(this.startBarX, this.startBarY, this.barWidth / this.parts * this.progressCounter,
                 this.barHeight);
             this.progressCounter++;
@@ -33,7 +34,7 @@ var SimpleLoadingScreen = (function (Math) {
         this._resizeScreen(event.width, event.height);
         this._calcScreenPositions(event.width, event.height);
         this._initialRendering();
-
+        this.screenCtx.fillStyle = 'white';
         this.screenCtx.fillRect(this.startBarX, this.startBarY, this.barWidth / this.parts * this.progressCounter,
             this.barHeight);
     };
@@ -47,10 +48,12 @@ var SimpleLoadingScreen = (function (Math) {
     };
 
     SimpleLoadingScreen.prototype._initialRendering = function () {
+        this.screenCtx.strokeStyle = 'white';
         this.screenCtx.strokeRect(this.startBarX, this.startBarY, this.barWidth, this.barHeight);
 
-        this.screenCtx.font = 'italic 40pt Calibri';
+        this.screenCtx.font = 'bold 40pt sans-serif';
         this.screenCtx.textAlign = 'center';
+        this.screenCtx.fillStyle = 'white';
 
         this.screenCtx.fillText(this.txt, this.centerX, this.startBarY + this.barHeight + 40);
     };
