@@ -40,7 +40,7 @@ var GameWorld = (function (Object, Event) {
         this.points = 0; //part of global game state
 
         this.elemHitsShieldsSprite = stage.getSprite(OBJECT_DESTROYED, 3, false);
-
+        this.isHit = false;
         this.isLowPerf = isLowPerf;
         this.gameStats = gameStats;
         this.destroyedAsteroidsInARow = 0;
@@ -87,6 +87,8 @@ var GameWorld = (function (Object, Event) {
                 this.stage.remove(asteroid);
                 delete this.trackedAsteroids[key];
 
+                if (this.isHit)
+                    return;
                 this._shipGotHit();
                 if (!this.isLowPerf)
                     this.shaker.startBigShake();
@@ -155,6 +157,7 @@ var GameWorld = (function (Object, Event) {
     };
 
     GameWorld.prototype._shipGotHit = function () {
+        var self = this;
         // stats stuff
         this.destroyedAsteroidsInARow = 0;
         this.gameStats.collectedAsteroids++;
@@ -169,6 +172,65 @@ var GameWorld = (function (Object, Event) {
         if (--this.lives > 0) {
             this.sounds.play(SHIP_HIT);
             this.shipHitView.hit();
+            this.isHit = true;
+            this.stage.animateAlphaPattern(this.shipDrawable, [
+                {
+                    value: 1,
+                    duration: 30,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 0,
+                    duration: 4,
+                    easing: Transition.LINEAR
+                }, {
+                    value: 1,
+                    duration: 2,
+                    easing: Transition.LINEAR,
+                    callback: function () {
+                        self.isHit = false;
+                    }
+                }
+            ]);
         }
         this.events.fireSync(Event.LIFE_LOST);
     };
