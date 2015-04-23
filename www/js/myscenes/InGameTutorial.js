@@ -205,7 +205,7 @@ var InGameTutorial = (function ($) {
         var heightQuarter;
         var moveStuff;
         var u = 48;
-        var v = 28;
+        var v = 26;
         if (do30fps) {
             __4 = get__4(self.device.height) * 2;
             __2 = get__2(self.device.height) * 2;

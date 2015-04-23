@@ -143,11 +143,11 @@
             "earn_3000_points_total": "earn a total of 3000 points"
         },
         "energy_tutorial": {
-            "consume_txt": "warning! you are out of energy. your shields consume energy. when the energy is empty your shields go off.",
+            "consume_txt": "your shields consume energy. when the energy is empty your shields go off.",
             "energy_bar": "energy bar"
         },
         "shop_tutorial": {
-            "shop_txt": "Welcome to the shop. You can upgrade your ship."
+            "shop_txt": "Welcome to the shop. Upgrade your shield energy, lives and the chance that stars appear."
         }
     },
     "de": {
@@ -243,7 +243,7 @@
             "luck": "gl\u00DCck",
             "energy_description": "erh\u00D6he die energie deines schildgenerators",
             "life_description": "erhalte ein extra leben",
-            "luck_description": "erh\u00D6he die chance f\u00DCr sterne"
+            "luck_description": "erh\u00D6he die chance auf sterne"
         },
         "mission": {
             "destroy_10_asteroids_once": "zerst\u00D6re 10 asteroiden in einem einzigen flug",
@@ -288,11 +288,11 @@
             "earn_3000_points_total": "erreiche insgesamt 3000 punkte"
         },
         "energy_tutorial": {
-            "consume_txt": "Achtung! Deine Energie ist leer. Deine Schilde verbrauchen Energie. Wenn die Energie leer ist gehen deine Schilde aus.",
+            "consume_txt": "Deine Schilde verbrauchen Energie. Wenn die Energie leer ist gehen deine Schilde aus.",
             "energy_bar": "Energieleiste"
         },
         "shop_tutorial": {
-            "shop_txt": "Willkommen im Shop. Hier kannst du dein Schiff upgraden."
+            "shop_txt": "Willkommen im Shop. Upgrade deine Schildenergie, Leben und die chance auf sterne."
         }
     }
 }

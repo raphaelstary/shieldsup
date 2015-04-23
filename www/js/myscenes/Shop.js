@@ -58,16 +58,6 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
 
     Shop.prototype.show = function (next) {
         var self = this, totalStarsValue, starsValue, energyItem, lifeItem, luckItem, drawables = [];
-
-        if (!self.sceneStorage.showedShopTutorial) {
-            self.sceneStorage.showedShopTutorial = true;
-            self.sceneStorage.menuScene = 'shop_tutorial';
-            self.events.fireSync(Event.PAUSE);
-            showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device, self.sounds,
-                self.missions, function () {
-                });
-        }
-
         var gameStats = self.sceneStorage.gameStats;
         delete this.sceneStorage.gameStats;
         var header = self.stage.drawText(Width.HALF, Height.get(48, 4), self.messages.get(KEY, SHOP), Font._15, FONT,
@@ -311,17 +301,6 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             }
         }
 
-        //self.timer.doLater(function showTutorial() {
-        //    if (!self.sceneStorage.showedShopTutorial) {
-        //        self.sceneStorage.showedShopTutorial = true;
-        //        self.sceneStorage.menuScene = 'shop_tutorial';
-        //        self.events.fireSync(Event.PAUSE);
-        //        showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device,
-        //            self.sounds, self.missions, function () {
-        //            });
-        //    }
-        //},1);
-
         var itIsOver = false;
 
         function nextScene() {
@@ -334,6 +313,15 @@ var Shop = (function (Width, Height, add, Font, ScreenShaker, localStorage, Even
             self.messages.resetStorage();
             checkAndSet30fps(self.sceneStorage, self.stage, self.shaker);
             next();
+        }
+
+        if (!self.sceneStorage.showedShopTutorial) {
+            self.sceneStorage.showedShopTutorial = true;
+            self.sceneStorage.menuScene = 'shop_tutorial';
+            self.events.fireSync(Event.PAUSE);
+            showMenu(self.stage, self.buttons, self.messages, self.events, self.sceneStorage, self.device, self.sounds,
+                self.missions, function () {
+                });
         }
     };
 

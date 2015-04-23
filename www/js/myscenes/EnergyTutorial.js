@@ -27,14 +27,26 @@ var EnergyTutorial = (function (Width, Height, Font, subtract, add, Math) {
         drawables.push(self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, 'consume_txt'), Font._40,
             FONT, WHITE, 7, undefined, undefined, undefined, Width.get(10, 8), Height.get(80, 3)));
 
-        var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(48, 40),
+        var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(48, 12),
             self.messages.get(COMMON_KEY, 'resume'), endScene, 7, false, getButtonWidth);
         self.sceneStorage.menuSceneButtons.push(resumeButton);
 
         var energyBar = self.stage.drawFresh(EnergyBar.getX, EnergyBar.getY, 'energy_full', 7);
         drawables.push(energyBar);
-        var energyBarTxt = self.stage.drawText(Width.TWO_THIRD, EnergyBar.getY, self.messages.get(KEY, 'energy_bar'),
-            Font._40, FONT, WHITE, 7);
+        this.stage.animateScalePattern(energyBar, [
+            {
+                value: 1.2,
+                duration: 15,
+                easing: Transition.LINEAR
+            }, {
+                value: 1,
+                duration: 15,
+                easing: Transition.LINEAR
+            }
+        ], true);
+
+        var energyBarTxt = self.stage.drawText(EnergyBar.getX, subtract(EnergyBar.getY, Height.get(48, 2)),
+            self.messages.get(KEY, 'energy_bar'), Font._40, FONT, WHITE, 7);
         drawables.push(energyBarTxt);
 
         function getButtonWidth(width, height) {
