@@ -147,7 +147,9 @@
             "energy_bar": "energy bar"
         },
         "shop_tutorial": {
-            "shop_txt": "Welcome to the shop. Upgrade your shield energy, lives and the chance that stars appear."
+            "welcome": "Welcome to the shop.",
+            "upgrades": "Upgrades, Upgrades, Upgrades ;)",
+            "to_the_shop": "to the shop"
         }
     },
     "de": {
@@ -292,7 +294,9 @@
             "energy_bar": "Energieleiste"
         },
         "shop_tutorial": {
-            "shop_txt": "Willkommen im Shop. Upgrade deine Schildenergie, Leben und die chance auf sterne."
+            "welcome": "Willkommen im Shop.",
+            "upgrades": "Upgrades, Upgrades, Upgrades ;)",
+            "to_the_shop": "zum shop"
         }
     }
 }

@@ -24,12 +24,17 @@ var ShopTutorial = (function (Width, Height, Font, subtract, add, Math) {
         var self = this;
         var drawables = [];
 
-        drawables.push(self.stage.drawText(Width.HALF, Height.HALF, self.messages.get(KEY, 'shop_txt'), Font._40, FONT,
-            WHITE, 7, undefined, undefined, undefined, Width.get(10, 8), Height.get(80, 3)));
+        drawables.push(self.stage.drawText(Width.HALF, Height.get(48, 16), self.messages.get('shop', 'shop'), Font._15,
+            FONT, LIGHT_GREY, 7));
 
-        var resumeButton = self.buttons.createPrimaryButton(Width.HALF, Height.get(48, 40),
-            self.messages.get(COMMON_KEY, 'resume'), endScene, 7, false, getButtonWidth);
-        self.sceneStorage.menuSceneButtons.push(resumeButton);
+        drawables.push(self.stage.drawText(Width.HALF, Height.get(48, 20), self.messages.get(KEY, 'welcome'), Font._40,
+            FONT,
+            WHITE, 7, undefined, undefined, undefined, Width.get(10, 8), Height.get(80, 3)));
+        drawables.push(self.stage.drawText(Width.HALF, Height.get(48, 24), self.messages.get(KEY, 'upgrades'), Font._40,
+            FONT, WHITE, 7, undefined, undefined, undefined, Width.get(10, 8), Height.get(80, 3)));
+
+        self.sceneStorage.menuSceneButtons.push(self.buttons.createPrimaryButton(Width.HALF, Height.get(48, 34),
+            self.messages.get(KEY, 'to_the_shop'), endScene, 7, false, getButtonWidth));
 
         function getButtonWidth(width, height) {
             if (width < height) {
