@@ -1,4 +1,4 @@
-var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial) {
+var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial, ShopTutorial) {
     "use strict";
 
     function Menu(services) {
@@ -123,4 +123,4 @@ var Menu = (function (Width, Height, changeSign, Transition, Event, Settings, Ac
     };
 
     return Menu;
-})(Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial);
+})(Width, Height, changeSign, Transition, Event, Settings, Achievements, PauseMenu, EnergyTutorial, ShopTutorial);

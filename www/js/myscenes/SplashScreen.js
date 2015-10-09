@@ -197,7 +197,7 @@ var SplashScreen = (function (Width, Height, Math, Font, Transition, Fire, docum
             });
 
             var isFs = self.device.requestFullScreen();
-            var locked = self.device.lockOrientation('portrait-primary');
+            var locked = self.device.isMobile ? self.device.lockOrientation('portrait-primary') : false;
 
             if (!locked && self.device.isMobile) {
 
